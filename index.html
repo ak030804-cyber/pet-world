@@ -3,364 +3,376 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>寵物世界</title>
+<title>寵物樂園</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,'PingFang TC','Segoe UI',sans-serif;background:#0c0c1d;color:#fff}
-#app{width:100%;height:100%;max-width:460px;margin:0 auto;display:flex;flex-direction:column;position:relative}
+#app{width:100%;height:100%;max-width:460px;margin:0 auto;display:flex;flex-direction:column;position:relative;overflow:hidden}
 
 /* ===== TITLE ===== */
-#title{display:flex;flex-direction:column;height:100%;align-items:center;justify-content:center;background:linear-gradient(160deg,#0c0c1d 0%,#1a0a2e 30%,#16213e 70%,#0f3460 100%);position:relative;overflow:hidden}
-#title::before{content:'';position:absolute;top:-50%;left:-50%;width:200%;height:200%;background:radial-gradient(circle at 50% 40%,rgba(232,168,56,.04) 0%,transparent 60%);pointer-events:none}
-#title h1{font-size:38px;font-weight:800;background:linear-gradient(135deg,#f5d76e 0%,#ff9500 50%,#ff6b6b 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px;margin-bottom:2px;position:relative}
-#title .sub{color:rgba(255,255,255,.4);font-size:13px;letter-spacing:4px;margin-bottom:28px;font-weight:300}
-.pick{display:flex;gap:14px;position:relative}
-.card{background:linear-gradient(180deg,rgba(255,255,255,.06),rgba(255,255,255,.02));border:1.5px solid rgba(255,255,255,.08);border-radius:18px;padding:20px 8px 14px;text-align:center;width:96px;cursor:pointer;transition:all .25s cubic-bezier(.4,0,.2,1);position:relative}
-.card::before{content:'';position:absolute;inset:-1px;border-radius:18px;background:linear-gradient(135deg,rgba(255,255,255,.1),transparent);opacity:0;transition:opacity .3s;pointer-events:none}
-.card:hover::before,.card.sel::before{opacity:1}
-.card.sel{border-color:rgba(245,215,110,.5);transform:translateY(-4px);box-shadow:0 12px 30px rgba(245,215,110,.1),inset 0 1px 0 rgba(255,255,255,.1)}
-.card .emoji{font-size:44px;display:block;margin-bottom:6px;filter:drop-shadow(0 4px 8px rgba(0,0,0,.3))}
-.card .nm{font-size:14px;font-weight:600;margin-bottom:2px}.card .el{font-size:10px;color:rgba(255,255,255,.4);font-weight:500}
-.go{background:linear-gradient(135deg,#f5d76e,#ff9500);border:none;border-radius:14px;color:#0c0c1d;font-size:17px;font-weight:700;padding:16px 52px;margin-top:28px;cursor:pointer;box-shadow:0 4px 0 #b87200,0 8px 25px rgba(255,149,0,.25);transition:all .12s;letter-spacing:1px}
-.go:disabled{opacity:.3;transform:none!important;box-shadow:none!important}
+#title{display:flex;flex-direction:column;height:100%;align-items:center;justify-content:center;background:linear-gradient(160deg,#0c0c1d,#1a0a2e,#16213e,#0f3460);}
+#title h1{font-size:36px;font-weight:800;background:linear-gradient(135deg,#f5d76e,#ff9500);-webkit-background-clip:text;-webkit-text-fill-color:transparent;letter-spacing:2px;margin-bottom:2px}
+#title .sub{color:rgba(255,255,255,.3);font-size:12px;letter-spacing:3px;margin-bottom:28px}
+.pick{display:flex;gap:12px;flex-wrap:wrap;justify-content:center}
+.card{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.06);border-radius:16px;padding:16px 10px 12px;text-align:center;width:80px;cursor:pointer;transition:all .2s}
+.card.sel{border-color:rgba(245,215,110,.4);background:rgba(245,215,110,.06);transform:translateY(-3px)}
+.card .e{font-size:36px;display:block;margin-bottom:4px}
+.card .n{font-size:12px;font-weight:600;color:rgba(255,255,255,.8)}
+.go{background:linear-gradient(135deg,#f5d76e,#ff9500);border:none;border-radius:14px;color:#0c0c1d;font-size:17px;font-weight:700;padding:16px 48px;margin-top:24px;cursor:pointer;box-shadow:0 4px 0 #b87200,0 8px 25px rgba(255,149,0,.2);transition:all .1s;letter-spacing:1px}
+.go:disabled{opacity:.3;box-shadow:none!important;cursor:default}
 .go:active{transform:translateY(4px);box-shadow:0 1px 0 #b87200}
 
-/* ===== OVERWORLD ===== */
-#game{display:none;flex-direction:column;height:100%}
-#gCan{flex:1;width:100%;display:block;touch-action:none;background:linear-gradient(180deg,#1a2a4a 0%,#2a5a3a 100%)}
-#ctrl{background:rgba(15,15,35,.95);padding:8px 12px 16px;display:flex;justify-content:center;align-items:center;gap:12px;border-top:1px solid rgba(255,255,255,.06);backdrop-filter:blur(10px)}
-.dpad{display:grid;grid-template-columns:48px 48px 48px;grid-template-rows:40px 40px;gap:3px}
-.db{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:10px;color:rgba(255,255,255,.5);font-size:16px;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:none;transition:all .1s;-webkit-tap-highlight-color:transparent}
-.db:active{background:rgba(255,255,255,.12);color:#fff;transform:scale(.93)}
-#u{grid-column:2;grid-row:1}#l{grid-column:1;grid-row:2}#d{grid-column:2;grid-row:2}#r{grid-column:3;grid-row:2}
-.bag-btn{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:10px;color:rgba(255,255,255,.6);font-size:12px;font-weight:600;padding:8px 14px;cursor:pointer;transition:all .1s}
-.bag-btn:active{background:rgba(255,255,255,.1)}
+/* ===== MAIN GAME ===== */
+#game{display:none;flex-direction:column;height:100%;background:linear-gradient(180deg,#1a0a2e 0%,#16213e 30%,#0f3460 60%,#0c0c1d 100%)}
 
-/* ===== BATTLE ===== */
-#btl{display:none;flex-direction:column;height:100%}
-#bCan{flex:1;width:100%;display:block;touch-action:none}
-#bUI{background:rgba(15,15,35,.97);padding:8px 12px 16px;border-top:1px solid rgba(255,255,255,.06)}
-#hud{display:flex;gap:8px;margin-bottom:6px}
-.hc{flex:1;background:rgba(255,255,255,.04);border-radius:12px;padding:6px 10px;backdrop-filter:blur(5px)}
-.hc .t{display:flex;justify-content:space-between;align-items:center;margin-bottom:2px}
-.hc .pn{font-size:13px;font-weight:600}.hc .lv{font-size:10px;color:rgba(255,255,255,.4);font-weight:500}
-.hc .bw{height:5px;background:rgba(0,0,0,.3);border-radius:3px;overflow:hidden;margin:2px 0}
-.hc .bf{height:100%;border-radius:3px;transition:width .35s cubic-bezier(.4,0,.2,1)}
-.bf.g{background:linear-gradient(90deg,#4cd964,#34c759);box-shadow:0 0 6px rgba(76,217,100,.3)}
-.bf.y{background:linear-gradient(90deg,#ff9500,#ffcc00);box-shadow:0 0 6px rgba(255,149,0,.3)}
-.bf.r{background:linear-gradient(90deg,#ff3b30,#ff6b6b);box-shadow:0 0 6px rgba(255,59,48,.3)}
-.hc .hn{font-size:9px;color:rgba(255,255,255,.3);text-align:right}
-#acts{display:grid;grid-template-columns:1fr 1fr;gap:5px;margin-bottom:4px}
-.ab{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:10px;color:rgba(255,255,255,.7);font-size:14px;font-weight:600;padding:10px 0;text-align:center;cursor:pointer;transition:all .1s;touch-action:none}
-.ab:active{transform:scale(.96);background:rgba(255,255,255,.1)}
-.ab.gp{background:linear-gradient(135deg,#f5d76e,#ff9500);color:#0c0c1d;border:none;box-shadow:0 2px 10px rgba(255,149,0,.2)}
-.ab.gs{background:linear-gradient(135deg,#4cd964,#34c759);color:#fff;border:none;box-shadow:0 2px 10px rgba(76,217,100,.2)}
-.ab.gd{background:linear-gradient(135deg,#ff3b30,#d62d20);color:#fff;border:none;box-shadow:0 2px 10px rgba(255,59,48,.2)}
-#msg{background:rgba(0,0,0,.4);border-radius:10px;padding:6px 10px;color:rgba(255,255,255,.6);font-size:13px;text-align:center;min-height:30px;backdrop-filter:blur(5px)}
+/* Header - Pet Name & Level */
+#header{display:flex;justify-content:space-between;align-items:center;padding:12px 16px 4px}
+#header .pn{font-size:18px;font-weight:700}
+#header .pl{font-size:12px;color:rgba(255,255,255,.4);font-weight:500}
+#header .exp{font-size:11px;color:rgba(255,255,255,.3);margin-left:auto;margin-right:8px}
+#header .coin{font-size:14px;font-weight:600;color:#f5d76e}
 
-/* ===== MODALS ===== */
+/* Pet Display */
+#petArea{flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
+#petArea::before{content:'';position:absolute;width:220px;height:220px;border-radius:50%;background:radial-gradient(circle,rgba(245,215,110,.04),transparent 70%);pointer-events:none}
+#petEmoji{font-size:100px;transition:all .3s;position:relative;filter:drop-shadow(0 10px 30px rgba(0,0,0,.3));cursor:pointer;-webkit-tap-highlight-color:transparent}
+#petEmoji:active{transform:scale(.95)}
+#petBg{position:absolute;bottom:0;left:0;right:0;height:60%;background:linear-gradient(0deg,rgba(245,215,110,.02),transparent);pointer-events:none}
+#petMood{position:absolute;top:18%;font-size:32px;animation:float 2s ease-in-out infinite}
+
+/* Stats */
+#stats{padding:0 14px 6px;display:flex;flex-direction:column;gap:4px}
+.stat{display:flex;align-items:center;gap:6px}
+.stat .icon{font-size:14px;width:20px;text-align:center}
+.stat .label{font-size:10px;color:rgba(255,255,255,.4);width:28px}
+.stat .barWrap{flex:1;height:5px;background:rgba(255,255,255,.06);border-radius:3px;overflow:hidden}
+.stat .bar{height:100%;border-radius:3px;transition:width .5s cubic-bezier(.4,0,.2,1)}
+.stat .val{font-size:10px;color:rgba(255,255,255,.3);width:24px;text-align:right}
+
+/* Actions */
+#actions{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:6px;padding:6px 12px 16px}
+.ac{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px 4px;text-align:center;cursor:pointer;transition:all .1s;touch-action:none}
+.ac:active{transform:scale(.93);background:rgba(255,255,255,.08)}
+.ac .ae{font-size:22px;display:block;margin-bottom:2px}
+.ac .an{font-size:11px;font-weight:600;color:rgba(255,255,255,.6)}
+.ac .acost{font-size:8px;color:rgba(255,255,255,.2);margin-top:1px}
+.ac.disabled{opacity:.3;pointer-events:none}
+
+/* ===== MODAL ===== */
 .md{display:none;position:absolute;inset:0;background:rgba(0,0,0,.6);z-index:20;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
-.md>div{background:linear-gradient(180deg,rgba(40,40,70,.98),rgba(25,25,50,.98));border-radius:20px;padding:24px;text-align:center;width:85%;max-width:310px;border:1px solid rgba(255,255,255,.06);box-shadow:0 20px 60px rgba(0,0,0,.5)}
-.md h3{font-size:18px;font-weight:700;margin-bottom:8px}
-.md p{color:rgba(255,255,255,.5);font-size:13px;line-height:1.6;margin-bottom:16px;white-space:pre-wrap}
-.md .mb{background:linear-gradient(135deg,#f5d76e,#ff9500);border:none;border-radius:12px;color:#0c0c1d;font-size:15px;font-weight:700;padding:12px 32px;cursor:pointer;width:100%;box-shadow:0 2px 0 #b87200}
+.md>div{background:linear-gradient(180deg,rgba(40,40,70,.98),rgba(25,25,50,.98));border-radius:20px;padding:24px;text-align:center;width:85%;max-width:290px;border:1px solid rgba(255,255,255,.06)}
+.md h3{font-size:18px;font-weight:700;margin-bottom:4px}
+.md .mdEmoji{font-size:48px;display:block;margin-bottom:8px}
+.md p{color:rgba(255,255,255,.5);font-size:13px;line-height:1.5;margin-bottom:16px}
+.md .mb{background:linear-gradient(135deg,#f5d76e,#ff9500);border:none;border-radius:12px;color:#0c0c1d;font-size:15px;font-weight:700;padding:12px 32px;cursor:pointer;width:100%}
 .md .mb:active{transform:translateY(2px)}
 
-/* ===== ANIMATIONS ===== */
-.lv{display:none;position:absolute;inset:0;z-index:30;align-items:center;justify-content:center;pointer-events:none}
-.lv span{font-size:34px;font-weight:800;color:#ffd700;text-shadow:0 0 40px rgba(255,215,0,.5);animation:lva 1.3s cubic-bezier(.4,0,.2,1) forwards}
-@keyframes lva{0%{transform:scale(2);opacity:0}35%{transform:scale(1);opacity:1}70%{opacity:1}100%{opacity:0;transform:translateY(-25px) scale(.85)}}
-.ev{display:none;position:absolute;inset:0;z-index:40;background:radial-gradient(circle,rgba(255,255,255,.12),transparent 60%);align-items:center;justify-content:center;flex-direction:column;gap:6px}
-.ev span{font-size:30px;font-weight:800;color:#fff;text-shadow:0 0 30px rgba(255,255,255,.4);animation:eva 2.2s cubic-bezier(.4,0,.2,1) forwards}
-.ev em{font-size:13px;color:#ffd700;font-weight:600;opacity:0;animation:evb 1s .9s forwards}
-@keyframes eva{0%{transform:scale(3) rotate(-8deg);opacity:0}25%{transform:scale(1) rotate(0);opacity:1}50%{transform:scale(1.08)}70%{opacity:1}100%{opacity:0}}
-@keyframes evb{to{opacity:1}}
-#bagList{max-height:50vh;overflow-y:auto;text-align:left;-webkit-overflow-scrolling:touch}
-#bagList .it{display:flex;align-items:center;padding:8px 4px;border-bottom:1px solid rgba(255,255,255,.04);gap:6px}
-#bagList .it.a{background:rgba(245,215,110,.06);border-radius:8px}
-#bagList .it .e{font-size:24px;width:36px;text-align:center}
-#bagList .it .n{font-size:13px;font-weight:600}.it .n .star{color:#f5d76e}
-#bagList .it .d{font-size:10px;color:rgba(255,255,255,.3)}
-#bagList .it .tg{font-size:10px;background:rgba(255,255,255,.06);padding:2px 8px;border-radius:8px;color:rgba(255,255,255,.4);margin-left:auto;flex-shrink:0}
-#bagList .it .sw{background:rgba(255,255,255,.08);border:none;color:#fff;font-size:11px;font-weight:600;padding:5px 12px;border-radius:8px;cursor:pointer;flex-shrink:0}
+/* Toast */
+#toast{position:absolute;top:60%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.7);backdrop-filter:blur(8px);border-radius:14px;padding:10px 20px;color:#fff;font-size:14px;font-weight:600;opacity:0;transition:opacity .3s;pointer-events:none;z-index:15;white-space:nowrap}
+#toast.show{opacity:1}
+
+/* Animations */
+@keyframes float{0%,100%{transform:translateY(0)}50%{transform:translateY(-8px)}}
+@keyframes pop{0%{transform:scale(.5);opacity:0}60%{transform:scale(1.1)}100%{transform:scale(1);opacity:1}}
+@keyframes shake{0%,100%{transform:translateX(0)}25%{transform:translateX(-8px)}50%{transform:translateX(8px)}75%{transform:translateX(-4px)}}
+
+/* Level up overlay */
+.lv{display:none;position:absolute;inset:0;z-index:30;align-items:center;justify-content:center;pointer-events:none;flex-direction:column;gap:8px}
+.lv span{font-size:42px;font-weight:800;color:#ffd700;text-shadow:0 0 40px rgba(255,215,0,.5);animation:lva 1.5s forwards}
+@keyframes lva{0%{transform:scale(3);opacity:0}30%{transform:scale(1);opacity:1}70%{opacity:1}100%{opacity:0;transform:translateY(-30px)}}
+.lv em{font-size:14px;color:#fff;opacity:0;animation:lvb 1s .5s forwards}
+@keyframes lvb{to{opacity:1}}
 </style>
-</head><body>
+</head>
+<body>
 <div id="app">
 
+<!-- Title -->
 <div id="title">
-  <h1>寵物世界</h1>
-  <div class="sub">PET WORLD</div>
+  <h1>寵物樂園</h1>
+  <div class="sub">揀你嘅寵物夥伴</div>
   <div class="pick" id="pickRow"></div>
-  <button class="go" id="goBtn" disabled>出發冒險！</button>
+  <button class="go" id="goBtn" disabled>開始飼養！</button>
 </div>
 
+<!-- Game -->
 <div id="game">
-  <canvas id="gCan"></canvas>
-  <div id="ctrl">
-    <div class="dpad"><div class="db" id="u">▲</div><div class="db" id="l">◀</div><div class="db" id="d">▼</div><div class="db" id="r">▶</div></div>
-    <button class="bag-btn" id="bagBtn">🎒 寵物</button>
+  <div id="header">
+    <span class="pn" id="petName">🐱 小貓</span>
+    <span class="pl" id="petLv">Lv.1</span>
+    <span class="exp" id="petExp">EXP 0/10</span>
+    <span class="coin" id="petCoin">🪙 0</span>
+  </div>
+  
+  <div id="petArea">
+    <div id="petMood"></div>
+    <span id="petEmoji">🐱</span>
+  </div>
+  
+  <div id="stats">
+    <div class="stat"><span class="icon">🍖</span><span class="label">飽肚</span><div class="barWrap"><div class="bar" id="hungerBar" style="width:80%;background:linear-gradient(90deg,#e17055,#fdcb6e)"></div></div><span class="val" id="hungerVal">80</span></div>
+    <div class="stat"><span class="icon">😊</span><span class="label">開心</span><div class="barWrap"><div class="bar" id="happyBar" style="width:80%;background:linear-gradient(90deg,#fdcb6e,#f5d76e)"></div></div><span class="val" id="happyVal">80</span></div>
+    <div class="stat"><span class="icon">⚡</span><span class="label">活力</span><div class="barWrap"><div class="bar" id="energyBar" style="width:80%;background:linear-gradient(90deg,#74b9ff,#81ecec)"></div></div><span class="val" id="energyVal">80</span></div>
+    <div class="stat"><span class="icon">🧹</span><span class="label">清潔</span><div class="barWrap"><div class="bar" id="cleanBar" style="width:80%;background:linear-gradient(90deg,#a29bfe,#6c5ce7)"></div></div><span class="val" id="cleanVal">80</span></div>
+  </div>
+  
+  <div id="actions">
+    <div class="ac" id="btnFeed"><span class="ae">🍖</span><span class="an">餵食</span><span class="acost">$5</span></div>
+    <div class="ac" id="btnPlay"><span class="ae">🎾</span><span class="an">玩耍</span><span class="acost">$0</span></div>
+    <div class="ac" id="btnSleep"><span class="ae">😴</span><span class="an">休息</span><span class="acost">$0</span></div>
+    <div class="ac" id="btnClean"><span class="ae">🛁</span><span class="an">清潔</span><span class="acost">$10</span></div>
   </div>
 </div>
 
-<div id="btl">
-  <canvas id="bCan"></canvas>
-  <div id="bUI">
-    <div id="hud">
-      <div class="hc"><div class="t"><span class="pn" id="myN"></span><span class="lv" id="myL"></span></div><div class="bw"><div class="bf g" id="myB"></div></div><div class="hn" id="myH"></div></div>
-      <div class="hc"><div class="t"><span class="pn" id="enN"></span><span class="lv" id="enL"></span></div><div class="bw"><div class="bf g" id="enB"></div></div><div class="hn" id="enH"></div></div>
-    </div>
-    <div id="acts"></div>
-    <div id="msg">⏳ 準備冒險...</div>
-  </div>
-</div>
-
-<div class="md" id="mdM"><div><h3 id="mdT"></h3><p id="mdX"></p><button class="mb" id="mdB">確定</button></div></div>
-<div class="lv" id="lvD"><span id="lvT"></span></div>
-<div class="ev" id="evD"><span id="evT"></span><em id="evS"></em></div>
-<div class="md" id="mdBag"><div style="text-align:left"><h3 style="text-align:center;margin-bottom:12px">🎒 寵物隊伍</h3><div id="bagList"></div><button class="mb" id="bagClose" style="margin-top:12px">關閉</button></div></div>
+<!-- Modals -->
+<div class="md" id="mdM"><div><span class="mdEmoji" id="mdEmoji">🐱</span><h3 id="mdT"></h3><p id="mdX"></p><button class="mb" id="mdB">好嘅！</button></div></div>
+<div class="lv" id="lvD"><span id="lvT">🌟 Lv.UP!</span><em id="lvS">新技能解鎖！</em></div>
+<div id="toast">🍖 餵食完畢！</div>
 
 </div>
 <script>
-"use strict";
-(()=>{
+"use strict";(()=>{
 
-// ===== CONST =====
-const EMJ = {Fire:'🔥',Water:'💧',Grass:'🌿',Normal:'🐤',Flying:'🦇',Psychic:'🥚',Earth:'🐹',Fire2:'🔥',Water2:'💧',Grass2:'🌿'};
-const ST = [['fire','火火','Fire','🔥'],['water','水水','Water','💧'],['grass','草草','Grass','🌿']];
-const TC = {Fire:{Water:.5,Grass:2,Normal:1,Flying:1.5,Psychic:1,Earth:.5,Fire:.5},Water:{Fire:2,Grass:.5,Normal:1,Flying:1,Psychic:1,Earth:1.5},Grass:{Fire:.5,Water:2,Normal:1,Flying:.5,Psychic:1,Earth:1.5},Normal:{Fire:1,Water:1,Grass:1,Flying:1,Psychic:.5,Earth:1},Flying:{Fire:1,Water:1,Grass:1.5,Normal:1,Flying:1,Psychic:1,Earth:.5},Psychic:{Fire:1,Water:1,Grass:1,Normal:1.5,Flying:1,Psychic:.5,Earth:1},Earth:{Fire:1.5,Water:1,Grass:.5,Normal:1,Flying:.5,Psychic:1,Earth:1}};
-const EV = {fire:{n:'炎獸',h:200,a:28,d:18},water:{n:'海獸',h:200,a:22,d:24},grass:{n:'森獸',h:200,a:26,d:20}};
-const WD = [{id:'bird',n:'比比',e:'Normal',h:80,a:10,d:8},{id:'bat',n:'蝙蝠',e:'Flying',h:70,a:12,d:6},{id:'egg',n:'蛋蛋',e:'Psychic',h:90,a:11,d:9},{id:'fox',n:'狐狐',e:'Fire',h:85,a:14,d:7,r:1},{id:'jelly',n:'水母',e:'Water',h:95,a:10,d:10,r:1}];
-const M = [[2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3],[2,1,1,1,1,1,1,1,2,2,2,2,2,3,3,3,3,3,3,3],[2,1,0,0,0,0,0,1,1,1,1,1,1,1,3,3,3,3,3,3],[2,1,0,0,0,0,0,1,0,0,0,1,0,1,3,3,3,3,3,3],[2,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,3,3,3],[2,2,2,2,2,2,2,1,0,0,0,1,0,0,0,0,1,3,3,3],[2,2,2,2,2,2,2,1,0,0,0,1,0,0,0,0,1,1,1,1],[2,2,2,2,2,2,2,1,0,0,0,1,0,0,0,0,0,0,0,1],[2,4,4,4,4,4,2,1,1,1,2,1,1,1,1,1,0,0,0,1],[2,4,5,6,5,4,2,2,2,1,2,2,2,2,1,1,0,0,0,1],[2,4,5,5,5,4,2,2,2,1,2,2,2,2,1,0,0,0,0,1],[2,4,4,4,4,4,2,2,2,1,2,2,2,2,1,1,0,0,0,1],[2,2,2,2,2,2,2,2,2,1,2,2,2,2,1,1,1,1,1,1],[2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,0,0,0,0,1],[2,2,2,2,2,2,2,2,2,2,2,2,2,1,0,0,0,0,0,1],[2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1]];
+const PETS = [
+  {e:'🐱',n:'小貓',c1:'#fdcb6e',c2:'#e17055'},
+  {e:'🐶',n:'小狗',c1:'#74b9ff',c2:'#0984e3'},
+  {e:'🐰',n:'兔兔',c1:'#fd79a8',c2:'#e84393'},
+  {e:'🐹',n:'倉鼠',c1:'#f5d76e',c2:'#f39c12'},
+  {e:'🐦',n:'小鳥',c1:'#55efc4',c2:'#00b894'},
+  {e:'🐢',n:'烏龜',c1:'#81ecec',c2:'#00cec9'}
+];
+
+const MOODS = {
+  happy:[{e:'😊',t:'好開心！'},{e:'😄',t:'心情好好！'},{e:'🥰',t:'好幸福！'}],
+  normal:[{e:'😐',t:'冇咩特別'},{e:'🙂',t:'都OK'},{e:'👀',t:'望住你'}],
+  sad:[{e:'😢',t:'唔開心...'},{e:'😞',t:'好悶...'},{e:'😔',t:'肚餓...'}],
+  sick:[{e:'🤒',t:'唔舒服...'},{e:'😷',t:'病咗...'},{e:'💔',t:'好難受...'}]
+};
+
+const ACTIONS = {
+  feed:{stat:'h',val:25,cost:5,msg:['好味好味！🍖','食飽飽啦！😋','Yummy yummy！']},
+  play:{stat:'p',val:20,cost:0,energy:-15,msg:['玩得好開心！🎾','跳嚟跳去！🐾','好過癮！🤪']},
+  sleep:{stat:'e',val:35,cost:0,msg:['zzz... 好精神！😴','叉足電！⚡','醒咗好精神！']},
+  clean:{stat:'c',val:30,cost:10,msg:['洗白白！🛁','好乾淨！✨','香噴噴！🌸']}
+};
 
 // ===== STATE =====
-const S = {px:10,py:8,pts:[],idx:0,sel:-1,tic:0,btl:false,w:null,bs:'i',mv:0};
+// Stats: h=hunger, p=happy, e=energy, c=clean
+const S = {
+  petIdx:0, lv:1, exp:0, coin:50,
+  h:80, p:80, e:80, c:80,
+  t:0, // game ticks
+  toast:null,
+  started:false
+};
 
-// ===== CANVAS =====
-let ts=24;
-function sz(){
-  const w=Math.min(document.getElementById('app').clientWidth||window.innerWidth,460);
-  const gc=document.getElementById('gCan'),bc=document.getElementById('bCan');
-  gc.width=w;gc.height=window.innerHeight-78;ts=gc.width/16;
-  bc.width=w;bc.height=window.innerHeight-173;
-}
-
-// ===== TITLE =====
+// ===== INIT =====
 function init(){
   const row=document.getElementById('pickRow');
-  ST.forEach((s,i)=>{
-    const d=document.createElement('div');d.className='card';d.dataset.i=i;
-    d.innerHTML='<span class="emoji">'+s[3]+'</span><div class="nm">'+s[1]+'</div><div class="el">'+s[2]+'</div>';
-    d.addEventListener('click',e=>pick(i));
+  PETS.forEach((p,i)=>{
+    const d=document.createElement('div');d.className='card';
+    d.innerHTML='<span class="e">'+p.e+'</span><div class="n">'+p.n+'</div>';
+    d.addEventListener('click',()=>pick(i));
     row.appendChild(d);
   });
-  document.getElementById('goBtn').addEventListener('click',go);
-  document.getElementById('mdB').addEventListener('click',()=>{$md().style.display='none';});
-  document.getElementById('bagClose').addEventListener('click',()=>{document.getElementById('mdBag').style.display='none';});
-  document.getElementById('bagBtn').addEventListener('click',openBag);
-  ['u','l','d','r'].forEach(id=>{
-    const el=document.getElementById(id);
-    const d={u:[0,-1],l:[-1,0],d:[0,1],r:[1,0]}[id];
-    el.addEventListener('mousedown',()=>mv(d[0],d[1]));
-    el.addEventListener('touchstart',e=>{e.preventDefault();mv(d[0],d[1]);});
-  });
-  document.addEventListener('keydown',e=>{if(S.btl||!e.key.startsWith('Arrow'))return;e.preventDefault();const d={ArrowUp:[0,-1],ArrowDown:[0,1],ArrowLeft:[-1,0],ArrowRight:[1,0]}[e.key];mv(d[0],d[1]);});
-  document.getElementById('mdM').addEventListener('click',()=>{$md().style.display='none';});
+  document.getElementById('goBtn').addEventListener('click',start);
+  
+  // Action buttons
+  document.getElementById('btnFeed').addEventListener('click',()=>doAct('feed'));
+  document.getElementById('btnPlay').addEventListener('click',()=>doAct('play'));
+  document.getElementById('btnSleep').addEventListener('click',()=>doAct('sleep'));
+  document.getElementById('btnClean').addEventListener('click',()=>doAct('clean'));
+  
+  // Pet tap
+  document.getElementById('petEmoji').addEventListener('click',petTap);
+  
+  // Modal
+  document.getElementById('mdB').addEventListener('click',()=>{document.getElementById('mdM').style.display='none';});
+  document.getElementById('mdM').addEventListener('click',()=>{document.getElementById('mdM').style.display='none';});
 }
 
 function pick(i){
-  if(S.sel>=0)document.querySelectorAll('.card')[S.sel].classList.remove('sel');
-  S.sel=i;document.querySelectorAll('.card')[i].classList.add('sel');
+  document.querySelectorAll('.card').forEach((c,j)=>c.classList.toggle('sel',j===i));
+  S.petIdx=i;
   document.getElementById('goBtn').disabled=false;
 }
-function go(){
-  const s=ST[S.sel];const ev=EV[s[0]];
-  S.pts=[{id:s[0],n:s[1],el:s[2],lv:1,h:120,m:120,a:15,d:10,x:0,elv:16,ed:false}];
-  S.idx=0;
+
+function start(){
+  const p=PETS[S.petIdx];
+  S.started=true;
   document.getElementById('title').style.display='none';
   document.getElementById('game').style.display='flex';
-  sz();r();
-  setTimeout(()=>{md('🎮 冒險開始','你揀咗 '+s[3]+' '+s[1]+' 做夥伴！\n\n行草叢可以遇見野生寵物\n打羸會升呢，打傷可以捕捉\nLv.16 就會進化！\n\n去冒險啦，訓練員！🌟');},500);
+  updateUI();
+  toast('👋 你好！我係 '+p.e+' '+p.n+'！');
+  
+  setTimeout(()=>{
+    md(p.e,'你好！','我係 '+p.n+'，以後請多多指教！\n\n記得定时餵我食嘢\n同我玩、俾我休息\n仲要幫我沖涼！');
+  },600);
 }
 
-// ===== MAP =====
-function r(){
-  const cv=document.getElementById('gCan'),cx=cv.getContext('2d');
-  const w=cv.width,h=cv.height,ox=w/2,oy=h/2;
-  cx.clearRect(0,0,w,h);
-  for(let rr=0;rr<16;rr++)for(let cc=0;cc<20;cc++){
-    const t=M[rr][cc],sx=cc*ts-S.px*ts+ox,sy=rr*ts-S.py*ts+oy;
-    if(sx+ts<-ts||sx>w||sy+ts<-ts||sy>h)continue;
-    if(t===0){cx.fillStyle=(rr*7+cc*13)%3?'#5a8f3c':'#4a7f2c';cx.fillRect(sx,sy,ts,ts);if((rr*7+cc*13)%9===0){cx.fillStyle='#f39c12';cx.beginPath();cx.arc(sx+5+Math.sin(rr)*4,sy+5+Math.cos(cc)*4,2,0,7);cx.fill();}}
-    else if(t===1){cx.fillStyle='#c8b078';cx.fillRect(sx,sy,ts,ts);cx.fillStyle='#b8a068';cx.fillRect(sx,sy,ts,1);cx.fillRect(sx,sy,1,ts);}
-    else if(t===2){cx.fillStyle='#2d5a1e';cx.fillRect(sx,sy,ts,ts);cx.fillStyle='#1d4a0e';cx.beginPath();cx.arc(sx+ts/2,sy+ts/2-3,ts/2.2,0,7);cx.fill();cx.fillStyle='#3a7a2a';cx.beginPath();cx.arc(sx+ts/2-5,sy+ts/2-6,ts/3,0,7);cx.fill();}
-    else if(t===3){cx.fillStyle='#3a7bc8';cx.fillRect(sx,sy,ts,ts);cx.fillStyle='rgba(255,255,255,.06)';cx.fillRect(sx+4,sy+ts/2-1+Math.sin(S.tic*.03+rr)*2,ts-8,2);}
-    else if(t===4){cx.fillStyle='#8a7a5a';cx.fillRect(sx,sy,ts,ts);cx.fillStyle='#7a6a4a';cx.fillRect(sx+2,sy,ts-4,2);cx.fillRect(sx+2,sy+ts-2,ts-4,2);for(let i=0;i<4;i++)cx.fillRect(sx+4+i*5,sy+2,2,ts-4);}
-    else if(t===5){cx.fillStyle='#7a6a4a';cx.fillRect(sx,sy,ts,ts);cx.fillStyle='#5a3a1a';cx.fillRect(sx-2,sy-4,ts+4,4);}
-    else if(t===6){cx.fillStyle='#5a3a2a';cx.fillRect(sx,sy,ts,ts);cx.fillStyle='#7a5a3a';cx.fillRect(sx+4,sy+4,ts-8,ts-4);cx.fillStyle='#f5d76e';cx.fillRect(sx+ts-10,sy+ts/2-2,3,3);}
+// ===== UI UPDATE =====
+function updateUI(){
+  const p=PETS[S.petIdx];
+  document.getElementById('petName').textContent=p.e+' '+p.n;
+  document.getElementById('petLv').textContent='Lv.'+S.lv;
+  const need=S.lv*10;
+  document.getElementById('petExp').textContent='EXP '+S.exp+'/'+need;
+  document.getElementById('petCoin').textContent='🪙 '+S.coin;
+  
+  // Stats
+  setBar('hunger',S.h);
+  setBar('happy',S.p);
+  setBar('energy',S.e);
+  setBar('clean',S.c);
+  
+  // Mood
+  const mood=getMood();
+  const moodInfo=MOODS[mood];
+  const m=moodInfo[~~(Math.random()*moodInfo.length)];
+  document.getElementById('petMood').textContent=m.e;
+  document.getElementById('petMood').title=m.t;
+  
+  // Pet emoji animation
+  const el=document.getElementById('petEmoji');
+  el.textContent=p.e;
+  if(mood==='sick'||mood==='sad')el.style.animation='shake .5s';
+  else el.style.animation='';
+}
+
+function setBar(id,val){
+  document.getElementById(id+'Bar').style.width=val+'%';
+  document.getElementById(id+'Val').textContent=val;
+}
+
+function getMood(){
+  const avg=(S.h+S.p+S.e+S.c)/4;
+  if(S.h<15||S.p<15)return 'sick';
+  if(S.h<30||S.p<30)return 'sad';
+  if(avg>70)return 'happy';
+  return 'normal';
+}
+
+// ===== ACTIONS =====
+function doAct(type){
+  const a=ACTIONS[type];
+  const p=PETS[S.petIdx];
+  
+  // Check cost
+  if(S.coin<a.cost){toast('🪙 唔夠錢... 同寵物玩可以賺錢！');return;}
+  
+  // Check stat caps
+  const statKey={feed:'h',play:'p',sleep:'e',clean:'c'}[type];
+  const curVal=S[statKey];
+  if(curVal>=100){toast('💯 已經滿晒啦！');return;}
+  
+  // Apply
+  S.coin-=a.cost;
+  S[statKey]=Math.min(100,S[statKey]+a.val);
+  
+  // Energy cost for playing
+  if(a.energy)S.e=Math.max(0,S.e+a.energy);
+  
+  // Play gives coins
+  if(type==='play'){
+    const earn=5+~~(Math.random()*6);
+    S.coin+=earn;
   }
-  // Player
-  const b=Math.sin(S.tic*.08)*1.5;
-  cx.fillStyle='rgba(0,0,0,.1)';cx.beginPath();cx.ellipse(ox,oy+ts-4,ts/3,3,0,0,7);cx.fill();
-  cx.fillStyle='#4a7ae8';cx.fillRect(ox-ts/3,oy-ts/4+b,ts/1.5,ts/2.2);
-  cx.fillStyle='#3a5ab8';cx.fillRect(ox-ts/4,oy+ts/4+b,ts/5,ts/3);cx.fillRect(ox+ts/10,oy+ts/4+b,ts/5,ts/3);
-  cx.fillStyle='#f0c8a0';cx.beginPath();cx.arc(ox,oy-ts/2+b,ts/4.5,0,7);cx.fill();
-  cx.fillStyle='#e74c3c';cx.fillRect(ox-ts/4,oy-ts/1.8+b-2,ts/2,ts/7);cx.fillRect(ox-ts/5,oy-ts/2.5+b-4,ts/2.5,ts/6);
-  cx.fillStyle='#222';cx.fillRect(ox-5,oy-ts/2-2+b,3,3);cx.fillRect(ox+2,oy-ts/2-2+b,3,3);
-  // Partner badge
-  if(S.pts.length){cx.fillStyle='rgba(0,0,0,.5)';cx.beginPath();const R=8;cx.roundRect?cx.roundRect(ox-48,oy-ts*1.5-6,96,22,R):cx.fillRect(ox-48,oy-ts*1.5-6,96,22);cx.fill();
-  cx.fillStyle='#fff';cx.font='12px sans-serif';cx.textAlign='center';cx.fillText(S.pts[S.idx].n+' Lv.'+S.pts[S.idx].lv,ox,oy-ts*1.5+5);}
-}
-
-// ===== MOVE =====
-function mv(dx,dy){
-  if(S.btl||S.mv>0)return;
-  const nx=S.px+dx,ny=S.py+dy;
-  if(nx<0||nx>=20||ny<0||ny>=16)return;
-  const t=M[ny][nx];if(t===2||t===3||t===4||t===5)return;
-  S.px=nx;S.py=ny;S.mv=1;setTimeout(()=>{S.mv=0;},140);
-  if(t===0&&Math.random()<.15){btlStart();return;}
-  r();
-}
-
-// ===== BATTLE =====
-function btlStart(){
-  S.btl=1;S.bs='m';
-  const w=[...WD][~~(Math.random()*WD.length)];
-  const p=S.pts[S.idx];const lv=Math.max(1,p.lv-2+~~(Math.random()*4));const lm=1+(lv-1)*.12;
-  S.w={id:w.id,n:w.n,e:w.e,lv,h:~~(w.h*lm),m:~~(w.h*lm),a:~~(w.a*lm),d:~~(w.d*lm)};
-  document.getElementById('game').style.display='none';
-  document.getElementById('btl').style.display='flex';sz();
-  uB();bB();sm('⚡ 野生 '+S.w.n+' 出現咗！');
-}
-function uB(){
-  const p=S.pts[S.idx],w=S.w;
-  document.getElementById('myN').textContent=(EMJ[p.el]||'?')+' '+p.n;
-  document.getElementById('myL').textContent='Lv.'+p.lv;
-  const mp=p.h/p.m*100;const mb=document.getElementById('myB');mb.style.width=mp+'%';mb.className='bf '+(mp<25?'r':mp<50?'y':'g');
-  document.getElementById('myH').textContent=Math.ceil(p.h)+'/'+p.m;
-  document.getElementById('enN').textContent=w.n;document.getElementById('enL').textContent='Lv.'+w.lv;
-  const ep=w.h/w.m*100;const eb=document.getElementById('enB');eb.style.width=ep+'%';eb.className='bf '+(ep<25?'r':ep<50?'y':'g');
-  document.getElementById('enH').textContent=Math.ceil(w.h)+'/'+w.m;
-}
-function bB(){document.getElementById('acts').innerHTML='<button class="ab gp">⚔️ 攻擊</button><button class="ab gs">⚡ 捕捉</button><button class="ab gd">🏃 逃走</button><button class="ab">🎒 換寵</button>';
-  const c=document.getElementById('acts').children;c[0].onclick=bA;c[1].onclick=bC;c[2].onclick=bR;c[3].onclick=bBag;
-}
-let _bl=0;
-function sm(m){document.getElementById('msg').textContent=m;}
-function bA(){
-  if(S.bs==='m'||_bl)return;_bl=1;S.bs='m';
-  const p=S.pts[S.idx],w=S.w;
-  let ml=1;if(TC[p.el]&&TC[p.el][w.e])ml=TC[p.el][w.e];
-  const d=Math.max(1,~~(p.a*12/w.d*(.85+Math.random()*.3)*ml));
-  w.h=Math.max(0,w.h-d);
-  sm(p.n+' 攻擊！-'+d+(ml>1.5?' 💥':ml<.8?' 💨':''));
-  uB();
-  if(w.h<=0){setTimeout(()=>{bW();_bl=0},700);return;}
-  setTimeout(()=>{eT();_bl=0},900);
-}
-function eT(){
-  const p=S.pts[S.idx],w=S.w;
-  let ml=1;if(TC[w.e]&&TC[w.e][p.el])ml=TC[w.e][p.el];
-  const d=Math.max(1,~~(w.a*10/p.d*(.85+Math.random()*.3)*ml));
-  p.h=Math.max(0,p.h-d);
-  sm(w.n+' 反擊！-'+d+(ml>1.5?' 💥':''));
-  uB();
-  if(p.h<=0){setTimeout(bl,700);return;}
-  S.bs='i';setTimeout(()=>{sm('輪到你！');bB();},700);
-}
-function bW(){
-  const p=S.pts[S.idx],w=S.w;
-  p.x=(p.x||0)+15+w.lv*3;
-  if(p.x>=(p.lv*10)){p.x-=p.lv*10;p.lv++;p.a=~~(p.a*1.1)+1;p.d=~~(p.d*1.08)+1;p.m=~~(p.m*1.08)+5;p.h=p.m;
-    document.getElementById('lvT').textContent='🌟 '+p.n+'\nLv.'+p.lv+'!';document.getElementById('lvD').style.display='flex';setTimeout(()=>{document.getElementById('lvD').style.display='none';},1200);
-    if(p.elv&&p.lv>=p.elv&&!p.ed)setTimeout(()=>{evl(p);},1400);
+  
+  // EXP gain
+  const expGain=3+~~(Math.random()*3);
+  S.exp+=expGain;
+  
+  // Level up check
+  const need=S.lv*10;
+  if(S.exp>=need){
+    S.exp-=need;
+    S.lv++;
+    // Heal a bit on level up
+    S.h=Math.min(100,S.h+10);
+    S.p=Math.min(100,S.p+10);
+    S.e=Math.min(100,S.e+10);
+    S.c=Math.min(100,S.c+10);
+    S.coin+=30;
+    setTimeout(()=>{
+      document.getElementById('lvT').textContent='🌟 Lv.'+S.lv+'!';
+      document.getElementById('lvS').textContent=p.n+' 成長咗！';
+      document.getElementById('lvD').style.display='flex';
+      setTimeout(()=>{document.getElementById('lvD').style.display='none';},2000);
+    },300);
   }
-  sm('🎉 勝利！');setTimeout(endB,1800);
+  
+  // Random message
+  const msg=a.msg[~~(Math.random()*a.msg.length)];
+  toast(msg);
+  updateUI();
 }
-function evl(p){
-  const ev=EV[p.id];if(!ev||p.ed)return;
-  document.getElementById('evT').textContent=p.n;document.getElementById('evS').textContent='進化 → '+ev.n+'！';
-  document.getElementById('evD').style.display='flex';
-  setTimeout(()=>{p.n=ev.n;p.m=ev.h;p.h=ev.h;p.a=ev.a;p.d=ev.d;p.ed=1;document.getElementById('evD').style.display='none';uB();sm('🌟 '+p.n+' 進化完成！');},2500);
-}
-function bl(){sm('💀 失去戰鬥能力...');document.getElementById('acts').innerHTML='<button class="ab gp" style="grid-column:1/3">返回起點</button>';document.getElementById('acts').children[0].onclick=()=>{S.pts.forEach(p=>p.h=p.m);S.px=10;S.py=8;endB();};}
-function bC(){
-  if(S.bs==='m'||_bl)return;_bl=1;S.bs='m';
-  const w=S.w;
-  if(S.pts.length>=6){sm('隊伍已滿！');S.bs='i';_bl=0;setTimeout(bB,700);return;}
-  if(Math.random()<.25+(1-w.h/w.m)*.5-(w.r?.3:0)){
-    S.pts.push({id:w.id+'_'+Math.random(),n:w.n,e:w.e,lv:w.lv,h:w.m,m:w.m,a:w.a,d:w.d,x:0,elv:null,ed:0});
-    sm('🎉 成功捕捉 '+w.n+'！');setTimeout(()=>{_bl=0;endB();},1200);
-  }else{sm(w.n+' 掙脫了！');_bl=0;setTimeout(eT,800);}
-}
-function bR(){
-  if(S.bs==='m'||_bl)return;_bl=1;S.bs='m';
-  if(Math.random()<.55){sm('成功逃走！💨');setTimeout(()=>{_bl=0;endB();},700);}
-  else{sm('逃唔到！😰');_bl=0;setTimeout(eT,700);}
-}
-function bBag(){
-  const bm=document.getElementById('mdBag');const bl=document.getElementById('bagList');
-  if(!S.pts.length)bl.innerHTML='<div style="color:rgba(255,255,255,.3);padding:20px;text-align:center">暫冇寵物</div>';
-  else bl.innerHTML=S.pts.map((x,i)=>{
-    const a=i===S.idx,e=x.el||'Normal';
-    return '<div class="it'+(a?' a':'')+'"><span class="e">'+(EMJ[e]||'?')+'</span><div style="flex:1"><div class="n">'+x.n+(a?' <span class="star">⭐</span>':'')+'</div><div class="d">Lv.'+x.lv+' | '+Math.ceil(x.h)+'/'+x.m+' HP</div></div><span class="tg">'+e+'</span>'+(a?'':'<button class="sw" onclick="swBtl('+i+')">換出</button>')+'</div>';
-  }).join('');
-  bm.style.display='flex';
-}
-function endB(){S.btl=0;document.getElementById('btl').style.display='none';document.getElementById('game').style.display='flex';sz();r();}
 
-// ===== BATTLE CANVAS =====
-function bRnd(){
-  const cv=document.getElementById('bCan'),cx=cv.getContext('2d');
-  const w=cv.width,h=cv.height;
-  cx.clearRect(0,0,w,h);
-  const sg=cx.createLinearGradient(0,0,0,h);sg.addColorStop(0,'#1a2a5a');sg.addColorStop(.35,'#2a4a3a');sg.addColorStop(1,'#1a2a1a');cx.fillStyle=sg;cx.fillRect(0,0,w,h);
-  // Stars
-  cx.fillStyle='rgba(255,255,255,.04)';
-  for(let i=0;i<8;i++){const sx=(i*137+w/2*Math.sin(i))%w,sy=(i*89+h/3*Math.cos(i*2))%(h/2);cx.beginPath();cx.arc(sx,sy,1+Math.sin(S.tic*.02+i)*.5,0,7);cx.fill();}
-  // Ground
-  cx.fillStyle='#2a5a2a';cx.beginPath();cx.moveTo(0,h-30);for(let i=0;i<=w;i+=4)cx.lineTo(i,h-30+Math.sin(i*.04+S.tic*.02)*3);cx.lineTo(w,h);cx.lineTo(0,h);cx.fill();
-  cx.fillStyle='#1a4a1a';cx.fillRect(0,h-33,w,4);
-  // Grass tufts
-  for(let i=0;i<w;i+=7){const gh=5+Math.sin(i*.2+S.tic*.03)*3;cx.fillStyle=i%3?'#3a6a3a':'#2a5a2a';cx.fillRect(i,h-33-gh,2,gh);}
-  // Wild creature (large emoji)
-  if(S.w){const s=S.w.id==='bird'?'🐤':S.w.id==='bat'?'🦇':S.w.id==='egg'?'🥚':S.w.id==='fox'?'🦊':S.w.id==='jelly'?'🪼':'🐤';
-    const sy2=h-75+Math.sin(S.tic*.03)*3;
-    cx.save();cx.font='70px sans-serif';cx.textAlign='center';cx.textBaseline='middle';cx.fillText(s,w*.72,sy2);cx.restore();
-    cx.fillStyle='rgba(0,0,0,.3)';cx.beginPath();cx.ellipse(w*.72,h-40+Math.sin(S.tic*.03)*3,28,6,0,0,7);cx.fill();
-  }
-  // Player creature (large emoji)
-  if(S.pts.length){const p=S.pts[S.idx];const e=EMJ[p.el]||'🔥';const sy2=h-65+Math.sin(S.tic*.03+2)*3;
-    cx.save();cx.font='56px sans-serif';cx.textAlign='center';cx.textBaseline='middle';cx.fillText(e,w*.28,sy2);cx.restore();
-    cx.fillStyle='rgba(0,0,0,.3)';cx.beginPath();cx.ellipse(w*.28,h-40+Math.sin(S.tic*.03+2)*3,22,5,0,0,7);cx.fill();
+function petTap(){
+  // Pet pet animation
+  const el=document.getElementById('petEmoji');
+  el.style.transform='scale(1.2)';
+  setTimeout(()=>{el.style.transform='scale(1)';},200);
+  
+  // Small happiness and coin
+  S.p=Math.min(100,S.p+2);
+  S.coin+=1;
+  updateUI();
+  toast('🥰 好舒服～ +1🪙');
+}
+
+// ===== TIME DECAY =====
+function decay(){
+  if(!S.started)return;
+  S.t++;
+  
+  // Decay every 30 ticks (~3 seconds at 60fps, but let's make it every ~6 seconds at 10fps)
+  if(S.t%60!==0)return;
+  
+  // Stats decrease over time
+  S.h=Math.max(0,S.h-(2+Math.random()*2));
+  S.p=Math.max(0,S.p-(1+Math.random()*2));
+  S.e=Math.max(0,S.e-(1+Math.random()*2));
+  S.c=Math.max(0,S.c-(1+Math.random()*2));
+  
+  // If very unhappy or hungry, faster decay
+  if(S.h<20)S.h=Math.max(0,S.h-1);
+  if(S.p<20)S.p=Math.max(0,S.p-1);
+  
+  updateUI();
+  
+  // Auto-check for sick
+  if(S.h<=0||S.p<=0){
+    const p=PETS[S.petIdx];
+    md('🤒 寵物病咗！','寵物好唔舒服...\n快啲餵佢食嘢或者陪佢玩！');
   }
 }
 
-// ===== UTIL =====
-function md(t,x){document.getElementById('mdT').textContent=t;document.getElementById('mdX').textContent=x;document.getElementById('mdM').style.display='flex';}
-function openBag(){
-  const bm=document.getElementById('mdBag');const bl=document.getElementById('bagList');
-  if(!S.pts.length)bl.innerHTML='<div style="color:rgba(255,255,255,.3);padding:20px;text-align:center">暫冇寵物</div>';
-  else bl.innerHTML=S.pts.map((x,i)=>{
-    const a=i===S.idx,e=x.el||'Normal';
-    return '<div class="it'+(a?' a':'')+'"><span class="e">'+(EMJ[e]||'?')+'</span><div style="flex:1"><div class="n">'+x.n+(a?' <span class="star">⭐</span>':'')+'</div><div class="d">Lv.'+x.lv+' | '+Math.ceil(x.h)+'/'+x.m+' HP</div></div><span class="tg">'+e+'</span></div>';
-  }).join('');
-  bm.style.display='flex';
+// ===== TOAST =====
+function toast(msg){
+  const el=document.getElementById('toast');
+  el.textContent=msg;
+  el.classList.add('show');
+  clearTimeout(S.toast);
+  S.toast=setTimeout(()=>{el.classList.remove('show');},1800);
 }
-function $md(){return document.getElementById('mdM');}
+
+// ===== MODAL =====
+function md(e,t,x){
+  document.getElementById('mdEmoji').textContent=e||'🐱';
+  document.getElementById('mdT').textContent=t;
+  document.getElementById('mdX').textContent=x;
+  document.getElementById('mdM').style.display='flex';
+}
 
 // ===== LOOP =====
-function lp(){
-  S.tic++;
-  if(S.btl)bRnd();else if(document.getElementById('game').style.display!=='none')r();
-  requestAnimationFrame(lp);
+function loop(){
+  decay();
+  requestAnimationFrame(loop);
 }
 
-// ===== INIT =====
-window.onload=function(){sz();window.addEventListener('resize',sz);init();lp();};
+// ===== START =====
+window.onload=function(){init();loop();};
 
-// Global for inline onclick (bag modal swap)
-window.swBtl=function(i){S.idx=i;S.bs='i';document.getElementById('mdBag').style.display='none';sm('換出 '+S.pts[i].n+'！');uB();setTimeout(bB,700);};
 })();
 </script>
 </body>

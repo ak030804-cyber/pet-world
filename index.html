@@ -1,0 +1,927 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>寵物世界 - 輕量版</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent;user-select:none;-webkit-user-select:none}
+html,body{width:100%;height:100%;overflow:hidden;background:#1a1a2e;font-family:'Segoe UI','PingFang TC','Microsoft JhengHei',sans-serif}
+#app{width:100%;height:100%;display:flex;flex-direction:column;position:relative;max-width:500px;margin:0 auto}
+/* Overworld */
+#overworld{display:flex;flex-direction:column;height:100%;width:100%}
+#gameCanvas{flex:1;width:100%;display:block;background:#4a7c59;touch-action:none}
+#controls{background:#2d2d44;padding:8px 12px;display:flex;justify-content:center;gap:6px;flex-shrink:0}
+.dpad{display:grid;grid-template-columns:60px 60px 60px;grid-template-rows:50px 50px;gap:3px;justify-content:center}
+.dpad-btn{background:#3d3d5c;border:2px solid #5a5a7a;border-radius:12px;color:#fff;font-size:24px;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:none;box-shadow:0 3px 0 #1a1a2e}
+.dpad-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #1a1a2e}
+.btn-up{grid-column:2;grid-row:1}
+.btn-left{grid-column:1;grid-row:2}
+.btn-down{grid-column:2;grid-row:2}
+.btn-right{grid-column:3;grid-row:2}
+.menu-btn{background:#e8a838;border:2px solid #c88a20;border-radius:12px;color:#1a1a2e;font-size:14px;font-weight:bold;padding:6px 14px;cursor:pointer;margin:auto 4px;box-shadow:0 3px 0 #a06a10;flex-shrink:0}
+.menu-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #a06a10}
+/* Battle Screen */
+#battle{display:none;flex-direction:column;height:100%;width:100%;background:linear-gradient(180deg,#2d1b4e,#1a1a2e)}
+#battleCanvas{flex:1;width:100%;display:block;background:linear-gradient(180deg,#4a90d9,#3a7bc8);touch-action:none}
+.battle-ui{background:#2d2d44;padding:8px 12px;flex-shrink:0}
+.battle-info{display:flex;justify-content:space-between;padding:4px 8px 8px;gap:8px}
+.hp-bar-box{flex:1;background:#1a1a2e;border-radius:8px;padding:4px 8px}
+.hp-label{font-size:12px;color:#aaa;display:flex;justify-content:space-between}
+.hp-fill-wrap{height:8px;background:#333;border-radius:4px;overflow:hidden;margin-top:2px}
+.hp-fill{height:100%;border-radius:4px;transition:width .3s ease;background:linear-gradient(90deg,#4cd964,#34c759)}
+.hp-fill.low{background:linear-gradient(90deg,#ff3b30,#ff6b6b)}
+.hp-fill.mid{background:linear-gradient(90deg,#ff9500,#ffcc00)}
+.pet-name{font-size:13px;color:#fff;font-weight:bold}
+.pet-lv{font-size:11px;color:#aaa}
+.battle-actions{display:grid;grid-template-columns:1fr 1fr;gap:8px;padding:0 8px 4px}
+.battle-btn{background:#4a4a6a;border:2px solid #6a6a8a;border-radius:12px;color:#fff;font-size:16px;font-weight:bold;padding:14px 0;text-align:center;cursor:pointer;touch-action:none;box-shadow:0 3px 0 #2a2a3a}
+.battle-btn:active{transform:translateY(2px);box-shadow:0 1px 0 #2a2a3a}
+.battle-btn.primary{background:#e8a838;border-color:#c88a20;color:#1a1a2e;box-shadow:0 3px 0 #a06a10}
+.battle-btn.danger{background:#d94a4a;border-color:#b83a3a;box-shadow:0 3px 0 #8a2a2a}
+.battle-btn.success{background:#4cd964;border-color:#34c759;color:#1a1a2e;box-shadow:0 3px 0 #2a9a3a}
+.battle-btn.small{font-size:13px;padding:10px 0}
+.battle-message{background:rgba(0,0,0,.7);border-radius:10px;padding:10px 14px;margin:0 8px 8px;color:#fff;font-size:15px;line-height:1.4;min-height:42px;text-align:center}
+/* Title Screen */
+#title{display:flex;flex-direction:column;height:100%;width:100%;background:linear-gradient(180deg,#1a1a2e 0%,#16213e 50%,#0f3460 100%);align-items:center;justify-content:center;position:absolute;top:0;left:0;z-index:10}
+.title-logo{font-size:42px;font-weight:900;color:#e8a838;text-shadow:0 4px 0 #a06a10,0 0 40px rgba(232,168,56,.4);margin-bottom:8px;letter-spacing:2px}
+.title-sub{color:#8a8aaa;font-size:15px;margin-bottom:30px}
+.starter-pick{display:flex;gap:16px;margin:16px 0 24px}
+.starter-card{background:#2d2d44;border:3px solid #4a4a6a;border-radius:16px;padding:14px 10px;text-align:center;cursor:pointer;width:100px;transition:all .2s}
+.starter-card:active{transform:scale(.95)}
+.starter-card.selected{border-color:#e8a838;box-shadow:0 0 20px rgba(232,168,56,.3)}
+.starter-card .emoji-img{font-size:48px;display:block;margin-bottom:4px}
+.starter-card .name{color:#fff;font-size:14px;font-weight:bold}
+.starter-card .element{font-size:11px;color:#8a8aaa;margin-top:2px}
+.title-btn{background:#e8a838;border:none;border-radius:14px;color:#1a1a2e;font-size:20px;font-weight:bold;padding:16px 60px;cursor:pointer;box-shadow:0 4px 0 #a06a10;margin-top:20px}
+.title-btn:active{transform:translateY(3px);box-shadow:0 1px 0 #a06a10}
+.title-btn:disabled{background:#5a5a7a;box-shadow:0 4px 0 #3a3a5a;color:#8a8aaa}
+/* Modal */
+.modal-overlay{display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:20;align-items:center;justify-content:center}
+.modal-box{background:#2d2d44;border-radius:18px;padding:20px 24px;max-width:85%;text-align:center;border:2px solid #5a5a7a}
+.modal-title{color:#fff;font-size:20px;font-weight:bold;margin-bottom:10px}
+.modal-text{color:#ccc;font-size:14px;line-height:1.5;margin-bottom:16px}
+.modal-btn{background:#e8a838;border:none;border-radius:12px;color:#1a1a2e;font-size:16px;font-weight:bold;padding:12px 36px;cursor:pointer}
+.modal-btn:active{transform:scale(.95)}
+/* level up animation */
+.lvup-overlay{display:none;position:absolute;top:0;left:0;width:100%;height:100%;z-index:30;align-items:center;justify-content:center;pointer-events:none}
+.lvup-text{font-size:48px;font-weight:900;color:#ffd700;text-shadow:0 0 30px rgba(255,215,0,.6),0 4px 10px rgba(0,0,0,.5);animation:lvPulse 1s ease-out}
+@keyframes lvPulse{0%{transform:scale(2);opacity:0}30%{transform:scale(1);opacity:1}70%{opacity:1}100%{opacity:0;transform:scale(.8)}}
+/* evolution animation */
+.evo-overlay{display:none;position:absolute;top:0;left:0;width:100%;height:100%;z-index:30;align-items:center;justify-content:center;background:rgba(0,0,0,.5);flex-direction:column;gap:12px}
+.evo-text{font-size:42px;font-weight:900;color:#fff;text-shadow:0 0 40px rgba(255,255,255,.6);animation:evoFlash 1.5s ease-out}
+.evo-sub{color:#ffd700;font-size:18px}
+@keyframes evoFlash{0%{transform:scale(1) rotate(0)}25%{transform:scale(1.2) rotate(-5deg);color:#ffd700}50%{transform:scale(.9) rotate(3deg);color:#fff}75%{transform:scale(1.1) rotate(-2deg);color:#ffd700}100%{transform:scale(1) rotate(0);color:#fff}}
+</style>
+</head>
+<body>
+<div id="app">
+  <!-- Title Screen -->
+  <div id="title">
+    <div class="title-logo">寵物世界</div>
+    <div class="title-sub">揀你嘅第一隻寵物開始冒險！</div>
+    <div class="starter-pick">
+      <div class="starter-card" data-starter="0" onclick="selectStarter(0)">
+        <span class="emoji-img">🔥</span>
+        <div class="name">火火</div>
+        <div class="element">火系</div>
+      </div>
+      <div class="starter-card" data-starter="1" onclick="selectStarter(1)">
+        <span class="emoji-img">💧</span>
+        <div class="name">水水</div>
+        <div class="element">水系</div>
+      </div>
+      <div class="starter-card" data-starter="2" onclick="selectStarter(2)">
+        <span class="emoji-img">🌿</span>
+        <div class="name">草草</div>
+        <div class="element">草系</div>
+      </div>
+    </div>
+    <button class="title-btn" id="startBtn" disabled onclick="startGame()">出發冒險！</button>
+  </div>
+
+  <!-- Overworld -->
+  <div id="overworld" style="display:none">
+    <canvas id="gameCanvas"></canvas>
+    <div id="controls">
+      <div class="dpad">
+        <div class="dpad-btn btn-up" ontouchstart="movePlayer(0,-1)" onmousedown="movePlayer(0,-1)">▲</div>
+        <div class="dpad-btn btn-left" ontouchstart="movePlayer(-1,0)" onmousedown="movePlayer(-1,0)">◀</div>
+        <div class="dpad-btn btn-down" ontouchstart="movePlayer(0,1)" onmousedown="movePlayer(0,1)">▼</div>
+        <div class="dpad-btn btn-right" ontouchstart="movePlayer(1,0)" onmousedown="movePlayer(1,0)">▶</div>
+      </div>
+      <button class="menu-btn" onclick="openBag()">🎒 寵物</button>
+    </div>
+  </div>
+
+  <!-- Battle -->
+  <div id="battle" style="display:none">
+    <canvas id="battleCanvas"></canvas>
+    <div class="battle-ui">
+      <div class="battle-info">
+        <div class="hp-bar-box">
+          <div class="hp-label"><span class="pet-name" id="myPetName">火火</span><span class="pet-lv" id="myPetLv">Lv.1</span></div>
+          <div class="hp-fill-wrap"><div class="hp-fill" id="myHpFill" style="width:100%"></div></div>
+          <div class="hp-label"><span id="myHpText"></span></div>
+        </div>
+        <div class="hp-bar-box">
+          <div class="hp-label"><span class="pet-name" id="enemyPetName">比比</span><span class="pet-lv" id="enemyPetLv">Lv.1</span></div>
+          <div class="hp-fill-wrap"><div class="hp-fill" id="enemyHpFill" style="width:100%"></div></div>
+          <div class="hp-label"><span id="enemyHpText"></span></div>
+        </div>
+      </div>
+      <div class="battle-actions" id="battleActions">
+        <div class="battle-btn primary" onclick="battleAction('fight')">⚔️ 攻擊</div>
+        <div class="battle-btn success" onclick="battleAction('catch')">⚡ 捕捉</div>
+        <div class="battle-btn danger" onclick="battleAction('run')">🏃 逃走</div>
+        <div class="battle-btn" onclick="battleAction('bag')">🎒 道具</div>
+      </div>
+      <div class="battle-message" id="battleMsg">選擇行動！</div>
+    </div>
+  </div>
+
+  <!-- Modal -->
+  <div class="modal-overlay" id="modalOverlay">
+    <div class="modal-box">
+      <div class="modal-title" id="modalTitle"></div>
+      <div class="modal-text" id="modalText"></div>
+      <button class="modal-btn" onclick="closeModal()">確定</button>
+    </div>
+  </div>
+
+  <!-- Level Up -->
+  <div class="lvup-overlay" id="lvupOverlay">
+    <div class="lvup-text" id="lvupText"></div>
+  </div>
+
+  <!-- Evolution -->
+  <div class="evo-overlay" id="evoOverlay">
+    <div class="evo-text" id="evoText"></div>
+    <div class="evo-sub" id="evoSub">進化！</div>
+  </div>
+
+  <!-- Bag Modal -->
+  <div class="modal-overlay" id="bagModal" onclick="closeBag(event)">
+    <div class="modal-box" style="max-height:70vh;overflow-y:auto;text-align:left;width:300px" onclick="event.stopPropagation()">
+      <div class="modal-title">🎒 我的寵物</div>
+      <div id="bagList" style="margin-bottom:12px"></div>
+      <button class="modal-btn" onclick="closeBag()" style="width:100%">關閉</button>
+    </div>
+  </div>
+</div>
+
+<script>
+// ==================== 寵物資料庫 ====================
+const PET_TEMPLATES = {
+  starter: [
+    {id:'fire',name:'火火',element:'Fire',emoji:'🔥',maxHp:120,atk:15,def:10,evolveLv:16,evolveTo:{id:'fire2',name:'炎獸',element:'Fire',emoji:'🔥',maxHp:200,atk:28,def:18}},
+    {id:'water',name:'水水',element:'Water',emoji:'💧',maxHp:120,atk:12,def:13,evolveLv:16,evolveTo:{id:'water2',name:'海獸',element:'Water',emoji:'💧',maxHp:200,atk:22,def:24}},
+    {id:'grass',name:'草草',element:'Grass',emoji:'🌿',maxHp:120,atk:14,def:11,evolveLv:16,evolveTo:{id:'grass2',name:'森獸',element:'Grass',emoji:'🌿',maxHp:200,atk:26,def:20}}
+  ],
+  wild: [
+    {id:'bird',name:'比比',element:'Normal',emoji:'🐤',maxHp:80,atk:10,def:8},
+    {id:'bat',name:'蝙蝠',element:'Flying',emoji:'🦇',maxHp:70,atk:12,def:6},
+    {id:'egg',name:'蛋蛋',element:'Psychic',emoji:'🥚',maxHp:90,atk:11,def:9},
+    {id:'mole',name:'地鼠',element:'Earth',emoji:'🐹',maxHp:100,atk:8,def:14},
+    {id:'fox',name:'狐狐',element:'Fire',emoji:'🦊',maxHp:85,atk:14,def:7,rare:true},
+    {id:'jelly',name:'水母',element:'Water',emoji:'🪼',maxHp:95,atk:10,def:10,rare:true}
+  ]
+};
+
+const TYPE_CHART = {
+  Fire:{Fire:.5,Water:.5,Grass:2,Normal:1,Flying:1.5,Psychic:1,Earth:.5},
+  Water:{Fire:2,Water:.5,Grass:.5,Normal:1,Flying:1,Psychic:1,Earth:1.5},
+  Grass:{Fire:.5,Water:2,Grass:.5,Normal:1,Flying:.5,Psychic:1,Earth:1.5},
+  Normal:{Fire:1,Water:1,Grass:1,Normal:1,Flying:1,Psychic:.5,Earth:1},
+  Flying:{Fire:1,Water:1,Grass:1.5,Normal:1,Flying:1,Psychic:1,Earth:.5},
+  Psychic:{Fire:1,Water:1,Grass:1,Normal:1.5,Flying:1,Psychic:.5,Earth:1},
+  Earth:{Fire:1.5,Water:1,Grass:.5,Normal:1,Flying:.5,Psychic:1,Earth:1}
+};
+
+// ==================== 遊戲狀態 ====================
+let game = {
+  player: {x:10,y:8,dir:0},
+  pets:[],        // player's pets
+  currentPetIdx:0,
+  currentStarter:0,
+  stepCount:0,
+  encounterRate:.15,
+  inBattle:false,
+  wildPet:null,
+  battleState:'action', // action|moves|result
+  caught:false,
+  gameTime:0
+};
+
+// Map: 0=grass,1=path,2=tree,3=water,4=fence,5=wall,6=door
+const MAP = [
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,3,3,3,3,3,3,3],
+  [2,1,1,1,1,1,1,1,2,2,2,2,2,3,3,3,3,3,3,3],
+  [2,1,0,0,0,0,0,1,1,1,1,1,1,1,3,3,3,3,3,3],
+  [2,1,0,0,0,0,0,1,0,0,0,1,0,1,3,3,3,3,3,3],
+  [2,1,1,1,1,1,1,1,0,0,0,1,0,1,1,1,1,3,3,3],
+  [2,2,2,2,2,2,2,1,0,0,0,1,0,0,0,0,1,3,3,3],
+  [2,2,2,2,2,2,2,1,0,0,0,1,0,0,0,0,1,1,1,1],
+  [2,2,2,2,2,2,2,1,0,0,0,1,0,0,0,0,0,0,0,1],
+  [2,4,4,4,4,4,2,1,1,1,2,1,1,1,1,1,0,0,0,1],
+  [2,4,5,6,5,4,2,2,2,1,2,2,2,2,1,1,0,0,0,1],
+  [2,4,5,5,5,4,2,2,2,1,2,2,2,2,1,0,0,0,0,1],
+  [2,4,4,4,4,4,2,2,2,1,2,2,2,2,1,1,0,0,0,1],
+  [2,2,2,2,2,2,2,2,2,1,2,2,2,2,1,1,1,1,1,1],
+  [2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,0,0,0,0,1],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,1,0,0,0,0,0,1],
+  [2,2,2,2,2,2,2,2,2,2,2,2,2,1,1,1,1,1,1,1]
+];
+const MAP_COLS = MAP[0].length;
+const MAP_ROWS = MAP.length;
+
+// ==================== Canvas & Rendering ====================
+let canvas, ctx, bCanvas, bCtx;
+let tileSize = 24;
+let camX = 0, camY = 0;
+
+function initCanvas(){
+  canvas = document.getElementById('gameCanvas');
+  ctx = canvas.getContext('2d');
+  bCanvas = document.getElementById('battleCanvas');
+  bCtx = bCanvas.getContext('2d');
+  resizeCanvas();
+  window.addEventListener('resize', resizeCanvas);
+}
+
+function resizeCanvas(){
+  const app = document.getElementById('app');
+  const w = app.clientWidth || window.innerWidth;
+  const ctrl = document.getElementById('controls');
+  const ctrlH = ctrl ? 80 : 0;
+  const h = app.clientHeight - ctrlH - 4;
+  canvas.width = Math.min(w, 500);
+  canvas.height = Math.max(h, 200);
+  tileSize = Math.floor(canvas.width / 15);
+  // Battle canvas
+  const bh = document.getElementById('battle').offsetHeight || app.clientHeight;
+  const buiH = 200;
+  bCanvas.width = canvas.width;
+  bCanvas.height = bh - buiH - 4;
+  bCanvas.height = Math.max(bCanvas.height, 150);
+}
+
+// ==================== Map Rendering ====================
+const TILE_COLORS = {
+  0:'#5a8f3c',1:'#c8b078',2:'#2d5a1e',3:'#3a7bc8',4:'#8a7a5a',5:'#6a5a3a',6:'#8a7a4a'
+};
+const TILE_SHADE = {
+  0:'#4a7f2c',1:'#a8905a',2:'#1d4a0e',3:'#2a6ba8',4:'#7a6a4a',5:'#5a4a2a',6:'#7a6a3a'
+};
+
+function drawMap(){
+  const cw = canvas.width, ch = canvas.height;
+  const offX = Math.floor(cw/2), offY = Math.floor(ch/2);
+  
+  ctx.clearRect(0,0,cw,ch);
+  
+  // Draw tiles
+  for(let r=0; r<MAP_ROWS; r++){
+    for(let c=0; c<MAP_COLS; c++){
+      const t = MAP[r][c];
+      const sx = c * tileSize - game.player.x * tileSize + offX;
+      const sy = r * tileSize - game.player.y * tileSize + offY;
+      if(sx + tileSize < -tileSize || sx > cw + tileSize || sy + tileSize < -tileSize || sy > ch + tileSize) continue;
+      
+      const col = TILE_COLORS[t] || '#333';
+      ctx.fillStyle = col;
+      ctx.fillRect(sx,sy,tileSize,tileSize);
+      
+      // Grid lines
+      ctx.strokeStyle = 'rgba(0,0,0,.08)';
+      ctx.lineWidth = 1;
+      ctx.strokeRect(sx,sy,tileSize,tileSize);
+      
+      // Tree top
+      if(t === 2){
+        ctx.fillStyle = '#3a7a2a';
+        ctx.beginPath();
+        ctx.arc(sx+tileSize/2, sy+tileSize/2-2, tileSize/2.5, 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = '#2d5a1e';
+        ctx.beginPath();
+        ctx.arc(sx+tileSize/2-4, sy+tileSize/2-6, tileSize/4, 0, Math.PI*2);
+        ctx.fill();
+      }
+      // Water ripple
+      if(t === 3){
+        ctx.fillStyle = 'rgba(255,255,255,.08)';
+        ctx.fillRect(sx+4,sy+tileSize/2-1,tileSize-8,2);
+      }
+      // House
+      if(t === 5 || t === 6){
+        if(t===5){
+          ctx.fillStyle = '#7a6a4a';
+          ctx.fillRect(sx,sy,tileSize,tileSize);
+          ctx.fillStyle = '#5a4a2a';
+          ctx.fillRect(sx,sy+tileSize-3,tileSize,3);
+        }
+        if(t===6){
+          ctx.fillStyle = '#6a5a3a';
+          ctx.fillRect(sx,sy,tileSize,tileSize);
+          ctx.fillStyle = '#8a7a4a';
+          ctx.fillRect(sx+4,sy+4,tileSize-8,tileSize-8);
+        }
+      }
+    }
+  }
+  
+  // Player
+  drawPlayer(offX, offY);
+}
+
+function drawPlayer(offX, offY){
+  const px = game.player.x * tileSize - game.player.x * tileSize + offX;
+  const py = game.player.y * tileSize - game.player.y * tileSize + offY;
+  const s = tileSize;
+  
+  // Body
+  ctx.fillStyle = '#4a7ae8';
+  ctx.fillRect(px+s/4, py+s/3, s/2, s/2.5);
+  // Head
+  ctx.fillStyle = '#f0c8a0';
+  ctx.beginPath();
+  ctx.arc(px+s/2, py+s/4, s/5, 0, Math.PI*2);
+  ctx.fill();
+  // Hat
+  ctx.fillStyle = '#d94a4a';
+  ctx.fillRect(px+s/4, py+s/8-2, s/2, s/6);
+  ctx.fillRect(px+s/5, py+s/8-4, s/1.5, s/10);
+  // Eyes
+  ctx.fillStyle = '#222';
+  ctx.fillRect(px+s/2-4, py+s/4-2, 3, 3);
+  ctx.fillRect(px+s/2+2, py+s/4-2, 3, 3);
+  // Shadow
+  ctx.fillStyle = 'rgba(0,0,0,.15)';
+  ctx.beginPath();
+  ctx.ellipse(px+s/2, py+s-2, s/3, 3, 0, 0, Math.PI*2);
+  ctx.fill();
+}
+
+// ==================== Movement ====================
+let moveCooldown = false;
+
+function movePlayer(dx, dy){
+  if(game.inBattle || moveCooldown) return;
+  
+  const nx = game.player.x + dx;
+  const ny = game.player.y + dy;
+  
+  // Bounds check
+  if(nx < 0 || nx >= MAP_COLS || ny < 0 || ny >= MAP_ROWS) return;
+  
+  // Collision check
+  const tile = MAP[ny][nx];
+  if(tile === 2 || tile === 3 || tile === 4 || tile === 5) return;
+  
+  game.player.x = nx;
+  game.player.y = ny;
+  game.stepCount++;
+  
+  moveCooldown = true;
+  setTimeout(() => { moveCooldown = false; }, 150);
+  
+  // Check encounter
+  if(tile === 0 && !game.inBattle){
+    const rate = game.encounterRate;
+    if(Math.random() < rate){
+      startBattle();
+      return;
+    }
+  }
+  
+  drawMap();
+}
+
+// Keyboard support
+document.addEventListener('keydown', (e)=>{
+  if(game.inBattle) return;
+  switch(e.key){
+    case 'ArrowUp': movePlayer(0,-1); break;
+    case 'ArrowDown': movePlayer(0,1); break;
+    case 'ArrowLeft': movePlayer(-1,0); break;
+    case 'ArrowRight': movePlayer(1,0); break;
+  }
+});
+
+// ==================== Battle System ====================
+function startBattle(){
+  game.inBattle = true;
+  
+  // Generate wild pet
+  const wilds = PET_TEMPLATES.wild;
+  const weights = wilds.map(w => w.rare ? 0.15 : 0.85);
+  const totalW = weights.reduce((a,b)=>a+b,0);
+  let r = Math.random() * totalW;
+  let idx = 0;
+  for(let i=0; i<weights.length; i++){
+    r -= weights[i];
+    if(r <= 0){ idx = i; break; }
+  }
+  const tmpl = wilds[idx];
+  
+  // Scale level to player
+  const myPet = game.pets[game.currentPetIdx];
+  const wildLv = Math.max(1, myPet.lv - 2 + Math.floor(Math.random() * 4));
+  const lvMult = 1 + (wildLv - 1) * 0.15;
+  
+  game.wildPet = {
+    ...tmpl,
+    lv: wildLv,
+    maxHp: Math.floor(tmpl.maxHp * lvMult),
+    hp: Math.floor(tmpl.maxHp * lvMult),
+    atk: Math.floor(tmpl.atk * lvMult),
+    def: Math.floor(tmpl.def * lvMult)
+  };
+  
+  showBattle();
+}
+
+function showBattle(){
+  document.getElementById('overworld').style.display = 'none';
+  document.getElementById('battle').style.display = 'flex';
+  game.battleState = 'action';
+  updateBattleUI();
+  drawBattleScene();
+  setBattleMsg(`野生 ${game.wildPet.emoji} ${game.wildPet.name} 出現咗！`);
+  showBattleActions();
+}
+
+function updateBattleUI(){
+  const pet = game.pets[game.currentPetIdx];
+  document.getElementById('myPetName').textContent = `${pet.emoji} ${pet.name}`;
+  document.getElementById('myPetLv').textContent = `Lv.${pet.lv}`;
+  const hpPct = (pet.hp / pet.maxHp * 100);
+  const myFill = document.getElementById('myHpFill');
+  myFill.style.width = hpPct + '%';
+  myFill.className = 'hp-fill' + (hpPct < 25 ? ' low' : hpPct < 50 ? ' mid' : '');
+  document.getElementById('myHpText').textContent = `${Math.ceil(pet.hp)} / ${pet.maxHp}`;
+  
+  const wp = game.wildPet;
+  document.getElementById('enemyPetName').textContent = `${wp.emoji} ${wp.name}`;
+  document.getElementById('enemyPetLv').textContent = `Lv.${wp.lv}`;
+  const ehpPct = (wp.hp / wp.maxHp * 100);
+  const eFill = document.getElementById('enemyHpFill');
+  eFill.style.width = ehpPct + '%';
+  eFill.className = 'hp-fill' + (ehpPct < 25 ? ' low' : ehpPct < 50 ? ' mid' : '');
+  document.getElementById('enemyHpText').textContent = `${Math.ceil(wp.hp)} / ${wp.maxHp}`;
+}
+
+function drawBattleScene(){
+  const w = bCanvas.width, h = bCanvas.height;
+  bCtx.clearRect(0,0,w,h);
+  
+  // Sky gradient - already set in CSS background
+  
+  // Ground
+  bCtx.fillStyle = '#4a7c3a';
+  bCtx.fillRect(0, h-60, w, 60);
+  bCtx.fillStyle = '#3a6c2a';
+  bCtx.fillRect(0, h-60, w, 3);
+  // Grass blades
+  for(let i=0; i<w; i+=8){
+    const gh = 4 + Math.sin(i*0.3 + game.gameTime*0.02) * 3;
+    bCtx.fillStyle = Math.random()>0.5 ? '#5a8f3c' : '#4a7c3a';
+    bCtx.fillRect(i, h-60-gh, 2, gh);
+  }
+  
+  // Wild pet (larger, on right)
+  const wp = game.wildPet;
+  bCtx.font = '72px sans-serif';
+  bCtx.textAlign = 'center';
+  bCtx.fillText(wp.emoji, w*0.72, h-70);
+  // Shadow
+  bCtx.fillStyle = 'rgba(0,0,0,.15)';
+  bCtx.beginPath();
+  bCtx.ellipse(w*0.72, h-58, 35, 8, 0, 0, Math.PI*2);
+  bCtx.fill();
+  // Name tag
+  bCtx.fillStyle = 'rgba(255,255,255,.85)';
+  bCtx.font = 'bold 12px sans-serif';
+  bCtx.fillText(wp.name, w*0.72, h-90);
+  
+  // My pet (on left)
+  const myPet = game.pets[game.currentPetIdx];
+  bCtx.font = '64px sans-serif';
+  bCtx.fillText(myPet.emoji, w*0.28, h-50);
+  bCtx.fillStyle = 'rgba(0,0,0,.15)';
+  bCtx.beginPath();
+  bCtx.ellipse(w*0.28, h-58, 30, 7, 0, 0, Math.PI*2);
+  bCtx.fill();
+  bCtx.fillStyle = 'rgba(255,255,255,.85)';
+  bCtx.font = 'bold 12px sans-serif';
+  bCtx.fillText(myPet.name, w*0.28, h-70);
+}
+
+function setBattleMsg(msg){
+  document.getElementById('battleMsg').textContent = msg;
+}
+
+function showBattleActions(){
+  const acts = document.getElementById('battleActions');
+  acts.innerHTML = `
+    <div class="battle-btn primary" onclick="battleAction('fight')">⚔️ 攻擊</div>
+    <div class="battle-btn success" onclick="battleAction('catch')">⚡ 捕捉</div>
+    <div class="battle-btn danger" onclick="battleAction('run')">🏃 逃走</div>
+    <div class="battle-btn" onclick="battleAction('bag')">🎒 道具</div>
+  `;
+}
+
+function battleAction(action){
+  if(game.battleState === 'result') return;
+  
+  if(action === 'fight') playerAttack();
+  else if(action === 'catch') playerCatch();
+  else if(action === 'run') playerRun();
+  else if(action === 'bag') showBagInBattle();
+}
+
+function playerAttack(){
+  game.battleState = 'result';
+  const pet = game.pets[game.currentPetIdx];
+  const wp = game.wildPet;
+  
+  // Type multiplier
+  let mult = 1;
+  if(TYPE_CHART[pet.element] && TYPE_CHART[pet.element][wp.element]){
+    mult = TYPE_CHART[pet.element][wp.element];
+  }
+  
+  const rawDmg = Math.max(1, Math.floor((pet.atk * 12) / wp.def * (0.85 + Math.random() * 0.3)));
+  const dmg = Math.floor(rawDmg * mult);
+  wp.hp = Math.max(0, wp.hp - dmg);
+  
+  let msg = `${pet.emoji} ${pet.name} 攻擊！造成 ${dmg} 傷害！`;
+  if(mult > 1.5) msg += '\n效果絕佳！💥';
+  else if(mult < 0.8) msg += '\n效果不太理想...💨';
+  
+  setBattleMsg(msg);
+  updateBattleUI();
+  drawBattleScene();
+  
+  if(wp.hp <= 0){
+    setTimeout(() => { battleWin(); }, 800);
+    return;
+  }
+  
+  setTimeout(() => { enemyTurn(); }, 1000);
+}
+
+function enemyTurn(){
+  const pet = game.pets[game.currentPetIdx];
+  const wp = game.wildPet;
+  
+  let mult = 1;
+  if(TYPE_CHART[wp.element] && TYPE_CHART[wp.element][pet.element]){
+    mult = TYPE_CHART[wp.element][pet.element];
+  }
+  
+  const rawDmg = Math.max(1, Math.floor((wp.atk * 10) / pet.def * (0.85 + Math.random() * 0.3)));
+  const dmg = Math.floor(rawDmg * mult);
+  pet.hp = Math.max(0, pet.hp - dmg);
+  
+  let msg = `野生 ${wp.emoji} ${wp.name} 反擊！造成 ${dmg} 傷害！`;
+  if(mult > 1.5) msg += '\n效果絕佳！💥';
+  
+  setBattleMsg(msg);
+  updateBattleUI();
+  drawBattleScene();
+  
+  if(pet.hp <= 0){
+    setTimeout(() => { battleLose(); }, 800);
+    return;
+  }
+  
+  game.battleState = 'action';
+  setTimeout(() => {
+    setBattleMsg('輪到你！選擇行動：');
+    showBattleActions();
+  }, 800);
+}
+
+function battleWin(){
+  const pet = game.pets[game.currentPetIdx];
+  const wp = game.wildPet;
+  
+  // Give EXP
+  const expGain = 15 + wp.lv * 3;
+  const oldLv = pet.lv;
+  pet.exp = (pet.exp || 0) + expGain;
+  
+  // Level up check
+  const needed = pet.lv * 10;
+  let msg = `🎉 打贏咗！獲得 ${expGain} 經驗值！`;
+  
+  if(pet.exp >= needed){
+    pet.exp -= needed;
+    pet.lv++;
+    pet.atk = Math.floor(pet.atk * 1.12) + 1;
+    pet.def = Math.floor(pet.def * 1.10) + 1;
+    pet.maxHp = Math.floor(pet.maxHp * 1.10) + 5;
+    pet.hp = pet.maxHp;
+    
+    msg += `\n\n🌟 ${pet.name} 升到 Lv.${pet.lv}！`;
+    showLvUp(pet.name, pet.lv);
+    
+    // Check evolution
+    if(pet.evolveLv && pet.lv >= pet.evolveLv && !pet.evolved){
+      setTimeout(() => {
+        evolvePet(pet);
+      }, 1500);
+    }
+  }
+  
+  setBattleMsg(msg);
+  game.battleState = 'action';
+  updateBattleUI();
+  drawBattleScene();
+  
+  setTimeout(() => {
+    endBattle();
+  }, 2000);
+}
+
+function battleLose(){
+  setBattleMsg(`💀 ${game.pets[0].name} 失去戰鬥能力...`);
+  document.getElementById('battleActions').innerHTML = `
+    <div class="battle-btn primary" onclick="endBattleLose()" style="grid-column:1/3">返回起點</div>
+  `;
+  game.battleState = 'action';
+}
+
+function endBattleLose(){
+  // Heal pets
+  game.pets.forEach(p => { p.hp = p.maxHp; });
+  game.player.x = 10;
+  game.player.y = 8;
+  endBattle();
+}
+
+function playerCatch(){
+  game.battleState = 'result';
+  const wp = game.wildPet;
+  
+  // Catch rate
+  const hpRatio = 1 - (wp.hp / wp.maxHp);
+  const baseRate = 0.3 + hpRatio * 0.5;
+  const rarePenalty = wp.rare ? 0.4 : 0;
+  const rate = Math.min(0.95, baseRate - rarePenalty);
+  
+  if(game.pets.length >= 6){
+    setBattleMsg('你的隊伍已滿！無法再捕捉更多寵物！');
+    game.battleState = 'action';
+    setTimeout(() => { showBattleActions(); }, 1000);
+    return;
+  }
+  
+  if(Math.random() < rate){
+    // Success!
+    const newPet = {
+      id: wp.id + '_' + Date.now(),
+      name: wp.name,
+      element: wp.element,
+      emoji: wp.emoji,
+      lv: wp.lv,
+      maxHp: wp.maxHp,
+      hp: wp.maxHp,
+      atk: wp.atk,
+      def: wp.def,
+      exp: 0,
+      evolveLv: null,
+      evolved: false
+    };
+    game.pets.push(newPet);
+    
+    // Give some EXP to current pet
+    const cur = game.pets[game.currentPetIdx];
+    cur.exp = (cur.exp || 0) + 10;
+    const needed = cur.lv * 10;
+    if(cur.exp >= needed){
+      cur.exp -= needed;
+      cur.lv++;
+      cur.atk = Math.floor(cur.atk * 1.12) + 1;
+      cur.def = Math.floor(cur.def * 1.10) + 1;
+      cur.maxHp = Math.floor(cur.maxHp * 1.10) + 5;
+      cur.hp = cur.maxHp;
+      showLvUp(cur.name, cur.lv);
+      
+      if(cur.evolveLv && cur.lv >= cur.evolveLv && !cur.evolved){
+        setTimeout(() => { evolvePet(cur); }, 1200);
+      }
+    }
+    
+    setBattleMsg(`🎉 成功捕捉 ${wp.emoji} ${wp.name}！`);
+    setTimeout(() => { endBattle(); }, 1500);
+  } else {
+    setBattleMsg(`${wp.emoji} ${wp.name} 掙脫了！繼續戰鬥！`);
+    game.battleState = 'action';
+    setTimeout(() => { enemyTurn(); }, 1000);
+  }
+}
+
+function playerRun(){
+  game.battleState = 'result';
+  if(Math.random() < 0.6){
+    setBattleMsg('成功逃走了！💨');
+    setTimeout(() => { endBattle(); }, 800);
+  } else {
+    setBattleMsg('逃唔到！😰');
+    game.battleState = 'action';
+    setTimeout(() => { enemyTurn(); }, 800);
+  }
+}
+
+function endBattle(){
+  game.inBattle = false;
+  document.getElementById('battle').style.display = 'none';
+  document.getElementById('overworld').style.display = 'flex';
+  resizeCanvas();
+  drawMap();
+}
+
+function showLvUp(name, lv){
+  const ov = document.getElementById('lvupOverlay');
+  const txt = document.getElementById('lvupText');
+  txt.textContent = `🌟 ${name} 升級！\nLv.${lv}`;
+  ov.style.display = 'flex';
+  setTimeout(() => { ov.style.display = 'none'; }, 1500);
+}
+
+function evolvePet(pet){
+  if(!pet.evolveTo || pet.evolved) return;
+  
+  const ov = document.getElementById('evoOverlay');
+  const txt = document.getElementById('evoText');
+  const sub = document.getElementById('evoSub');
+  
+  txt.textContent = `${pet.emoji} ${pet.name}`;
+  sub.textContent = `進化 → ${pet.evolveTo.emoji} ${pet.evolveTo.name}！`;
+  ov.style.display = 'flex';
+  
+  setTimeout(() => {
+    // Apply evolution
+    const evo = pet.evolveTo;
+    pet.name = evo.name;
+    pet.emoji = evo.emoji;
+    pet.maxHp = evo.maxHp;
+    pet.hp = evo.maxHp;
+    pet.atk = evo.atk;
+    pet.def = evo.def;
+    pet.evolved = true;
+    ov.style.display = 'none';
+    
+    if(game.inBattle){
+      updateBattleUI();
+      drawBattleScene();
+    }
+    setBattleMsg(`🌟 ${pet.name} 進化完成！`);
+  }, 2500);
+}
+
+// ==================== Bag System ====================
+function openBag(){
+  if(game.inBattle) return;
+  showBag();
+}
+
+function openBag(){
+  showBag();
+}
+
+function showBag(){
+  const modal = document.getElementById('bagModal');
+  const list = document.getElementById('bagList');
+  
+  if(game.pets.length === 0){
+    list.innerHTML = '<div style="color:#888;padding:20px;text-align:center">暫冇寵物</div>';
+  } else {
+    list.innerHTML = game.pets.map((p,i) => {
+      const active = i === game.currentPetIdx;
+      return `<div style="display:flex;align-items:center;padding:8px 4px;border-bottom:1px solid #3d3d5c;${active?'background:rgba(232,168,56,.15);border-radius:8px':''}">
+        <span style="font-size:28px;margin-right:10px">${p.emoji}</span>
+        <div style="flex:1">
+          <div style="color:#fff;font-weight:bold;font-size:14px">${p.name} ${active?'⭐':''}</div>
+          <div style="color:#8a8aaa;font-size:11px">Lv.${p.lv} | HP:${Math.ceil(p.hp)}/${p.maxHp}</div>
+        </div>
+        ${!active ? `<button class="battle-btn small" style="padding:6px 14px;font-size:12px" onclick="switchPet(${i})">切換</button>` : ''}
+      </div>`;
+    }).join('');
+  }
+  
+  modal.style.display = 'flex';
+}
+
+function showBagInBattle(){
+  const list = document.getElementById('bagList');
+  list.innerHTML = game.pets.map((p,i) => {
+    const active = i === game.currentPetIdx;
+    return `<div style="display:flex;align-items:center;padding:8px 4px;border-bottom:1px solid #3d3d5c;${active?'background:rgba(232,168,56,.15);border-radius:8px':''}">
+      <span style="font-size:28px;margin-right:10px">${p.emoji}</span>
+      <div style="flex:1">
+        <div style="color:#fff;font-weight:bold;font-size:14px">${p.name} ${active?'⭐':''}</div>
+        <div style="color:#8a8aaa;font-size:11px">Lv.${p.lv} | HP:${Math.ceil(p.hp)}/${p.maxHp}</div>
+      </div>
+      ${!active && p.hp > 0 ? `<button class="battle-btn small" style="padding:6px 14px;font-size:12px" onclick="switchPetBattle(${i})">換出</button>` : ''}
+    </div>`;
+  }).join('');
+  document.getElementById('bagModal').style.display = 'flex';
+}
+
+function switchPet(idx){
+  game.currentPetIdx = idx;
+  document.getElementById('bagModal').style.display = 'none';
+  showBag();
+}
+
+function switchPetBattle(idx){
+  game.currentPetIdx = idx;
+  game.battleState = 'action';
+  document.getElementById('bagModal').style.display = 'none';
+  updateBattleUI();
+  drawBattleScene();
+  setBattleMsg(`換出 ${game.pets[idx].emoji} ${game.pets[idx].name}！`);
+  setTimeout(() => { showBattleActions(); }, 800);
+}
+
+function closeBag(e){
+  document.getElementById('bagModal').style.display = 'none';
+}
+
+// ==================== Modal ====================
+function showModal(title, text){
+  document.getElementById('modalTitle').textContent = title;
+  document.getElementById('modalText').textContent = text;
+  document.getElementById('modalOverlay').style.display = 'flex';
+}
+
+function closeModal(){
+  document.getElementById('modalOverlay').style.display = 'none';
+}
+
+// ==================== Start Game ====================
+function selectStarter(idx){
+  game.currentStarter = idx;
+  document.querySelectorAll('.starter-card').forEach((c,i)=>{
+    c.classList.toggle('selected', i===idx);
+  });
+  document.getElementById('startBtn').disabled = false;
+}
+
+function startGame(){
+  const tmpl = PET_TEMPLATES.starter[game.currentStarter];
+  const starter = {
+    id: 'starter_' + Date.now(),
+    name: tmpl.name,
+    element: tmpl.element,
+    emoji: tmpl.emoji,
+    lv: 1,
+    maxHp: tmpl.maxHp,
+    hp: tmpl.maxHp,
+    atk: tmpl.atk,
+    def: tmpl.def,
+    exp: 0,
+    evolveLv: tmpl.evolveLv,
+    evolveTo: tmpl.evolveTo,
+    evolved: false
+  };
+  game.pets = [starter];
+  game.currentPetIdx = 0;
+  
+  // Hide title, show game
+  document.getElementById('title').style.display = 'none';
+  document.getElementById('overworld').style.display = 'flex';
+  resizeCanvas();
+  drawMap();
+  
+  // Tutorial message
+  setTimeout(() => {
+    showModal('🎮 開始冒險！', 
+      `你揀咗 ${starter.emoji} ${starter.name}！\n\n用方向鍵移動，喺草叢入面會遇到野生寵物。\n打贏可以升呢，打傷咗可以捕捉！\n\n加油訓練員！🌟`);
+  }, 500);
+}
+
+// ==================== Game Loop ====================
+function gameLoop(){
+  game.gameTime++;
+  if(game.inBattle){
+    drawBattleScene();
+    if(game.battleState === 'action'){
+      updateBattleUI();
+    }
+  }
+  requestAnimationFrame(gameLoop);
+}
+
+// ==================== Init ====================
+window.onload = function(){
+  initCanvas();
+  gameLoop();
+};
+</script>
+</body>
+</html>

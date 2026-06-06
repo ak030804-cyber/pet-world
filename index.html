@@ -274,8 +274,7 @@ function drawCreature(ctx,type,x,y,sz,anim=0){
     drawMouth(ctx,x,y+s*.1+b,s*.06);
     ctx.strokeStyle='rgba(116,185,255,.6)';ctx.lineWidth=2;
     for(let i=-2;i<=2;i++){const tx=x+i*s*.15,ty=y+s*.5+b;ctx.beginPath();ctx.moveTo(tx,ty);const wav=Math.sin(anim*.04+i)*s*.1;ctx.quadraticCurveTo(tx+wav,ty+s*.3,tx+wav*1.5,ty+s*.45);ctx.stroke();}
-  },
-  'fire2':'fire','water2':'water','grass2':'grass'
+  }
 }
 
 // ===== DATA =====

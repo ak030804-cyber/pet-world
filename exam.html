@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="zh-HK">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>常識測驗 App</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,'PingFang TC','Segoe UI',sans-serif;background:#0a0a1a;color:#fff}
+#app{width:100%;height:100%;max-width:460px;margin:0 auto;display:flex;flex-direction:column;position:relative}
+
+/* Title */
+#title{display:flex;flex-direction:column;height:100%;align-items:center;justify-content:center;background:linear-gradient(160deg,#0a0a1a,#1a0a3e,#16215e);text-align:center}
+#title h1{font-size:30px;font-weight:800;background:linear-gradient(135deg,#74b9ff,#a29bfe,#fd79a8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:6px}
+#title .sub{color:rgba(255,255,255,.25);font-size:12px;letter-spacing:4px;margin-bottom:30px}
+#title .info{color:rgba(255,255,255,.4);font-size:13px;margin-bottom:24px;line-height:1.6}
+.si{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 16px;margin-bottom:10px;width:85%;max-width:300px;text-align:left}
+.si label{font-size:11px;color:rgba(255,255,255,.4);display:block;margin-bottom:3px}
+.si input{background:rgba(255,255,255,.06);border:1px solid rgba(255,255,255,.08);border-radius:8px;padding:10px 12px;color:#fff;font-size:15px;width:100%;outline:none;transition:border .2s}
+.si input:focus{border-color:#74b9ff}
+.go{background:linear-gradient(135deg,#74b9ff,#a29bfe);border:none;border-radius:14px;color:#0a0a1a;font-size:17px;font-weight:700;padding:15px 48px;margin-top:8px;cursor:pointer;box-shadow:0 4px 0 #6a7ad8;transition:all .1s;letter-spacing:1px}
+.go:active{transform:translateY(4px);box-shadow:0 1px 0 #6a7ad8}
+
+/* Game */
+#game{display:none;flex-direction:column;height:100%;background:linear-gradient(180deg,#0a0a1a,#16215e,#1a2a7a)}
+#hdr{display:flex;justify-content:space-between;align-items:center;padding:10px 16px}
+#hdr .nm{font-size:15px;font-weight:600}#hdr .sc{font-size:13px;color:#f5d76e}
+#hdr .pg{font-size:11px;color:rgba(255,255,255,.3)}
+#prog{height:3px;background:rgba(255,255,255,.06);margin:0 16px;border-radius:2px;overflow:hidden}
+#prog .bf{height:100%;background:linear-gradient(90deg,#74b9ff,#a29bfe);border-radius:2px;transition:width .4s ease}
+
+/* Question */
+#qArea{flex:1;display:flex;flex-direction:column;padding:16px;overflow-y:auto}
+#qNum{font-size:12px;color:rgba(255,255,255,.3);font-weight:500;margin-bottom:6px}
+#qText{font-size:18px;font-weight:700;line-height:1.5;margin-bottom:20px;padding:0 4px}
+#qText .blank{display:inline-block;min-width:60px;border-bottom:2px dashed rgba(116,185,255,.4);margin:0 2px;color:#74b9ff;text-align:center}
+#options{display:flex;flex-direction:column;gap:8px;margin-top:auto}
+.opt{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.06);border-radius:14px;padding:14px 16px;cursor:pointer;transition:all .15s;font-size:15px;line-height:1.4;touch-action:none}
+.opt:active{transform:scale(.97)}
+.opt.sel{border-color:#74b9ff;background:rgba(116,185,255,.08)}
+.opt.cor{border-color:#4cd964!important;background:rgba(76,217,100,.1)!important}
+.opt.wro{border-color:#ff3b30!important;background:rgba(255,59,48,.1)!important}
+.opt.dis{pointer-events:none;opacity:.5}
+.opt .tag{display:inline-block;background:rgba(255,255,255,.06);border-radius:6px;padding:1px 8px;font-size:11px;color:rgba(255,255,255,.3);margin-right:8px;font-weight:600}
+.opt.cor .tag{background:rgba(76,217,100,.15);color:#4cd964}
+.opt.wro .tag{background:rgba(255,59,48,.15);color:#ff3b30}
+
+/* Feedback */
+#fb{display:none;margin-top:12px;padding:12px 14px;border-radius:12px;font-size:13px;line-height:1.5;gap:8px;flex-direction:column}
+#fb .icon{font-size:18px}#fb .msg{color:rgba(255,255,255,.8)}
+#fb.cor{background:rgba(76,217,100,.08);border:1px solid rgba(76,217,100,.15);display:flex}
+#fb.wro{background:rgba(255,59,48,.08);border:1px solid rgba(255,59,48,.15);display:flex}
+#nextBtn{background:linear-gradient(135deg,#74b9ff,#a29bfe);border:none;border-radius:12px;color:#0a0a1a;font-size:15px;font-weight:700;padding:12px 0;margin-top:8px;cursor:pointer;transition:all .1s;width:100%;display:none}
+#nextBtn:active{transform:translateY(2px)}
+
+/* Result */
+#result{display:none;flex-direction:column;height:100%;align-items:center;justify-content:center;background:linear-gradient(160deg,#0a0a1a,#1a0a3e,#16215e);text-align:center}
+#result .emoji{font-size:56px;margin-bottom:12px}
+#result h2{font-size:26px;font-weight:800;margin-bottom:6px}
+#result .sub{color:rgba(255,255,255,.4);font-size:13px;margin-bottom:20px}
+#result .score-box{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.08);border-radius:16px;padding:20px 32px;margin-bottom:20px}
+#result .score-box .big{font-size:42px;font-weight:800;color:#f5d76e}
+#result .score-box .detail{font-size:14px;color:rgba(255,255,255,.4);margin-top:4px}
+#result .btn-row{display:flex;gap:10px}
+#result .btn-row button{background:linear-gradient(135deg,#74b9ff,#a29bfe);border:none;border-radius:12px;color:#0a0a1a;font-size:14px;font-weight:700;padding:12px 24px;cursor:pointer}
+#result .btn-row button:active{transform:translateY(2px)}
+#result .btn-row .sec{background:rgba(255,255,255,.06);color:rgba(255,255,255,.5)}
+
+/* Review */
+#review{display:none;flex-direction:column;height:100%;background:linear-gradient(180deg,#0a0a1a,#16215e,#1a2a7a)}
+#review #hdr{border-bottom:1px solid rgba(255,255,255,.04)}
+#review .list{flex:1;overflow-y:auto;padding:8px 16px}
+.rv-item{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:12px;padding:10px 12px;margin-bottom:8px}
+.rv-item .q{font-size:13px;font-weight:600;margin-bottom:4px;line-height:1.4}
+.rv-item .a{font-size:11px;color:rgba(255,255,255,.4)}
+.rv-item .a .y{color:#4cd964;font-weight:600}
+.rv-item .a .n{color:#ff3b30;font-weight:600}
+.rv-item .tag-r{display:inline-block;font-size:10px;padding:1px 8px;border-radius:6px;margin-bottom:4px}
+.rv-item .tag-r.ok{background:rgba(76,217,100,.1);color:#4cd964}
+.rv-item .tag-r.fail{background:rgba(255,59,48,.1);color:#ff3b30}
+</style>
+</head><body>
+<div id="app">
+
+<!-- Title -->
+<div id="title">
+  <h1>📝 常識測驗</h1>
+  <div class="sub">互動考試 App</div>
+  <div class="si"><label>👤 姓名</label><input id="nameInput" placeholder="輸入你嘅名..." value="謝蕊安"></div>
+  <div class="si"><label>📚 範圍</label><input id="topicInput" placeholder="輸入範圍..." value="一年級常識 19-21課"></div>
+  <button class="go" id="startBtn">開始測驗！</button>
+</div>
+
+<!-- Quiz -->
+<div id="game">
+  <div id="hdr"><span class="nm" id="studentName"></span><span class="pg" id="qProgress">1/20</span><span class="sc" id="scoreDisplay">✅ 0</span></div>
+  <div id="prog"><div class="bf" id="progBar" style="width:5%"></div></div>
+  <div id="qArea">
+    <div id="qNum"></div>
+    <div id="qText"></div>
+    <div id="options"></div>
+    <div id="fb"><span class="icon"></span><span class="msg"></span></div>
+    <button id="nextBtn">下一題 ▶</button>
+  </div>
+</div>
+
+<!-- Result -->
+<div id="result">
+  <div class="emoji" id="resEmoji">🎉</div>
+  <h2 id="resTitle">測驗完成！</h2>
+  <div class="sub" id="resSub">謝蕊安 - 一年級常識 19-21課</div>
+  <div class="score-box">
+    <div class="big" id="resScore">0/20</div>
+    <div class="detail" id="resDetail">答啱 0 題，答錯 0 題</div>
+  </div>
+  <div class="btn-row">
+    <button id="reviewBtn">📋 覆卷</button>
+    <button class="sec" id="retryBtn">🔄 再考</button>
+  </div>
+</div>
+
+<!-- Review -->
+<div id="review">
+  <div id="hdr"><span class="nm">📋 覆卷</span><span class="pg" id="reviewBack" style="cursor:pointer">✕ 關閉</span></div>
+  <div class="list" id="reviewList"></div>
+</div>
+
+</div>
+<script>
+"use strict";(()=>{
+
+const QS = [
+  // 聲音
+  {q:'聲音係由物體______產生嘅。',o:['振動','移動','跳動','滾動'],a:0},
+  {q:'聲音要透過______先可以傳播。',o:['媒介','真空','電線','空氣'],a:0},
+  {q:'下面邊個可以傳播聲音？',o:['水','真空','太空','以上全部'],a:0},
+  {q:'聲音喺下面邊種媒介傳得最快？',o:['固體（鐵）','液體（水）','氣體（空氣）','一樣快'],a:0},
+  
+  // 光
+  {q:'光係以______傳播嘅。',o:['直線','曲線','圓形',' zigzag'],a:0},
+  {q:'光線射到平面鏡會發生______。',o:['反射','折射','吸收','擴散'],a:0},
+  {q:'下面邊種物體可以透光？',o:['玻璃','木板','鐵片','石頭'],a:1},
+  {q:'______可以阻擋光線，形成影子。',o:['不透明體','透明體','半透明體','光源'],a:0},
+  {q:'半透明體係可以點？',o:['透過部分光線','完全透光','完全唔透光','發光'],a:0},
+  {q:'下面邊個係光源？',o:['太陽','月亮','鏡子','白紙'],a:0},
+  {q:'影子嘅形成係因為光線被______。',o:['阻擋','反射','折射','增強'],a:0},
+  
+  // 磁鐵
+  {q:'磁鐵可以吸起下面邊種物品？',o:['鐵釘','膠擦','鉛筆','紙張'],a:0},
+  {q:'磁鐵有兩個磁極，分別係______。',o:['N極和S極','東極和西極','正極和負極','上極和下極'],a:0},
+  {q:'同極嘅磁鐵會互相______。',o:['排斥','吸引','冇反應','旋轉'],a:0},
+  {q:'唔同極嘅磁鐵會互相______。',o:['吸引','排斥','冇反應','跳動'],a:0},
+  
+  // 指南針
+  {q:'指南針嘅N極指向______方。',o:['北','南','東','西'],a:0},
+  {q:'指南針可以幫助我哋______。',o:['辨別方向','測量溫度','量度長度','計算時間'],a:0},
+  {q:'磁鐵嘅______極指向南方。',o:['S','N','東','西'],a:0},
+  
+  // 綜合
+  {q:'物體嘅______越______，聲音越大聲。',o:['振動幅度·大','振動速度·快','體積·大','重量·重'],a:0},
+  {q:'用指南針辨別方向時，要將指南針______擺放。',o:['水平','垂直','傾斜','倒轉'],a:0},
+];
+
+var S = {n:'',t:'',i:0,c:0,a:[],sel:-1,lock:0};
+
+function init(){
+  document.getElementById('startBtn').addEventListener('click',start);
+  document.getElementById('nextBtn').addEventListener('click',next);
+  document.getElementById('reviewBtn').addEventListener('click',showReview);
+  document.getElementById('retryBtn').addEventListener('click',()=>{document.getElementById('result').style.display='none';document.getElementById('title').style.display='flex';});
+  document.getElementById('reviewBack').addEventListener('click',()=>{document.getElementById('review').style.display='none';document.getElementById('result').style.display='flex';});
+}
+
+function start(){
+  const n=document.getElementById('nameInput').value||'考生';
+  const t=document.getElementById('topicInput').value||'常識測驗';
+  S={n,t,i:0,c:0,a:[],sel:-1,lock:0};
+  // Shuffle questions
+  for(let i=QS.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[QS[i],QS[j]]=[QS[j],QS[i]];}
+  
+  document.getElementById('title').style.display='none';
+  document.getElementById('game').style.display='flex';
+  document.getElementById('studentName').textContent='📝 '+n;
+  renderQ();
+}
+
+function renderQ(){
+  const q=QS[S.i];
+  S.sel=-1;S.lock=0;
+  
+  document.getElementById('qProgress').textContent=(S.i+1)+'/'+QS.length;
+  document.getElementById('scoreDisplay').textContent='✅ '+S.c;
+  document.getElementById('progBar').style.width=((S.i+1)/QS.length*100)+'%';
+  document.getElementById('fb').className='fb';
+  document.getElementById('fb').style.display='none';
+  document.getElementById('nextBtn').style.display='none';
+  
+  document.getElementById('qNum').textContent='第 '+(S.i+1)+' 題（共 '+QS.length+' 題）';
+  document.getElementById('qText').innerHTML=q.q.replace(/______/g,'<span class="blank"></span>');
+  
+  const opts=document.getElementById('options');
+  opts.innerHTML='';
+  q.o.forEach((o,i)=>{
+    const d=document.createElement('div');d.className='opt';
+    d.innerHTML='<span class="tag">'+(i+1)+'</span>'+o;
+    d.addEventListener('click',()=>ans(i));
+    opts.appendChild(d);
+  });
+}
+
+function ans(i){
+  if(S.lock)return;
+  S.lock=1;
+  const q=QS[S.i];
+  const opts=document.querySelectorAll('.opt');
+  opts[i].classList.add('sel');
+  opts[q.a].classList.add('cor');
+  if(i===q.a){S.c++;opts[i].classList.add('cor');S.a.push(1);}
+  else{opts[i].classList.add('wro');S.a.push(0);}
+  opts.forEach(o=>o.classList.add('dis'));
+  
+  const fb=document.getElementById('fb');
+  if(i===q.a){fb.className='fb cor';fb.innerHTML='<span class="icon">✅</span><span class="msg">答啱！好嘢！</span>';}
+  else{fb.className='fb wro';fb.innerHTML='<span class="icon">❌</span><span class="msg">答錯～ 正確答案：<strong>'+(q.a+1)+'. '+q.o[q.a]+'</strong></span>';}
+  fb.style.display='flex';
+  document.getElementById('scoreDisplay').textContent='✅ '+S.c;
+  
+  document.getElementById('nextBtn').style.display='block';
+  document.getElementById('nextBtn').textContent=S.i<QS.length-1?'下一題 ▶':'📊 睇成績';
+}
+
+function next(){
+  S.i++;
+  if(S.i>=QS.length)showRes();
+  else renderQ();
+}
+
+function showRes(){
+  document.getElementById('game').style.display='none';
+  document.getElementById('result').style.display='flex';
+  const p=Math.round(S.c/QS.length*100);
+  const emoji=p>=90?'🏆':p>=70?'🎉':p>=50?'👍':'💪';
+  const title=p>=90?'超班！':p>=70?'好叻！':p>=50?'唔錯！':'加油！';
+  document.getElementById('resEmoji').textContent=emoji;
+  document.getElementById('resTitle').textContent=title;
+  document.getElementById('resSub').textContent=S.n+' - '+S.t;
+  document.getElementById('resScore').textContent=S.c+'/'+QS.length;
+  document.getElementById('resDetail').textContent='答啱 '+S.c+' 題，答錯 '+(QS.length-S.c)+' 題（'+p+'%）';
+}
+
+function showReview(){
+  document.getElementById('result').style.display='none';
+  document.getElementById('review').style.display='flex';
+  const list=document.getElementById('reviewList');
+  list.innerHTML='';
+  QS.forEach((q,i)=>{
+    const a=S.a[i]||0;
+    const d=document.createElement('div');d.className='rv-item';
+    d.innerHTML='<div class="tag-r '+(a?'ok':'fail')+'">'+(a?'✅ 答啱':'❌ 答錯')+'</div>'+
+      '<div class="q">'+(i+1)+'. '+q.q.replace(/______/g,'____')+'</div>'+
+      '<div class="a">正確答案：<span class="y">'+(q.a+1)+'. '+q.o[q.a]+'</span></div>';
+    list.appendChild(d);
+  });
+}
+
+window.onload=function(){init();};
+})();
+</script>
+</body>
+</html>

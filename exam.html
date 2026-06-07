@@ -2,156 +2,124 @@
 <html lang="zh-HK">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>常識測驗 - 聲光磁</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
+<title>常識測驗 - 19-21課</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,'PingFang TC','Segoe UI',sans-serif;background:#0f0f2a;color:#fff}
 #app{width:100%;height:100%;max-width:460px;margin:0 auto;display:flex;flex-direction:column;position:relative}
-
-/* Title */
-#title{display:flex;flex-direction:column;height:100%;align-items:center;justify-content:center;background:linear-gradient(160deg,#0f0f2a,#1a1050,#162878);text-align:center;padding:20px}
+#title{display:flex;flex-direction:column;height:100%;align-items:center;justify-content:center;background:linear-gradient(160deg,#0f0f2a,#1a1050,#162878);padding:20px}
 #title h1{font-size:28px;font-weight:800;background:linear-gradient(135deg,#74b9ff,#a29bfe,#fd79a8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2px}
-#title .sub{color:rgba(255,255,255,.2);font-size:11px;letter-spacing:3px;margin-bottom:20px}
-#title .info{color:rgba(255,255,255,.5);font-size:13px;margin-bottom:18px;line-height:1.5}
-.si{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px 14px;margin-bottom:8px;width:88%;max-width:320px;text-align:left}
+#title .sub{color:rgba(255,255,255,.2);font-size:11px;letter-spacing:3px;margin-bottom:16px}
+.si{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px 14px;margin-bottom:8px;width:88%;max-width:320px}
 .si label{font-size:10px;color:rgba(255,255,255,.35);display:block;margin-bottom:2px}
 .si input{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:9px 12px;color:#fff;font-size:14px;width:100%;outline:none}
 .si input:focus{border-color:#74b9ff}
-.go-btn{background:linear-gradient(135deg,#74b9ff,#a29bfe);border:none;border-radius:14px;color:#0f0f2a;font-size:16px;font-weight:700;padding:14px 44px;margin-top:10px;cursor:pointer;box-shadow:0 4px 0 #5a6ad8;transition:all .08s;letter-spacing:1px}
-.go-btn:active{transform:translateY(4px);box-shadow:0 0 0 #5a6ad8}
-
-/* Quiz */
+.gb{background:linear-gradient(135deg,#74b9ff,#a29bfe);border:none;border-radius:14px;color:#0f0f2a;font-size:16px;font-weight:700;padding:14px 44px;margin-top:10px;cursor:pointer;box-shadow:0 4px 0 #5a6ad8;transition:all .08s;letter-spacing:1px}
+.gb:active{transform:translateY(4px);box-shadow:0 0 0 #5a6ad8}
 #quiz{display:none;flex-direction:column;height:100%;background:linear-gradient(180deg,#0f0f2a,#1a1050,#162878)}
 #hdr{display:flex;justify-content:space-between;align-items:center;padding:8px 14px}
-#hdr .nm{font-size:14px;font-weight:600}#hdr .sc{font-size:12px;color:#f5d76e}
-#hdr .pg{font-size:10px;color:rgba(255,255,255,.3)}
+#hdr .nm{font-size:14px;font-weight:600}#hdr .sc{font-size:12px;color:#f5d76e}#hdr .pg{font-size:10px;color:rgba(255,255,255,.3)}
 #prog{height:2px;background:rgba(255,255,255,.04);margin:0 14px;border-radius:2px;overflow:hidden}
 #prog .bf{height:100%;background:linear-gradient(90deg,#74b9ff,#a29bfe);border-radius:2px;transition:width .4s ease}
-
-#qArea{flex:1;display:flex;flex-direction:column;padding:14px 16px;overflow-y:auto;-webkit-overflow-scrolling:touch}
-#qNum{font-size:10px;color:rgba(255,255,255,.25);font-weight:500;margin-bottom:4px}
-#qType{font-size:10px;color:rgba(255,255,255,.15);margin-bottom:2px}
-#qText{font-size:16px;font-weight:700;line-height:1.5;margin-bottom:14px;padding:0 2px}
-#qText .bl{display:inline-block;min-width:50px;border-bottom:2px dashed rgba(116,185,255,.3);margin:0 2px;color:#74b9ff;text-align:center;font-weight:700}
-#qText .bl2{display:inline-block;min-width:35px;border-bottom:2px dashed rgba(116,185,255,.3);margin:0 1px;color:#74b9ff;text-align:center;font-weight:700}
-
+#qa{flex:1;display:flex;flex-direction:column;padding:10px 14px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#qType{font-size:10px;color:rgba(255,255,255,.15)}
+#qNum{font-size:10px;color:rgba(255,255,255,.25);margin-bottom:4px}
+#qTxt{font-size:15px;font-weight:700;line-height:1.5;margin-bottom:10px;padding:0 2px}
+#qTxt .bl{display:inline-block;min-width:50px;border-bottom:2px dashed rgba(116,185,255,.3);margin:0 2px;color:#74b9ff;font-weight:700}
+/* Diagram */
+#diagram{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:10px;padding:10px;margin-bottom:10px;text-align:center}
+#diagram .d-label{font-size:9px;color:rgba(255,255,255,.2);margin-bottom:6px}
+#diagram .d-grid{display:grid;gap:6px}
+#diagram .d-grid.c2{grid-template-columns:1fr 1fr}
+#diagram .d-grid.c4{grid-template-columns:1fr 1fr 1fr 1fr}
+#diagram .d-item{background:rgba(255,255,255,.03);border-radius:8px;padding:8px 4px;text-align:center}
+#diagram .d-item .d-icon{font-size:28px;display:block;margin-bottom:2px}
+#diagram .d-item .d-label{font-size:9px;color:rgba(255,255,255,.4)}
 /* Word bank */
-#wordBank{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);border-radius:12px;padding:8px 10px;margin-bottom:14px}
-#wordBank .wb-label{font-size:9px;color:rgba(255,255,255,.2);margin-bottom:4px;font-weight:500}
-#wordBank .wb-wrap{display:flex;flex-wrap:wrap;gap:4px}
-.wb-word{background:rgba(116,185,255,.08);border:1px solid rgba(116,185,255,.12);border-radius:6px;padding:3px 8px;font-size:12px;color:#74b9ff;cursor:pointer;transition:all .1s;touch-action:none}
-.wb-word:active{background:rgba(116,185,255,.15);transform:scale(.95)}
-.wb-word.used{opacity:.2;pointer-events:none}
-
-#options{display:flex;flex-direction:column;gap:6px}
-.opt{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:12px;padding:12px 14px;cursor:pointer;transition:all .12s;font-size:14px;line-height:1.3;touch-action:none}
+#wb{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);border-radius:10px;padding:8px 10px;margin-bottom:10px}
+#wb .wl{font-size:9px;color:rgba(255,255,255,.2);margin-bottom:4px}
+#wb .ww{display:flex;flex-wrap:wrap;gap:4px}
+.ww-word{background:rgba(116,185,255,.08);border:1px solid rgba(116,185,255,.12);border-radius:6px;padding:3px 8px;font-size:12px;color:#74b9ff;cursor:pointer;touch-action:none}
+.ww-word:active{background:rgba(116,185,255,.15);transform:scale(.95)}
+.ww-word.us{opacity:.2;pointer-events:none}
+#opts{display:flex;flex-direction:column;gap:5px}
+.opt{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:11px;padding:10px 12px;cursor:pointer;transition:all .12s;font-size:14px;touch-action:none}
 .opt:active{transform:scale(.98)}
-.opt.sel{border-color:#74b9ff;background:rgba(116,185,255,.06)}
-.opt.cor{border-color:#4cd964!important;background:rgba(76,217,100,.08)!important}
-.opt.wro{border-color:#ff3b30!important;background:rgba(255,59,48,.08)!important}
-.opt.dis{pointer-events:none;opacity:.5}
-.opt .tag{display:inline-block;background:rgba(255,255,255,.04);border-radius:5px;padding:0 7px;font-size:10px;color:rgba(255,255,255,.25);margin-right:6px;font-weight:600}
-.opt.cor .tag{background:rgba(76,217,100,.12);color:#4cd964}
-.opt.wro .tag{background:rgba(255,59,48,.12);color:#ff3b30}
-
-/* Fill input */
-#fillArea{display:none;flex-direction:column;margin-top:4px}
-#fillInput{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);border-radius:12px;padding:12px 14px;color:#fff;font-size:16px;text-align:center;outline:none;width:100%}
-#fillInput:focus{border-color:#74b9ff}
-#fillSubmit{background:linear-gradient(135deg,#74b9ff,#a29bfe);border:none;border-radius:10px;color:#0f0f2a;font-size:14px;font-weight:700;padding:10px;margin-top:6px;cursor:pointer}
-#fillSubmit:active{transform:translateY(2px)}
-
-#fb{display:none;margin-top:10px;padding:10px 12px;border-radius:10px;font-size:13px;line-height:1.4;gap:6px;flex-direction:column}
-#fb .icon{font-size:16px}
-#fb.cor{background:rgba(76,217,100,.06);border:1px solid rgba(76,217,100,.12);display:flex}
-#fb.wro{background:rgba(255,59,48,.06);border:1px solid rgba(255,59,48,.12);display:flex}
-#fb .ans{color:#74b9ff;font-weight:600}
-#nextBtn{background:linear-gradient(135deg,#74b9ff,#a29bfe);border:none;border-radius:10px;color:#0f0f2a;font-size:14px;font-weight:700;padding:11px 0;margin-top:8px;cursor:pointer;display:none;width:100%}
-#nextBtn:active{transform:translateY(2px)}
-
-/* Result */
-#result{display:none;flex-direction:column;height:100%;align-items:center;justify-content:center;background:linear-gradient(160deg,#0f0f2a,#1a1050,#162878);padding:20px}
-#result .emoji{font-size:52px;margin-bottom:8px}
-#result h2{font-size:24px;font-weight:800;margin-bottom:4px}
-#result .sub{color:rgba(255,255,255,.3);font-size:12px;margin-bottom:16px}
-#result .sb{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:16px;padding:16px 28px;margin-bottom:16px;text-align:center}
-#result .sb .big{font-size:38px;font-weight:800;color:#f5d76e}
-#result .sb .dt{font-size:12px;color:rgba(255,255,255,.35);margin-top:3px}
-#result .br{display:flex;gap:8px}
-#result .br button{background:linear-gradient(135deg,#74b9ff,#a29bfe);border:none;border-radius:10px;color:#0f0f2a;font-size:13px;font-weight:700;padding:10px 20px;cursor:pointer;white-space:nowrap}
-#result .br button:active{transform:translateY(2px)}
-#result .br .s2{background:rgba(255,255,255,.04);color:rgba(255,255,255,.4)}
-
-/* Review */
-#review{display:none;flex-direction:column;height:100%;background:linear-gradient(180deg,#0f0f2a,#1a1050)}
-#review #hdr{border-bottom:1px solid rgba(255,255,255,.04);padding:10px 14px}
-#review #hdr .close{font-size:11px;color:rgba(255,255,255,.3);cursor:pointer}
-#review .list{flex:1;overflow-y:auto;padding:6px 14px}
-.rv{border:1px solid rgba(255,255,255,.03);border-radius:10px;padding:8px 10px;margin-bottom:6px;background:rgba(255,255,255,.01)}
-.rv .q{font-size:12px;font-weight:600;margin-bottom:3px;line-height:1.3}
-.rv .a{font-size:10px;color:rgba(255,255,255,.35)}
-.rv .a .y{color:#4cd964;font-weight:600}
-.rv .a .n{color:#ff3b30;font-weight:600}
-.rv .tr{display:inline-block;font-size:9px;padding:1px 6px;border-radius:5px;margin-bottom:3px}
-.rv .tr.ok{background:rgba(76,217,100,.08);color:#4cd964}
-.rv .tr.fail{background:rgba(255,59,48,.08);color:#ff3b30}
+.opt.sl{border-color:#74b9ff;background:rgba(116,185,255,.06)}
+.opt.cr{border-color:#4cd964!important;background:rgba(76,217,100,.08)!important}
+.opt.wr{border-color:#ff3b30!important;background:rgba(255,59,48,.08)!important}
+.opt.ds{pointer-events:none;opacity:.5}
+.opt .tg{display:inline-block;background:rgba(255,255,255,.04);border-radius:4px;padding:0 6px;font-size:10px;color:rgba(255,255,255,.25);margin-right:6px;font-weight:600}
+.opt.cr .tg{background:rgba(76,217,100,.12);color:#4cd964}
+.opt.wr .tg{background:rgba(255,59,48,.12);color:#ff3b30}
+#fa{display:none;flex-direction:column;margin-top:4px}
+#fi{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 12px;color:#fff;font-size:15px;text-align:center;outline:none;width:100%}
+#fi:focus{border-color:#74b9ff}
+#fs{background:linear-gradient(135deg,#74b9ff,#a29bfe);border:none;border-radius:10px;color:#0f0f2a;font-size:14px;font-weight:700;padding:10px;margin-top:5px;cursor:pointer}
+#fs:active{transform:translateY(2px)}
+#fb{display:none;margin-top:8px;padding:8px 10px;border-radius:10px;font-size:12px;line-height:1.4;gap:6px;flex-direction:column}
+#fb .ic{font-size:15px}
+#fb.cr{background:rgba(76,217,100,.06);border:1px solid rgba(76,217,100,.12);display:flex}
+#fb.wr{background:rgba(255,59,48,.06);border:1px solid rgba(255,59,48,.12);display:flex}
+#fb .an{color:#74b9ff;font-weight:600}
+#nb{background:linear-gradient(135deg,#74b9ff,#a29bfe);border:none;border-radius:10px;color:#0f0f2a;font-size:14px;font-weight:700;padding:10px 0;margin-top:6px;cursor:pointer;display:none;width:100%}
+#nb:active{transform:translateY(2px)}
+#res{display:none;flex-direction:column;height:100%;align-items:center;justify-content:center;background:linear-gradient(160deg,#0f0f2a,#1a1050,#162878);padding:20px}
+#res .re{font-size:52px;margin-bottom:8px}#res h2{font-size:24px;font-weight:800;margin-bottom:4px}
+#res .rs{color:rgba(255,255,255,.3);font-size:12px;margin-bottom:14px}
+#res .sb{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:14px 26px;margin-bottom:14px;text-align:center}
+#res .sb .bg{font-size:38px;font-weight:800;color:#f5d76e}#res .sb .dt{font-size:12px;color:rgba(255,255,255,.35);margin-top:3px}
+#res .br{display:flex;gap:8px}#res .br button{background:linear-gradient(135deg,#74b9ff,#a29bfe);border:none;border-radius:10px;color:#0f0f2a;font-size:13px;font-weight:700;padding:10px 20px;cursor:pointer}
+#res .br .s2{background:rgba(255,255,255,.04);color:rgba(255,255,255,.4)}
+#rv{display:none;flex-direction:column;height:100%;background:linear-gradient(180deg,#0f0f2a,#1a1050)}
+#rv .list{flex:1;overflow-y:auto;padding:6px 12px;-webkit-overflow-scrolling:touch}
+.rvi{border:1px solid rgba(255,255,255,.03);border-radius:10px;padding:8px 10px;margin-bottom:6px}
+.rvi .q{font-size:12px;font-weight:600;margin-bottom:3px;line-height:1.3}
+.rvi .a{font-size:10px;color:rgba(255,255,255,.35)}
+.rvi .a .y{color:#4cd964;font-weight:600}.rvi .a .n{color:#ff3b30;font-weight:600}
+.rvi .tr{display:inline-block;font-size:9px;padding:1px 6px;border-radius:5px;margin-bottom:3px}
+.rvi .tr.ok{background:rgba(76,217,100,.08);color:#4cd964}.rvi .tr.fail{background:rgba(255,59,48,.08);color:#ff3b30}
 </style>
 </head><body>
 <div id="app">
-
-<!-- Title -->
 <div id="title">
   <h1>📝 常識測驗</h1>
-  <div class="sub">一 年 級 · 聲 光 磁</div>
-  <div class="si"><label>👤 姓名</label><input id="nameInput" placeholder="輸入姓名..." value="謝蕊安"></div>
-  <div class="si"><label>📚 範圍</label><input id="topicInput" value="一年級常識 19-21課"></div>
-  <button class="go-btn" id="startBtn">開始測驗！</button>
+  <div class="sub">一 年 級 · 19 - 21 課</div>
+  <div class="si"><label>👤 姓名</label><input id="ni" value="謝蕊安"></div>
+  <div class="si"><label>📚 範圍</label><input id="ti" value="一年級常識 19-21課 聲光磁"></div>
+  <button class="gb" id="sb">開始測驗！</button>
 </div>
 
-<!-- Quiz -->
 <div id="quiz">
-  <div id="hdr"><span class="nm" id="sName"></span><span class="pg" id="qProg">1/16</span><span class="sc" id="sScore">✅ 0</span></div>
-  <div id="prog"><div class="bf" id="progBar" style="width:6%"></div></div>
-  <div id="qArea">
-    <div id="qType"></div>
-    <div id="qNum"></div>
-    <div id="qText"></div>
-    <div id="wordBank"></div>
-    <div id="fillArea">
-      <input id="fillInput" placeholder="輸入答案..." autocomplete="off">
-      <button id="fillSubmit">提交答案</button>
-    </div>
-    <div id="options"></div>
-    <div id="fb"><span class="icon"></span><span class="msg"></span></div>
-    <button id="nextBtn">下一題 ▶</button>
+  <div id="hdr"><span class="nm" id="sn"></span><span class="pg" id="qp"></span><span class="sc" id="ss"></span></div>
+  <div id="prog"><div class="bf" id="pb"></div></div>
+  <div id="qa">
+    <div id="qType"></div><div id="qNum"></div><div id="qTxt"></div>
+    <div id="diagram"></div><div id="wb"></div><div id="fa"><input id="fi" placeholder="輸入答案..." autocomplete="off"><button id="fs">提交答案</button></div>
+    <div id="opts"></div>
+    <div id="fb"><span class="ic"></span><span class="msg"></span></div>
+    <button id="nb">下一題 ▶</button>
   </div>
 </div>
 
-<!-- Result -->
-<div id="result">
-  <div class="emoji" id="rEmoji">🎉</div>
-  <h2 id="rTitle">測驗完成！</h2>
-  <div class="sub" id="rSub">謝蕊安 - 一年級常識 19-21課</div>
-  <div class="sb"><div class="big" id="rScore">0/16</div><div class="dt" id="rDt">答啱 0 題，答錯 0 題</div></div>
-  <div class="br"><button id="rvBtn">📋 覆卷</button><button class="s2" id="retryBtn">🔄 再考</button></div>
+<div id="res">
+  <div class="re" id="re">🎉</div><h2 id="rt">測驗完成！</h2><div class="rs" id="rsub"></div>
+  <div class="sb"><div class="bg" id="rsc">0/26</div><div class="dt" id="rdt"></div></div>
+  <div class="br"><button id="rvb">📋 覆卷</button><button class="s2" id="ryb">🔄 再考</button></div>
 </div>
 
-<!-- Review -->
-<div id="review">
-  <div id="hdr"><span class="nm">📋 覆卷</span><span class="close" id="rvClose">✕ 關閉</span></div>
-  <div class="list" id="rvList"></div>
-</div>
+<div id="rv"><div class="list" id="rvl"></div></div>
 
-</div>
 <script>
 "use strict";(()=>{
 
-const WORD_BANK = ['氣體','吸','鐵','振動','直線','南','辨別方向','大','媒介','光線','北','聲音','黑色','半透明體','排斥','吸引'];
+const WB = ['氣體','吸','鐵','振動','直線','南','辨別方向','大','媒介','光線','北','聲音','黑色','半透明體','排斥','吸引'];
 
-// Qs: {t:'mc'|'fill'|'tf', q, o?, a, type?}
+// Questions
+// t: wb=wordbank, tf=true/false, mc=choice, exp=experiment
 const QS = [
-  // === 填充題 (with word bank) ===
+  // === 填充題（詞語庫）13題 ===
   {t:'wb',q:'物體嘅振動幅度越______，產生嘅聲音越大。',a:'大'},
   {t:'wb',q:'指南針能幫助我哋______。',a:'辨別方向'},
   {t:'wb',q:'聲音可以透過______、固體同液體傳播。',a:'氣體'},
@@ -166,184 +134,196 @@ const QS = [
   {t:'wb',q:'當無______，我哋就睇唔到嘢。',a:'光線'},
   {t:'wb',q:'磁鐵嘅兩端稱為______極同______極。',a:'北,南'},
   
-  // === 是非題 ===
+  // === 是非題 10題 ===
   {t:'tf',q:'當無熱，我哋就睇唔到嘢。',a:false},
-  {t:'tf',q:'當光照喺唔透明嘅物體上，便會受到阻擋，形成聲音。',a:false},
+  {t:'tf',q:'當光照喺唔透明嘅物體上，會受到阻擋，形成聲音。',a:false},
+  {t:'tf',q:'物體振動幅度越小，發出嘅聲音便越小。',a:true},
+  {t:'tf',q:'光能穿透鐵造嘅物體。',a:false},
+  {t:'tf',q:'光以曲線傳播，遇到唔透明物體會形成影子。',a:false},
+  {t:'tf',q:'所有不透明體嘅影子都係黑色嘅。',a:true},
+  {t:'tf',q:'磁鐵嘅兩端係南極同北極，有異極相斥嘅特性。',a:false},
+  {t:'tf',q:'越大力敲打木門，振動幅度越大，產生嘅聲音越小。',a:false},
+  {t:'tf',q:'木嘅傳聲效果較空氣嘅好。',a:true},
+  {t:'tf',q:'能讓部分光穿透嘅物體，稱為透明體。',a:false},
   
-  // === 問答題 ===
-  {t:'mc',q:'影子係點樣形成嘅？',o:['光線被唔透明物體阻擋形成','物體發光形成','溫度變化形成','空氣流動形成'],a:0},
+  // === 圈出適當答案 ===
+  {t:'mc',q:'聲音可經由空氣、水和木等媒介______。',o:['傳播','傳染'],a:0},
+  
+  // === 看圖選擇題 ===
+  {t:'mc-img',q:'以下邊D情況會產生聲音？',d:['🧑 拍打枱面','👧 輕輕放杯','🧍 企定定','📚 圖書館睇書'],a:[0],m:'可選多個答案'},
+  {t:'mc-img',q:'第一組：邊個敲打方法音量較大？',d:['🥁 用力敲鼓（聲波大）','🥁 輕輕敲鼓（聲波細）'],a:0},
+  {t:'mc-img',q:'第二組：邊個敲打方法音量較大？',d:['🥤 輕敲玻璃杯（裂痕細）','🥤 大力敲玻璃杯（裂痕大）'],a:1},
+  
+  // === 看圖分類 ===
+  {t:'mc-img',q:'以下邊個係不透明體？',d:['⚪ 波','🪟 玻璃窗','🥛 水杯','📕 書本'],a:[0,3],m:'可選多個答案'},
+  {t:'mc-img',q:'以下邊個係透明體？',d:['⚪ 波','🪟 玻璃窗','🥛 透明水杯','📕 書本'],a:[1,2],m:'可選多個答案'},
+  
+  // === 音量題 ===
+  {t:'mc-img',q:'A) 用力拍枱  B) 用力拍手  C) 輕力拍枱  D) 輕力拍手\n邊D發出較大音量？',d:['A: 用力拍枱🔊','B: 用力拍手🔊','C: 輕力拍枱🔉','D: 輕力拍手🔉'],a:[0,1],m:'可選多個答案'},
+  
+  // === 實驗題 ===
+  {t:'mc',q:'根據實驗，佢係測試物料嘅邊項特性？',o:['硬度','透光率','吸水程度'],a:1},
 ];
 
-var S = {n:'',t:'',i:0,c:0,res:[],sel:-1,lock:0,used:[]};
+var G = {n:'',t:'',i:0,c:0,r:[],lk:0,us:[]};
+
+function $(id){return document.getElementById(id);}
 
 function init(){
-  document.getElementById('startBtn').addEventListener('click',start);
-  document.getElementById('nextBtn').addEventListener('click',nextQ);
-  document.getElementById('fillSubmit').addEventListener('click',checkFill);
-  document.getElementById('fillInput').addEventListener('keydown',e=>{if(e.key==='Enter')checkFill();});
-  document.getElementById('rvBtn').addEventListener('click',showRV);
-  document.getElementById('retryBtn').addEventListener('click',()=>{document.getElementById('result').style.display='none';document.getElementById('title').style.display='flex';});
-  document.getElementById('rvClose').addEventListener('click',()=>{document.getElementById('review').style.display='none';document.getElementById('result').style.display='flex';});
+  $('sb').addEventListener('click',go);
+  $('nb').addEventListener('click',next);
+  $('fs').addEventListener('click',checkFill);
+  $('fi').addEventListener('keydown',e=>{if(e.key==='Enter')checkFill();});
+  $('rvb').addEventListener('click',showRV);
+  $('ryb').addEventListener('click',()=>{$('res').style.display='none';$('title').style.display='flex';});
 }
 
-function start(){
-  const n=document.getElementById('nameInput').value||'考生';
-  const tp=document.getElementById('topicInput').value||'常識測驗';
-  S={n,tp,i:0,c:0,res:[],sel:-1,lock:0,used:[]};
-  
-  document.getElementById('title').style.display='none';
-  document.getElementById('quiz').style.display='flex';
-  document.getElementById('sName').textContent='📝 '+n;
-  renderQ();
+function go(){
+  G={n:$('ni').value||'考生',t:$('ti').value||'常識測驗',i:0,c:0,r:[],lk:0,us:[]};
+  $('title').style.display='none';$('quiz').style.display='flex';
+  $('sn').textContent='📝 '+G.n;rq();
 }
 
-function renderQ(){
-  const q=QS[S.i];S.sel=-1;S.lock=0;
+function rq(){
+  const q=QS[G.i];G.lk=0;
+  $('qp').textContent=(G.i+1)+'/'+QS.length;
+  $('ss').textContent='✅ '+G.c;
+  $('pb').style.width=((G.i+1)/QS.length*100)+'%';
+  $('fb').className='fb';$('fb').style.display='none';
+  $('nb').style.display='none';
+  $('opts').style.display='none';$('opts').innerHTML='';
+  $('wb').style.display='none';$('wb').innerHTML='';
+  $('fa').style.display='none';$('fi').value='';$('fs').disabled=false;$('fi').disabled=false;
+  $('diagram').style.display='none';$('diagram').innerHTML='';
   
-  document.getElementById('qProg').textContent=(S.i+1)+'/'+QS.length;
-  document.getElementById('sScore').textContent='✅ '+S.c;
-  document.getElementById('progBar').style.width=((S.i+1)/QS.length*100)+'%';
-  document.getElementById('fb').className='fb';document.getElementById('fb').style.display='none';
-  document.getElementById('nextBtn').style.display='none';
-  document.getElementById('options').style.display='none';
-  document.getElementById('options').innerHTML='';
-  document.getElementById('wordBank').style.display='none';
-  document.getElementById('wordBank').innerHTML='';
-  document.getElementById('fillArea').style.display='none';
-  document.getElementById('fillInput').value='';
+  let tn='';
+  if(q.t==='wb')tn='✏️ 填充題（用詞語庫）';
+  else if(q.t==='tf')tn='⭕ 是非題';
+  else if(q.t==='mc')tn='🔘 選擇題';
+  else if(q.t==='mc-img')tn='🖼️ 看圖題';
+  $('qType').textContent=tn;
+  $('qNum').textContent='第 '+(G.i+1)+' 題（共 '+QS.length+' 題）';
   
-  let typeName='';
-  if(q.t==='wb')typeName='✏️ 填充題（用詞語庫）';
-  else if(q.t==='tf')typeName='⭕ 是非題';
-  else if(q.t==='mc')typeName='🔘 選擇題';
-  document.getElementById('qType').textContent=typeName;
-  document.getElementById('qNum').textContent='第 '+(S.i+1)+' 題（共 '+QS.length+' 題）';
-  
-  // Render question text
   let txt=q.q;
-  // Replace blanks with styled spans
-  txt=txt.replace(/______/g,'<span class="bl"></span>').replace(/________/g,'<span class="bl" style="min-width:60px"></span>');
-  document.getElementById('qText').innerHTML=txt;
+  txt=txt.replace(/______/g,'<span class="bl"></span>').replace(/________/g,'<span class="bl" style="min-width:55px"></span>');
+  txt=txt.replace(/\n/g,'<br>');
+  $('qTxt').innerHTML=txt;
+  
+  // Diagram
+  if(q.d){
+    $('diagram').style.display='block';
+    const d=$('diagram');
+    if(q.d.length>4){d.innerHTML='<div class="d-label">📊 圖片情境</div><div class="d-grid c2">'+q.d.map((x,i)=>'<div class="d-item"><span class="d-icon">'+(x.match(/^.{1,2}/)?.[0]||'')+'</span><span class="d-label">'+(q.m?'':'')+String.fromCharCode(65+i)+'. '+x.replace(/^.{1,2}\s?/,'')+'</span></div>').join('')+'</div>';}
+    else{d.innerHTML='<div class="d-label">📊 圖片情境</div><div class="d-grid c4">'+q.d.map((x,i)=>'<div class="d-item"><span class="d-icon">'+(x.match(/^.{1,2}/)?.[0]||'')+'</span><span class="d-label">'+String.fromCharCode(65+i)+'. '+x.replace(/^.{1,2}\s?/,'')+'</span></div>').join('')+'</div>';}
+  }
   
   if(q.t==='wb'){
-    // Show word bank (filter used words)
-    const wb=document.getElementById('wordBank');wb.style.display='block';
-    wb.innerHTML='<div class="wb-label">📦 詞語庫（撳一下選取）</div><div class="wb-wrap"></div>';
-    const wrap=wb.querySelector('.wb-wrap');
-    WORD_BANK.forEach(w=>{
-      const el=document.createElement('span');el.className='wb-word'+(S.used.includes(w)?' used':'');
-      el.textContent=w;
-      el.addEventListener('click',()=>{
-        if(el.classList.contains('used'))return;
-        document.getElementById('fillInput').value=w;
-        checkFill();
-      });
-      wrap.appendChild(el);
+    const w=$('wb');w.style.display='block';
+    w.innerHTML='<div class="wl">📦 詞語庫（撳字填答案）</div><div class="ww"></div>';
+    const ww=w.querySelector('.ww');
+    WB.forEach(w=>{
+      const e=document.createElement('span');e.className='ww-word'+(G.us.includes(w)?' us':'');
+      e.textContent=w;
+      e.addEventListener('click',()=>{if(!e.classList.contains('us')){$('fi').value=w;checkFill();}});
+      ww.appendChild(e);
     });
-    document.getElementById('fillArea').style.display='flex';
+    $('fa').style.display='flex';
   } else if(q.t==='tf'){
-    const opts=document.getElementById('options');opts.style.display='flex';
+    const o=$('opts');o.style.display='flex';
     [['✅ 正確（√）',true],['❌ 唔正確（×）',false]].forEach(([l,v])=>{
-      const d=document.createElement('div');d.className='opt';d.innerHTML='<span class="tag">?</span>'+l;
-      d.addEventListener('click',()=>checkTF(v));
-      opts.appendChild(d);
+      const d=document.createElement('div');d.className='opt';
+      d.innerHTML='<span class="tg">?</span>'+l;
+      d.addEventListener('click',()=>chkTF(v));
+      o.appendChild(d);
     });
-  } else if(q.t==='mc'){
-    const opts=document.getElementById('options');opts.style.display='flex';
-    q.o.forEach((o,i)=>{
-      const d=document.createElement('div');d.className='opt';d.innerHTML='<span class="tag">'+(i+1)+'</span>'+o;
-      d.addEventListener('click',()=>checkMC(i));
-      opts.appendChild(d);
+  } else if(q.t==='mc'||q.t==='mc-img'){
+    const o=$('opts');o.style.display='flex';
+    q.o.forEach((x,i)=>{
+      const d=document.createElement('div');d.className='opt';
+      d.innerHTML='<span class="tg">'+String.fromCharCode(65+i)+'</span>'+x;
+      d.addEventListener('click',()=>chkMC(i,Array.isArray(q.a)));
+      o.appendChild(d);
     });
   }
 }
 
 function checkFill(){
-  if(S.lock)return;S.lock=1;
-  const val=document.getElementById('fillInput').value.trim();
-  if(!val){S.lock=0;return;}
-  
-  const q=QS[S.i];
-  const answers=q.a.split(',');
-  const correct=answers.some(a=>val.includes(a)||a.includes(val));
-  
-  S.used.push(val);
-  
-  showFB(correct,q.a);
-  if(correct){S.c++;S.res.push(1);}else S.res.push(0);
-  document.getElementById('nextBtn').style.display='block';
-  document.getElementById('fillSubmit').disabled=true;
-  document.getElementById('fillInput').disabled=true;
-  document.getElementById('sScore').textContent='✅ '+S.c;
+  if(G.lk)return;G.lk=1;
+  const v=$('fi').value.trim();if(!v){G.lk=0;return;}
+  const q=QS[G.i];G.us.push(v);
+  const aa=q.a.split(',');const cr=aa.some(a=>v.includes(a)||a.includes(v));
+  fb(cr,q.a);if(cr){G.c++;G.r.push(1);}else G.r.push(0);
+  $('nb').style.display='block';$('fs').disabled=true;$('fi').disabled=true;$('ss').textContent='✅ '+G.c;
 }
 
-function checkTF(v){
-  if(S.lock)return;S.lock=1;
-  const q=QS[S.i];const correct=v===q.a;
-  const opts=document.querySelectorAll('.opt');
-  opts.forEach((o,i)=>o.classList.add('dis'));
-  if(correct){opts[0].classList.add(v?'cor':'wro');S.c++;S.res.push(1);}
-  else{const ci=v?0:1;opts[ci].classList.add('wro');opts[1-ci].classList.add('cor');S.res.push(0);}
-  const ansStr=q.a?'✅ 正確（√）':'❌ 唔正確（×）';
-  showFB(correct,ansStr);
-  document.getElementById('nextBtn').style.display='block';
-  document.getElementById('sScore').textContent='✅ '+S.c;
+function chkTF(v){
+  if(G.lk)return;G.lk=1;
+  const q=QS[G.i],cr=v===q.a;
+  const o=document.querySelectorAll('.opt');o.forEach(e=>e.classList.add('ds'));
+  if(cr){o[0].classList.add(v?'cr':'wr');const ci=v?1:0;o[ci].classList.add('cr');G.c++;G.r.push(1);}
+  else{const ci=v?0:1;o[ci].classList.add('wr');o[1-ci].classList.add('cr');G.r.push(0);}
+  fb(cr,q.a?'✅正確（√）':'❌唔正確（×）');
+  $('nb').style.display='block';$('ss').textContent='✅ '+G.c;
 }
 
-function checkMC(i){
-  if(S.lock)return;S.lock=1;
-  const q=QS[S.i];const correct=i===q.a;
-  const opts=document.querySelectorAll('.opt');
-  opts.forEach(o=>o.classList.add('dis'));
-  opts[i].classList.add(i===q.a?'cor':'wro','sel');
-  opts[q.a].classList.add('cor');
-  if(correct){S.c++;S.res.push(1);}else S.res.push(0);
-  showFB(correct,q.o[q.a]);
-  document.getElementById('nextBtn').style.display='block';
-  document.getElementById('sScore').textContent='✅ '+S.c;
-}
-
-function showFB(correct,ans){
-  const fb=document.getElementById('fb');
-  if(correct){fb.className='fb cor';fb.innerHTML='<span class="icon">✅</span><span class="msg">答啱！好嘢！</span>';}
-  else{fb.className='fb wro';fb.innerHTML='<span class="icon">❌</span><span class="msg">答錯～ 正確答案：<span class="ans">'+ans+'</span></span>';}
-  fb.style.display='flex';
-}
-
-function nextQ(){
-  S.i++;
-  if(S.i>=QS.length)showRes();
-  else{
-    document.getElementById('fillSubmit').disabled=false;
-    document.getElementById('fillInput').disabled=false;
-    renderQ();
+var selMC=[];
+function chkMC(i,mul){
+  if(G.lk&&!mul)return;
+  const q=QS[G.i];
+  if(mul&&!G.lk){
+    selMC.push(i);
+    const o=document.querySelectorAll('.opt');
+    o[i].classList.toggle('sl');
+    // Show submit button
+    return;
   }
+  G.lk=1;
+  const cr=i===q.a;
+  const o=document.querySelectorAll('.opt');o.forEach(e=>e.classList.add('ds'));
+  o[i].classList.add(i===q.a?'cr':'wr','sl');
+  o[q.a].classList.add('cr');
+  if(cr){G.c++;G.r.push(1);}else G.r.push(0);
+  fb(cr,q.o[q.a]);$('nb').style.display='block';$('ss').textContent='✅ '+G.c;
+}
+
+function fb(cr,ans){
+  const f=$('fb');
+  f.className='fb '+(cr?'cr':'wr');
+  f.innerHTML=cr?'<span class="ic">✅</span><span class="msg">答啱！好嘢！</span>':'<span class="ic">❌</span><span class="msg">答錯～ 正確答案：<span class="an">'+ans+'</span></span>';
+  f.style.display='flex';
+}
+
+function next(){
+  G.i++;if(G.i>=QS.length)showRes();else{$('fs').disabled=false;$('fi').disabled=false;selMC=[];rq();}
 }
 
 function showRes(){
-  document.getElementById('quiz').style.display='none';
-  document.getElementById('result').style.display='flex';
-  const p=Math.round(S.c/QS.length*100);
+  $('quiz').style.display='none';$('res').style.display='flex';
+  const p=Math.round(G.c/QS.length*100);
   const em=p>=90?'🏆':p>=70?'🎉':p>=50?'👍':'💪';
-  const ti=p>=90?'超班！':p>=70?'好叻！':p>=50?'唔錯！':'加油呀！';
-  document.getElementById('rEmoji').textContent=em;
-  document.getElementById('rTitle').textContent=ti;
-  document.getElementById('rSub').textContent=S.n+' - '+S.tp;
-  document.getElementById('rScore').textContent=S.c+'/'+QS.length;
-  document.getElementById('rDt').textContent='答啱 '+S.c+' 題，答錯 '+(QS.length-S.c)+' 題（'+p+'%）';
+  const ti=p>=90?'超叻！':p>=70?'好嘢！':p>=50?'唔錯！':'加油呀！';
+  $('re').textContent=em;$('rt').textContent=ti;
+  $('rsub').textContent=G.n+' - '+G.t;
+  $('rsc').textContent=G.c+'/'+QS.length;
+  $('rdt').textContent='答啱 '+G.c+' 題，答錯 '+(QS.length-G.c)+' 題（'+p+'%）';
 }
 
 function showRV(){
-  document.getElementById('result').style.display='none';
-  document.getElementById('review').style.display='flex';
-  const list=document.getElementById('rvList');list.innerHTML='';
+  $('res').style.display='none';
+  const el=$('rv');el.style.display='flex';
+  // Close handler
+  if(!el._close){
+    const h=document.createElement('div');h.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04)';
+    h.innerHTML='<span style="font-size:14px;font-weight:600">📋 覆卷</span><span id="rvc" style="font-size:11px;color:rgba(255,255,255,.3);cursor:pointer">✕ 關閉</span>';
+    el.insertBefore(h,el.firstChild);
+    h.querySelector('#rvc').addEventListener('click',()=>{el.style.display='none';$('res').style.display='flex';});
+    el._close=true;
+  }
+  const l=$('rvl');l.innerHTML='';
   QS.forEach((q,i)=>{
-    const ok=S.res[i];
-    const d=document.createElement('div');d.className='rv';
-    d.innerHTML='<div class="tr '+(ok?'ok':'fail')+'">'+(ok?'✅':'❌')+'</div>'+
-      '<div class="q">'+(i+1)+'. '+q.q.replace(/______/g,'____')+'</div>'+
-      '<div class="a">答案：<span class="y">'+(q.a||q.o?.[q.a]||'')+'</span></div>';
-    list.appendChild(d);
+    const ok=G.r[i];const d=document.createElement('div');d.className='rvi';
+    d.innerHTML='<div class="tr '+(ok?'ok':'fail')+'">'+(ok?'✅ 答啱':'❌ 答錯')+'</div><div class="q">'+(i+1)+'. '+q.q.replace(/______/g,'____')+'</div><div class="a">答案：<span class="y">'+(q.a||'')+'</span></div>';
+    l.appendChild(d);
   });
 }
 

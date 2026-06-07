@@ -2,287 +2,1100 @@
 <html lang="zh-HK">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
-<title>寵物樂園</title>
+<meta name="viewport" content="width=device-width,initial-scale=1.0,maximum-scale=1.0,user-scalable=no">
+<title>寵物世界</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
-html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,'PingFang TC','Segoe UI',sans-serif;background:#0a0a1a;color:#fff}
-#app{width:100%;height:100%;max-width:460px;margin:0 auto;display:flex;flex-direction:column;position:relative}
-#title{display:flex;flex-direction:column;height:100%;align-items:center;justify-content:center;background:linear-gradient(160deg,#0a0a1a,#1a0a2e,#16213e)}
-#title h1{font-size:36px;font-weight:800;background:linear-gradient(135deg,#f5d76e,#ff9500,#ff6b6b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px}
-#title .sub{color:rgba(255,255,255,.25);font-size:11px;letter-spacing:6px;margin-bottom:32px}
-.pick{display:flex;gap:10px;flex-wrap:wrap;justify-content:center;max-width:360px}
-.card{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:18px;padding:16px 6px 12px;text-align:center;width:90px;cursor:pointer;transition:all .25s}
-.card.sel{border-color:rgba(245,215,110,.3);background:rgba(245,215,110,.04);transform:translateY(-4px);box-shadow:0 8px 20px rgba(245,215,110,.08)}
-.card .pm{width:56px;height:56px;margin:0 auto 6px;position:relative}
-.card .pm .pet{transform:scale(.5);transform-origin:top left;width:100px;height:120px}
-.card .pn{font-size:12px;font-weight:600}
-.go{background:linear-gradient(135deg,#f5d76e,#ff9500);border:none;border-radius:14px;color:#0a0a1a;font-size:17px;font-weight:700;padding:15px 48px;margin-top:28px;cursor:pointer;box-shadow:0 4px 0 #b87200;transition:all .1s}
-.go:disabled{opacity:.25;box-shadow:none!important;pointer-events:none}
-.go:active{transform:translateY(4px);box-shadow:0 1px 0 #b87200}
-#game{display:none;flex-direction:column;height:100%;background:linear-gradient(180deg,#0a0a1a,#16213e,#1a2a5a)}
-#header{display:flex;align-items:center;padding:10px 16px 2px;gap:8px}
-#header .pn{font-size:17px;font-weight:700}#header .lv{font-size:11px;color:rgba(255,255,255,.4);background:rgba(255,255,255,.04);padding:2px 10px;border-radius:8px}
-#header .xp{font-size:10px;color:rgba(255,255,255,.25);margin-left:auto}#header .coin{font-size:13px;font-weight:600;color:#f5d76e;background:rgba(245,215,110,.06);padding:2px 10px;border-radius:8px}
-
-/* Pet Display */
-#petArea{flex:1;display:flex;align-items:center;justify-content:center;position:relative;overflow:hidden}
-#petArea::before{content:'';position:absolute;width:260px;height:260px;border-radius:50%;background:radial-gradient(circle,rgba(245,215,110,.03),transparent 60%)}
-#petArt{position:relative;cursor:pointer;-webkit-tap-highlight-color:transparent;display:flex;flex-direction:column;align-items:center}
-#petArt .pet{transform:scale(1.2);transform-origin:center center}
-#petArt .shadow{width:80px;height:12px;background:rgba(0,0,0,.12);border-radius:50%;margin-top:-10px}
-#petMood{position:absolute;top:20%;font-size:30px;animation:float 2s ease-in-out infinite;z-index:5}
-
-/* CSS Pets */
-.pet{position:relative;width:100px;height:120px;margin:0 auto}
-.pet .body{position:absolute;left:50%;top:35px;transform:translateX(-50%)}
-/* Fire pet */
-.pet-0 .body{width:56px;height:56px;background:radial-gradient(circle at 38% 35%,#ff6b35,#d63031);border-radius:50%;box-shadow:inset -4px -4px 10px rgba(0,0,0,.15),inset 3px 3px 12px rgba(255,150,50,.4)}
-.pet-0 .eye{position:absolute;top:16px;width:10px;height:12px;background:#222;border-radius:50%;z-index:2}
-.pet-0 .eye::after{content:'';position:absolute;top:0;left:1px;width:5px;height:5px;background:#fff;border-radius:50%}
-.pet-0 .eye-l{left:8px}.pet-0 .eye-r{right:8px}
-.pet-0 .bl{position:absolute;top:24px;width:10px;height:5px;background:rgba(255,100,100,.25);border-radius:50%}.pet-0 .bl-l{left:1px}.pet-0 .bl-r{right:1px}
-.pet-0 .mo{position:absolute;top:28px;left:50%;transform:translateX(-50%);width:10px;height:5px;border-bottom:2px solid rgba(0,0,0,.2);border-radius:0 0 10px 10px}
-.pet-0 .fl{position:absolute;top:-8px;left:50%;transform:translateX(-50%);width:32px;height:24px;background:radial-gradient(circle at 50% 60%,#ffd93d,#ff9500 40%,#d63031 75%);border-radius:50% 50% 30% 30%;animation:fk 1.2s infinite}
-.pet-0 .fl::before{content:'';position:absolute;top:-2px;left:50%;transform:translateX(-50%);width:16px;height:12px;background:radial-gradient(circle at 50% 30%,#fff,#ffd93d);border-radius:50% 50% 40% 40%}
-.pet-0 .lg{position:absolute;bottom:0;width:14px;height:14px;border-radius:50%}.pet-0 .lg-l{left:10px;background:radial-gradient(ellipse at 50% 30%,#ff6b35,#c0392b)}.pet-0 .lg-r{right:10px;background:radial-gradient(ellipse at 50% 30%,#ff6b35,#c0392b)}
-.pet-0 .tl{position:absolute;right:-16px;top:30px;width:20px;height:8px;background:linear-gradient(90deg,#ff9500,#d63031);border-radius:0 50% 50% 0;animation:wg 1.5s infinite;transform-origin:left center}
-/* Water pet */
-.pet-1 .body{width:58px;height:50px;background:radial-gradient(circle at 38% 35%,#81ecec,#0984e3);border-radius:50% 50% 45% 45%;box-shadow:inset -4px -4px 10px rgba(0,0,0,.1),inset 3px 3px 12px rgba(129,236,236,.3)}
-.pet-1 .eye{position:absolute;top:14px;width:10px;height:12px;background:#222;border-radius:50%;z-index:2}
-.pet-1 .eye::after{content:'';position:absolute;top:0;left:1px;width:5px;height:5px;background:#fff;border-radius:50%}
-.pet-1 .eye-l{left:10px}.pet-1 .eye-r{right:10px}
-.pet-1 .bl{position:absolute;top:22px;width:10px;height:5px;background:rgba(255,100,100,.2);border-radius:50%}.pet-1 .bl-l{left:3px}.pet-1 .bl-r{right:3px}
-.pet-1 .mo{position:absolute;top:26px;left:50%;transform:translateX(-50%);width:8px;height:4px;border-bottom:2px solid rgba(0,0,0,.15);border-radius:0 0 8px 8px}
-.pet-1 .dp{position:absolute;top:-15px;left:50%;transform:translateX(-50%);width:20px;height:20px;background:radial-gradient(circle at 35% 30%,rgba(255,255,255,.4),#81ecec 40%,#00b894);border-radius:50% 0 50% 50%;animation:ft 2.5s infinite}
-.pet-1 .lg{position:absolute;bottom:2px;width:14px;height:12px;border-radius:50%}.pet-1 .lg-l{left:12px;background:radial-gradient(ellipse at 50% 40%,#81ecec,#0984e3)}.pet-1 .lg-r{right:12px;background:radial-gradient(ellipse at 50% 40%,#81ecec,#0984e3)}
-.pet-1 .bb{position:absolute;left:-10px;top:15px;width:8px;height:8px;background:rgba(129,236,236,.2);border-radius:50%;animation:bb 3s infinite}
-.pet-1 .b2{position:absolute;left:-6px;top:8px;width:5px;height:5px;background:rgba(129,236,236,.15);border-radius:50%;animation:bb 2.5s .5s infinite}
-/* Grass pet */
-.pet-2 .body{width:56px;height:52px;background:radial-gradient(circle at 38% 35%,#55efc4,#00b894);border-radius:50% 50% 40% 40%;box-shadow:inset -4px -4px 10px rgba(0,0,0,.1),inset 3px 3px 12px rgba(85,239,196,.3)}
-.pet-2 .eye{position:absolute;top:14px;width:10px;height:11px;background:#222;border-radius:50%;z-index:2}
-.pet-2 .eye::after{content:'';position:absolute;top:0;left:1px;width:5px;height:5px;background:#fff;border-radius:50%}
-.pet-2 .eye-l{left:10px}.pet-2 .eye-r{right:10px}
-.pet-2 .bl{position:absolute;top:22px;width:10px;height:5px;background:rgba(255,100,100,.2);border-radius:50%}.pet-2 .bl-l{left:2px}.pet-2 .bl-r{right:2px}
-.pet-2 .mo{position:absolute;top:26px;left:50%;transform:translateX(-50%);width:9px;height:4px;border-bottom:2px solid rgba(0,0,0,.12);border-radius:0 0 10px 10px}
-.pet-2 .lf{position:absolute;top:-10px;left:50%;transform:translateX(-50%);width:14px;height:22px;background:radial-gradient(ellipse at 50% 30%,#55efc4,#00b894);border-radius:50% 50% 20% 20%;transform-origin:bottom center;animation:sw 2s infinite}
-.pet-2 .lf::before{content:'';position:absolute;top:-1px;left:50%;transform:translateX(-50%);width:6px;height:12px;background:radial-gradient(ellipse at 50% 20%,rgba(255,255,255,.3),transparent);border-radius:50% 50% 20% 20%}
-.pet-2 .ea{position:absolute;top:-6px;width:18px;height:16px;background:radial-gradient(ellipse at 50% 40%,#55efc4,#00b894);border-radius:50% 50% 30% 30%}.pet-2 .ea-l{left:8px;transform:rotate(-15deg)}.pet-2 .ea-r{right:8px;transform:rotate(15deg)}
-.pet-2 .lg{position:absolute;bottom:0;width:14px;height:12px;border-radius:50%}.pet-2 .lg-l{left:12px;background:radial-gradient(ellipse at 50% 40%,#55efc4,#00a87e)}.pet-2 .lg-r{right:12px;background:radial-gradient(ellipse at 50% 40%,#55efc4,#00a87e)}
-/* Dog pet */
-.pet-3 .body{width:60px;height:50px;background:radial-gradient(circle at 40% 35%,#fdcb6e,#e17055);border-radius:45% 45% 40% 40%;box-shadow:inset -4px -4px 10px rgba(0,0,0,.1),inset 3px 3px 8px rgba(253,203,110,.2)}
-.pet-3 .eye{position:absolute;top:14px;width:10px;height:11px;background:#222;border-radius:50%;z-index:2}
-.pet-3 .eye::after{content:'';position:absolute;top:0;left:1px;width:5px;height:5px;background:#fff;border-radius:50%}
-.pet-3 .eye-l{left:11px}.pet-3 .eye-r{right:11px}
-.pet-3 .bl{position:absolute;top:21px;width:12px;height:5px;background:rgba(255,100,100,.2);border-radius:50%}.pet-3 .bl-l{left:2px}.pet-3 .bl-r{right:2px}
-.pet-3 .mo{position:absolute;top:26px;left:50%;transform:translateX(-50%);width:14px;height:6px;border-bottom:2px solid rgba(0,0,0,.15);border-radius:0 0 12px 12px}
-.pet-3 .ea{position:absolute;top:-8px;width:20px;height:20px;background:radial-gradient(ellipse at 50% 40%,#fdcb6e,#d63031);border-radius:50% 50% 20% 20%}.pet-3 .ea-l{left:6px;transform:rotate(-20deg)}.pet-3 .ea-r{right:6px;transform:rotate(20deg)}
-.pet-3 .lg{position:absolute;bottom:0;width:14px;height:14px;border-radius:50%}.pet-3 .lg-l{left:10px;background:radial-gradient(ellipse at 50% 30%,#fdcb6e,#e17055)}.pet-3 .lg-r{right:10px;background:radial-gradient(ellipse at 50% 30%,#fdcb6e,#e17055)}
-.pet-3 .tl{position:absolute;right:-18px;top:22px;width:20px;height:7px;background:linear-gradient(90deg,#e17055,#fdcb6e);border-radius:0 50% 50% 0;animation:wg 1.2s infinite;transform-origin:left center}
-/* Bunny pet */
-.pet-4 .body{width:52px;height:48px;background:radial-gradient(circle at 38% 35%,#fd79a8,#e84393);border-radius:50% 50% 45% 45%;box-shadow:inset -4px -4px 10px rgba(0,0,0,.1),inset 3px 3px 10px rgba(253,121,168,.2)}
-.pet-4 .eye{position:absolute;top:13px;width:11px;height:12px;background:#222;border-radius:50%;z-index:2}
-.pet-4 .eye::after{content:'';position:absolute;top:0;left:2px;width:5px;height:5px;background:#fff;border-radius:50%}
-.pet-4 .eye-l{left:8px}.pet-4 .eye-r{right:8px}
-.pet-4 .bl{position:absolute;top:21px;width:12px;height:5px;background:rgba(255,100,100,.22);border-radius:50%}.pet-4 .bl-l{left:0}.pet-4 .bl-r{right:0}
-.pet-4 .mo{position:absolute;top:25px;left:50%;transform:translateX(-50%);width:6px;height:4px;border-bottom:2px solid rgba(0,0,0,.12);border-radius:0 0 6px 6px}
-.pet-4 .ea{position:absolute;top:-22px;width:12px;height:28px;background:radial-gradient(ellipse at 50% 40%,#fd79a8,#e84393);border-radius:50% 50% 20% 20%;z-index:0}.pet-4 .ea-l{left:12px;transform:rotate(-6deg)}.pet-4 .ea-r{right:12px;transform:rotate(6deg)}
-.pet-4 .ea::after{content:'';position:absolute;top:6px;left:50%;transform:translateX(-50%);width:5px;height:15px;background:rgba(255,255,255,.15);border-radius:50%}
-.pet-4 .lg{position:absolute;bottom:0;width:16px;height:14px;border-radius:50%}.pet-4 .lg-l{left:8px;background:radial-gradient(ellipse at 50% 40%,#fd79a8,#d6307a)}.pet-4 .lg-r{right:8px;background:radial-gradient(ellipse at 50% 40%,#fd79a8,#d6307a)}
-/* Hamster */
-.pet-5 .body{width:54px;height:48px;background:radial-gradient(circle at 38% 35%,#f5d76e,#f39c12);border-radius:50% 50% 45% 45%;box-shadow:inset -4px -4px 10px rgba(0,0,0,.1),inset 3px 3px 10px rgba(245,215,110,.2)}
-.pet-5 .eye{position:absolute;top:14px;width:10px;height:10px;background:#222;border-radius:50%;z-index:2}
-.pet-5 .eye::after{content:'';position:absolute;top:1px;left:2px;width:4px;height:4px;background:#fff;border-radius:50%}
-.pet-5 .eye-l{left:10px}.pet-5 .eye-r{right:10px}
-.pet-5 .bl{position:absolute;top:20px;width:14px;height:5px;background:rgba(255,100,100,.25);border-radius:50%}.pet-5 .bl-l{left:0}.pet-5 .bl-r{right:0}
-.pet-5 .mo{position:absolute;top:25px;left:50%;transform:translateX(-50%);width:8px;height:4px;border-bottom:2px solid rgba(0,0,0,.1);border-radius:0 0 8px 8px}
-.pet-5 .ea{position:absolute;top:-4px;width:16px;height:14px;background:radial-gradient(ellipse at 50% 40%,#f5d76e,#f39c12);border-radius:50% 50% 20% 20%}.pet-5 .ea-l{left:8px;transform:rotate(-10deg)}.pet-5 .ea-r{right:8px;transform:rotate(10deg)}
-.pet-5 .ea::after{content:'';position:absolute;top:2px;left:50%;transform:translateX(-50%);width:6px;height:8px;background:rgba(255,255,255,.12);border-radius:50%}
-.pet-5 .ck{position:absolute;bottom:6px;width:16px;height:12px;background:rgba(245,215,110,.15);border-radius:50%}.pet-5 .ck-l{left:2px}.pet-5 .ck-r{right:2px}
-.pet-5 .lg{position:absolute;bottom:-2px;width:12px;height:10px;border-radius:50%}.pet-5 .lg-l{left:13px;background:radial-gradient(ellipse at 50% 40%,#f5d76e,#e67e22)}.pet-5 .lg-r{right:13px;background:radial-gradient(ellipse at 50% 40%,#f5d76e,#e67e22)}
-
-@keyframes ft{0%,100%{transform:translateX(-50%) translateY(0)}50%{transform:translateX(-50%) translateY(-8px)}}
-@keyframes fk{0%,100%{transform:translateX(-50%) scaleY(1)}25%{scaleY(1.08) scaleX(.95)}50%{scaleY(.92) scaleX(1.05)}}
-@keyframes wg{0%,100%{transform:rotate(0)}50%{transform:rotate(20deg)}}
-@keyframes sw{0%,100%{transform:translateX(-50%) rotate(0)}50%{transform:translateX(-50%) rotate(5deg)}}
-@keyframes bb{0%{transform:translateX(0);opacity:1}100%{transform:translateX(-15px) translateY(-10px);opacity:0}}
-
-/* Stats */
-#stats{padding:0 16px 6px;display:flex;flex-direction:column;gap:3px}
-.st{display:flex;align-items:center;gap:5px}.st .ic{font-size:12px;width:16px;text-align:center}.st .lb{font-size:9px;color:rgba(255,255,255,.3);width:22px}
-.st .bw{flex:1;height:4px;background:rgba(255,255,255,.04);border-radius:2px;overflow:hidden}.st .bf{height:100%;border-radius:2px;transition:width .5s ease}.st .vl{font-size:9px;color:rgba(255,255,255,.2);width:20px;text-align:right}
-/* Actions */
-#actions{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:5px;padding:4px 12px 18px}
-.ac{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:8px 4px;text-align:center;cursor:pointer;transition:all .08s;touch-action:none}
-.ac:active{transform:scale(.94);background:rgba(255,255,255,.08)}.ac .ae{font-size:20px;display:block;margin-bottom:1px}.ac .an{font-size:10px;font-weight:600;color:rgba(255,255,255,.5)}
-/* Modal */
-.md{display:none;position:absolute;inset:0;background:rgba(0,0,0,.55);z-index:20;align-items:center;justify-content:center;backdrop-filter:blur(6px)}
-.md>div{background:linear-gradient(180deg,rgba(40,40,70,.98),rgba(25,25,48,.98));border-radius:20px;padding:24px;text-align:center;width:85%;max-width:290px;border:1px solid rgba(255,255,255,.05)}
-.md h3{font-size:17px;font-weight:700;margin-bottom:4px}.md p{color:rgba(255,255,255,.45);font-size:12px;line-height:1.5;margin-bottom:14px}
-.md .mb{background:linear-gradient(135deg,#f5d76e,#ff9500);border:none;border-radius:10px;color:#0a0a1a;font-size:14px;font-weight:700;padding:11px 28px;cursor:pointer;width:100%}
-.md .mb:active{transform:translateY(2px)}
-#toast{position:absolute;top:58%;left:50%;transform:translate(-50%,-50%);background:rgba(0,0,0,.6);backdrop-filter:blur(8px);border-radius:12px;padding:8px 18px;color:#fff;font-size:13px;font-weight:600;opacity:0;transition:opacity .25s;pointer-events:none;z-index:15}
-#toast.show{opacity:1}
-.lvUp{display:none;position:absolute;inset:0;z-index:30;align-items:center;justify-content:center;pointer-events:none;flex-direction:column;gap:6px}
-.lvUp span{font-size:40px;font-weight:800;color:#ffd700;text-shadow:0 0 40px rgba(255,215,0,.4);animation:lva 1.5s forwards}
-@keyframes lva{0%{transform:scale(3);opacity:0}30%{transform:scale(1);opacity:1}70%{opacity:1}100%{opacity:0;transform:translateY(-25px)}}
-.lvUp em{font-size:13px;color:#fff;opacity:0;animation:lvb 1s .5s forwards}@keyframes lvb{to{opacity:1}}
-#settings{padding:0 12px;display:flex;gap:6px}
-.stb{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);border-radius:8px;padding:4px 8px;cursor:pointer;font-size:10px;color:rgba(255,255,255,.3);flex:1;text-align:center}
-.stb:active{background:rgba(255,255,255,.06)}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{width:100%;height:100%;overflow:hidden;background:#0f0f23;font-family:'Segoe UI','PingFang TC',sans-serif;color:#fff}
+#app{width:100%;height:100%;max-width:480px;margin:0 auto;display:flex;flex-direction:column;position:relative}
+#title{display:flex;flex-direction:column;height:100%;width:100%;background:linear-gradient(180deg,#0f0f23 0%,#1a1a3e 40%,#2d1b4e 100%);align-items:center;justify-content:center;position:absolute;top:0;left:0;z-index:10}
+.title-bg{position:absolute;width:100%;height:100%;overflow:hidden;pointer-events:none}
+.title-star{position:absolute;width:3px;height:3px;background:#fff;border-radius:50%;animation:twinkle 2s ease-in-out infinite}
+@keyframes twinkle{0%,100%{opacity:.2}50%{opacity:1}}
+.title-logo{font-size:40px;font-weight:900;background:linear-gradient(135deg,#f5d76e,#ff9500,#ff6b6b);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:4px;letter-spacing:3px;position:relative;z-index:1}
+.title-sub{color:#8a8aba;font-size:14px;margin-bottom:24px;position:relative;z-index:1;letter-spacing:1px}
+.starter-pick{display:flex;gap:14px;margin:8px 0 20px;position:relative;z-index:1}
+.starter-card{background:linear-gradient(180deg,#2a2a4a,#1e1e3a);border:2px solid #3a3a5a;border-radius:16px;padding:12px 10px 10px;text-align:center;cursor:pointer;width:100px;transition:all .2s;position:relative}
+.starter-card.selected{border-color:#f5d76e;background:linear-gradient(180deg,#3a2a4a,#2a1e3a);box-shadow:0 0 20px rgba(245,215,110,.2)}
+.starter-card .sprite-box{width:80px;height:80px;margin:0 auto 4px;position:relative}
+.starter-card .sprite-box canvas{width:80px;height:80px}
+.starter-card .name{color:#fff;font-size:13px;font-weight:bold}
+.starter-card .element{font-size:10px;color:#8a8aba;padding:2px 8px;border-radius:8px;display:inline-block;margin-top:2px;background:#2a2a4a}
+.starter-card.selected .element{background:#4a3a2a;color:#f5d76e}
+.title-btn{background:linear-gradient(135deg,#f5d76e,#ff9500);border:none;border-radius:14px;color:#1a1a2e;font-size:18px;font-weight:bold;padding:14px 48px;cursor:pointer;box-shadow:0 4px 0 #b87200,0 6px 20px rgba(255,149,0,.3);position:relative;z-index:1;transition:all .1s}
+.title-btn:active{transform:translateY(4px);box-shadow:0 1px 0 #b87200}
+.title-btn:disabled{opacity:.4;transform:none;box-shadow:none;cursor:default}
+#overworld{display:none;flex-direction:column;height:100%;width:100%;position:relative}
+#gameCanvas{flex:1;width:100%;display:block;touch-action:none;background:#3a6b3a}
+#overlayUI{position:absolute;top:6px;left:6px;right:6px;display:flex;justify-content:space-between;pointer-events:none;z-index:5}
+.location-badge{background:rgba(0,0,0,.6);backdrop-filter:blur(8px);border-radius:10px;padding:4px 12px;color:#fff;font-size:12px;font-weight:bold;pointer-events:auto}
+.partner-badge{background:rgba(0,0,0,.6);backdrop-filter:blur(8px);border-radius:10px;padding:4px 10px;color:#fff;font-size:11px;pointer-events:auto;display:flex;align-items:center;gap:4px}
+#controls{background:linear-gradient(180deg,#1a1a3a,#0f0f23);padding:10px 12px 14px;display:flex;justify-content:center;align-items:center;gap:10px;flex-shrink:0;border-top:1px solid #2a2a4a}
+.dpad{display:grid;grid-template-columns:52px 52px 52px;grid-template-rows:44px 44px;gap:3px;justify-content:center}
+.dpad-btn{background:linear-gradient(135deg,#2a2a4a,#1e1e3e);border:1px solid #3a3a5a;border-radius:10px;color:#aaa;font-size:18px;display:flex;align-items:center;justify-content:center;cursor:pointer;touch-action:none;box-shadow:inset 0 -2px 0 #0f0f23}
+.dpad-btn:active{background:linear-gradient(135deg,#3a3a5a,#2a2a4a);transform:scale(.93);color:#fff}
+.btn-up{grid-column:2;grid-row:1}
+.btn-left{grid-column:1;grid-row:2}
+.btn-down{grid-column:2;grid-row:2}
+.btn-right{grid-column:3;grid-row:2}
+.menu-btn{background:linear-gradient(135deg,#3a2a4a,#2a1e3a);border:1px solid #5a4a6a;border-radius:10px;color:#d0b0e0;font-size:12px;font-weight:bold;padding:8px 14px;cursor:pointer;box-shadow:inset 0 -2px 0 #1a0f2a;white-space:nowrap}
+.menu-btn:active{transform:scale(.95)}
+#battle{display:none;flex-direction:column;height:100%;width:100%;position:relative}
+#battleCanvas{width:100%;flex:1;display:block;touch-action:none}
+.battle-panel{background:linear-gradient(180deg,#1a1a3a,#0f0f23);flex-shrink:0;border-top:2px solid #2a2a4a;padding:8px 10px 14px}
+.battle-hud{display:flex;gap:8px;margin-bottom:6px}
+.hp-card{flex:1;background:rgba(255,255,255,.06);border-radius:10px;padding:6px 10px;backdrop-filter:blur(4px)}
+.hp-card .top{display:flex;justify-content:space-between;align-items:center}
+.hp-card .pname{color:#fff;font-size:13px;font-weight:bold}
+.hp-card .plv{color:#8a8aba;font-size:10px}
+.hp-card .bar-wrap{height:7px;background:rgba(0,0,0,.4);border-radius:4px;overflow:hidden;margin:3px 0 2px}
+.hp-card .bar-fill{height:100%;border-radius:4px;transition:width .4s ease}
+.bar-fill.green{background:linear-gradient(90deg,#4cd964,#34c759);box-shadow:0 0 6px rgba(76,217,100,.4)}
+.bar-fill.yellow{background:linear-gradient(90deg,#ff9500,#ffcc00);box-shadow:0 0 6px rgba(255,149,0,.4)}
+.bar-fill.red{background:linear-gradient(90deg,#ff3b30,#ff6b6b);box-shadow:0 0 6px rgba(255,59,48,.4)}
+.hp-card .num{color:#8a8aba;font-size:10px;text-align:right}
+.battle-actions{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin-bottom:6px}
+.act-btn{background:linear-gradient(135deg,#2a2a4a,#1e1e3e);border:1px solid #3a3a5a;border-radius:10px;color:#ccc;font-size:14px;font-weight:bold;padding:12px 0;text-align:center;cursor:pointer;box-shadow:inset 0 -2px 0 #0f0f23;transition:all .1s}
+.act-btn:active{transform:scale(.95);background:#3a3a5a}
+.act-btn.primary{background:linear-gradient(135deg,#e8a838,#d4892a);border-color:#e8a838;color:#1a1a2e;box-shadow:inset 0 -2px 0 #a06a10}
+.act-btn.success{background:linear-gradient(135deg,#4cd964,#34c759);border-color:#4cd964;color:#1a1a2e;box-shadow:inset 0 -2px 0 #2a9a3a}
+.act-btn.danger{background:linear-gradient(135deg,#ff3b30,#d62d20);border-color:#ff3b30;color:#fff;box-shadow:inset 0 -2px 0 #8a1a10}
+.battle-msg{background:rgba(0,0,0,.5);border-radius:10px;padding:8px 12px;color:#ddd;font-size:13px;line-height:1.4;min-height:36px;text-align:center;backdrop-filter:blur(4px)}
+.modal-overlay{display:none;position:absolute;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,.7);z-index:20;align-items:center;justify-content:center;backdrop-filter:blur(4px)}
+.modal-box{background:linear-gradient(135deg,#2a2a4a,#1a1a3a);border-radius:18px;padding:24px;max-width:88%;width:320px;text-align:center;border:1px solid #3a3a5a;box-shadow:0 10px 40px rgba(0,0,0,.5)}
+.modal-title{color:#fff;font-size:18px;font-weight:bold;margin-bottom:8px}
+.modal-text{color:#b0b0d0;font-size:13px;line-height:1.6;margin-bottom:16px;white-space:pre-wrap}
+.modal-btn{background:linear-gradient(135deg,#f5d76e,#ff9500);border:none;border-radius:12px;color:#1a1a2e;font-size:15px;font-weight:bold;padding:12px 32px;cursor:pointer;box-shadow:0 3px 0 #b87200}
+.modal-btn:active{transform:translateY(3px);box-shadow:0 0 0 #b87200}
+.lvup-overlay,.evo-overlay{display:none;position:absolute;top:0;left:0;width:100%;height:100%;z-index:30;align-items:center;justify-content:center;pointer-events:none;flex-direction:column;gap:10px}
+.lvup-text{font-size:40px;font-weight:900;color:#ffd700;text-shadow:0 0 40px rgba(255,215,0,.5),0 4px 10px rgba(0,0,0,.5);animation:lvAnim 1.2s ease-out forwards}
+@keyframes lvAnim{0%{transform:scale(2) rotate(-5deg);opacity:0}30%{transform:scale(1) rotate(0);opacity:1}60%{opacity:1}100%{opacity:0;transform:scale(.8) translateY(-30px)}}
+.evo-overlay{background:radial-gradient(circle,rgba(255,255,255,.15),transparent 70%);z-index:40}
+.evo-text{font-size:36px;font-weight:900;color:#fff;text-shadow:0 0 50px rgba(255,255,255,.6);animation:evoPulse 2s ease-out}
+.evo-sub{color:#ffd700;font-size:16px;opacity:0;animation:fadeIn 1s ease-out 1s forwards}
+@keyframes evoPulse{0%{transform:scale(3);opacity:0}20%{transform:scale(1);opacity:1}50%{transform:scale(1.15);color:#ffd700}80%{transform:scale(.95)}100%{transform:scale(1)}}
+@keyframes fadeIn{to{opacity:1}}
 </style>
-</head><body>
+</head>
+<body>
 <div id="app">
-
-<div id="title">
-  <h1>寵物樂園</h1>
-  <div class="sub">揀你嘅寵物</div>
-  <div class="pick" id="pickRow"></div>
-  <button class="go" id="goBtn" disabled>開始養！</button>
-</div>
-
-<div id="game">
-  <div id="settings"><div class="stb" id="btnSave">💾 儲存</div><div class="stb" id="btnReset">🔄 重開</div></div>
-  <div id="header"><span class="pn" id="petName"></span><span class="lv" id="petLv"></span><span class="xp" id="petExp"></span><span class="coin" id="petCoin"></span></div>
-  <div id="petArea">
-    <div id="petMood"></div>
-    <div id="petArt"><div id="petRender"></div><div class="shadow"></div></div>
+  <div id="title">
+    <div class="title-bg" id="starBG"></div>
+    <div class="title-logo">寵物世界</div>
+    <div class="title-sub">揀你嘅第一隻夥伴</div>
+    <div class="starter-pick" id="starterPick"></div>
+    <button class="title-btn" id="startBtn" disabled onclick="startGame()">出發冒險！</button>
   </div>
-  <div id="stats">
-    <div class="st"><span class="ic">🍖</span><span class="lb">飽</span><div class="bw"><div class="bf" id="hBar" style="width:80%;background:linear-gradient(90deg,#e17055,#fdcb6e)"></div></div><span class="vl" id="hVal">80</span></div>
-    <div class="st"><span class="ic">😊</span><span class="lb">樂</span><div class="bw"><div class="bf" id="pBar" style="width:80%;background:linear-gradient(90deg,#fdcb6e,#f5d76e)"></div></div><span class="vl" id="pVal">80</span></div>
-    <div class="st"><span class="ic">⚡</span><span class="lb">活</span><div class="bw"><div class="bf" id="eBar" style="width:80%;background:linear-gradient(90deg,#74b9ff,#81ecec)"></div></div><span class="vl" id="eVal">80</span></div>
-    <div class="st"><span class="ic">🧹</span><span class="lb">潔</span><div class="bw"><div class="bf" id="cBar" style="width:80%;background:linear-gradient(90deg,#a29bfe,#6c5ce7)"></div></div><span class="vl" id="cVal">80</span></div>
+  <div id="overworld">
+    <div id="overlayUI">
+      <div class="location-badge" id="locBadge">🌿 草原</div>
+      <div class="partner-badge" id="partnerBadge"></div>
+    </div>
+    <canvas id="gameCanvas"></canvas>
+    <div id="controls">
+      <div class="dpad">
+        <div class="dpad-btn btn-up" ontouchstart="movePlayer(0,-1)" onmousedown="movePlayer(0,-1)">▲</div>
+        <div class="dpad-btn btn-left" ontouchstart="movePlayer(-1,0)" onmousedown="movePlayer(-1,0)">◀</div>
+        <div class="dpad-btn btn-down" ontouchstart="movePlayer(0,1)" onmousedown="movePlayer(0,1)">▼</div>
+        <div class="dpad-btn btn-right" ontouchstart="movePlayer(1,0)" onmousedown="movePlayer(1,0)">▶</div>
+      </div>
+      <button class="menu-btn" onclick="showBag()">🎒 寵物</button>
+    </div>
   </div>
-  <div id="actions">
-    <div class="ac" id="btnFeed"><span class="ae">🍖</span><span class="an">餵</span></div>
-    <div class="ac" id="btnPlay"><span class="ae">🎾</span><span class="an">玩</span></div>
-    <div class="ac" id="btnSleep"><span class="ae">😴</span><span class="an">瞓</span></div>
-    <div class="ac" id="btnClean"><span class="ae">🛁</span><span class="an">沖涼</span></div>
+  <div id="battle">
+    <canvas id="battleCanvas"></canvas>
+    <div class="battle-panel">
+      <div class="battle-hud">
+        <div class="hp-card"><div class="top"><span class="pname" id="myPN">火火</span><span class="plv" id="myPL">Lv.1</span></div><div class="bar-wrap"><div class="bar-fill green" id="myBar" style="width:100%"></div></div><div class="num" id="myNum">100/100</div></div>
+        <div class="hp-card"><div class="top"><span class="pname" id="enPN">比比</span><span class="plv" id="enPL">Lv.1</span></div><div class="bar-wrap"><div class="bar-fill green" id="enBar" style="width:100%"></div></div><div class="num" id="enNum">100/100</div></div>
+      </div>
+      <div class="battle-actions" id="btlActs"></div>
+      <div class="battle-msg" id="btlMsg">選擇行動！</div>
+    </div>
   </div>
-</div>
-
-<div class="md" id="mdM"><div><h3 id="mdT"></h3><p id="mdX"></p><button class="mb" id="mdB">好嘅！</button></div></div>
-<div class="lvUp" id="lvD"><span id="lvT">🌟 Lv.UP!</span><em id="lvS">成長咗！</em></div>
-<div id="toast">🍖 餵食完畢！</div>
-
+  <div class="modal-overlay" id="modal">
+    <div class="modal-box"><div class="modal-title" id="modalT"></div><div class="modal-text" id="modalX"></div><button class="modal-btn" onclick="closeModal()">確定</button></div>
+  </div>
+  <div class="lvup-overlay" id="lvupO"><div class="lvup-text" id="lvupT"></div></div>
+  <div class="evo-overlay" id="evoO"><div class="evo-text" id="evoT"></div><div class="evo-sub" id="evoSub"></div></div>
 </div>
 <script>
-"use strict";(()=>{
+"use strict";
+// ===== CANVAS DRAWING ENGINE =====
+// drawPet(ctx, type, x, y, size, facingLeft, anim)
+// type: 'fire','water','grass','fire2','water2','grass2','bird','bat','egg'
 
-const PETS = [
-  {n:'小火',css:'pet-0',e:'🔥'},{n:'水水',css:'pet-1',e:'💧'},{n:'草草',css:'pet-2',e:'🌿'},
-  {n:'狗狗',css:'pet-3',e:'🐶'},{n:'兔兔',css:'pet-4',e:'🐰'},{n:'吱吱',css:'pet-5',e:'🐹'}
+var animFrame = 0;
+
+function drawPet(ctx, type, x, y, size, facingLeft, anim) {
+  ctx.save();
+  if (facingLeft) {
+    ctx.translate(x + size/2, 0);
+    ctx.scale(-1, 1);
+    ctx.translate(-(x + size/2), 0);
+  }
+  var s = size;
+  var cx = x + s/2;
+  var cy = y + s/2;
+  var bob = Math.sin((anim||animFrame) * 0.06) * s * 0.02;
+
+  function eye(ex, ey, sz) {
+    ctx.beginPath();
+    ctx.ellipse(ex, ey, sz*0.35, sz*0.38, 0, 0, Math.PI*2);
+    ctx.fillStyle = '#222';
+    ctx.fill();
+    ctx.beginPath();
+    ctx.arc(ex + sz*0.08, ey - sz*0.08, sz*0.12, 0, Math.PI*2);
+    ctx.fillStyle = '#fff';
+    ctx.fill();
+  }
+  function blush(bx, by, sz) {
+    ctx.beginPath();
+    ctx.ellipse(bx, by, sz*0.15, sz*0.09, 0, 0, Math.PI*2);
+    ctx.fillStyle = 'rgba(255,120,120,0.3)';
+    ctx.fill();
+  }
+  function mouth(mx, my, w) {
+    ctx.beginPath();
+    ctx.arc(mx, my, w*0.5, 0.1, Math.PI-0.1);
+    ctx.strokeStyle = 'rgba(0,0,0,0.2)';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+  function foot(fx, fy, fs, clr) {
+    ctx.beginPath();
+    ctx.ellipse(fx, fy, fs*0.18, fs*0.14, 0, 0, Math.PI*2);
+    ctx.fillStyle = clr;
+    ctx.fill();
+  }
+  function bodyGrad(cx2, cy2, c1, c2) {
+    var g = ctx.createRadialGradient(cx2, cy2, 0, cx2, cy2, s*0.32);
+    g.addColorStop(0, c1);
+    g.addColorStop(1, c2);
+    return g;
+  }
+
+  var by2 = cy + s*0.05 + bob;
+  var types = {
+    fire: function() {
+      // Flame crown
+      ctx.beginPath();
+      ctx.moveTo(cx - s*0.18, cy - s*0.30 + bob);
+      ctx.quadraticCurveTo(cx - s*0.20, cy - s*0.44, cx - s*0.04, cy - s*0.36);
+      ctx.quadraticCurveTo(cx, cy - s*0.52, cx + s*0.04, cy - s*0.36);
+      ctx.quadraticCurveTo(cx + s*0.20, cy - s*0.44, cx + s*0.18, cy - s*0.30);
+      ctx.closePath();
+      ctx.fillStyle = '#ff9500';
+      ctx.fill();
+      // Inner bright flame
+      ctx.beginPath();
+      ctx.moveTo(cx - s*0.08, cy - s*0.32 + bob);
+      ctx.quadraticCurveTo(cx - s*0.10, cy - s*0.42, cx, cy - s*0.46);
+      ctx.quadraticCurveTo(cx + s*0.10, cy - s*0.42, cx + s*0.08, cy - s*0.32);
+      ctx.closePath();
+      ctx.fillStyle = '#ffd93d';
+      ctx.fill();
+      // Body - round chibi
+      ctx.beginPath();
+      ctx.ellipse(cx, by2, s*0.30, s*0.32, 0, 0, Math.PI*2);
+      ctx.fillStyle = bodyGrad(cx, by2, '#ff6b35', '#d63031');
+      ctx.fill();
+      if (s > 20) {
+        eye(cx - s*0.10, by2 - s*0.08, s*0.16);
+        eye(cx + s*0.10, by2 - s*0.08, s*0.16);
+        blush(cx - s*0.18, by2 + s*0.02, s);
+        blush(cx + s*0.18, by2 + s*0.02, s);
+        mouth(cx, by2 + s*0.10, s*0.08);
+      }
+      foot(cx - s*0.12, cy + s*0.30 + bob, s, '#c0392b');
+      foot(cx + s*0.12, cy + s*0.30 + bob, s, '#c0392b');
+      // Stubby arms
+      ctx.beginPath();
+      ctx.ellipse(cx - s*0.35, by2 + s*0.04, s*0.07, s*0.10, 0.3, 0, Math.PI*2);
+      ctx.fillStyle = '#d63031';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(cx + s*0.35, by2 + s*0.04, s*0.07, s*0.10, -0.3, 0, Math.PI*2);
+      ctx.fill();
+    },
+    water: function() {
+      // Water droplet crest
+      ctx.beginPath();
+      ctx.ellipse(cx, cy - s*0.38 + bob, s*0.10, s*0.16, 0, 0, Math.PI*2);
+      ctx.fillStyle = '#74b9ff';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(cx - s*0.02, cy - s*0.42 + bob, s*0.045, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,255,255,0.4)';
+      ctx.fill();
+      // Body
+      ctx.beginPath();
+      ctx.ellipse(cx, by2, s*0.30, s*0.30, 0, 0, Math.PI*2);
+      ctx.fillStyle = bodyGrad(cx, by2, '#81ecec', '#0984e3');
+      ctx.fill();
+      // Fins
+      ctx.beginPath();
+      ctx.ellipse(cx - s*0.32, by2 + s*0.02, s*0.04, s*0.12, 0.3, 0, Math.PI*2);
+      ctx.fillStyle = '#74b9ff';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(cx + s*0.32, by2 + s*0.02, s*0.04, s*0.12, -0.3, 0, Math.PI*2);
+      ctx.fill();
+      if (s > 20) {
+        eye(cx - s*0.10, by2 - s*0.07, s*0.16);
+        eye(cx + s*0.10, by2 - s*0.07, s*0.16);
+        blush(cx - s*0.18, by2 + s*0.02, s);
+        blush(cx + s*0.18, by2 + s*0.02, s);
+        mouth(cx, by2 + s*0.10, s*0.08);
+      }
+      foot(cx - s*0.12, cy + s*0.28 + bob, s, '#0984e3');
+      foot(cx + s*0.12, cy + s*0.28 + bob, s, '#0984e3');
+    },
+    grass: function() {
+      // Leaf sprout on head
+      ctx.beginPath();
+      ctx.ellipse(cx, cy - s*0.40 + bob, s*0.07, s*0.16, 0, 0, Math.PI*2);
+      ctx.fillStyle = '#00b894';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(cx - s*0.03, cy - s*0.45 + bob, s*0.04, s*0.08, -0.2, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,255,255,0.3)';
+      ctx.fill();
+      // Side leaves
+      ctx.beginPath();
+      ctx.ellipse(cx - s*0.26, by2 - s*0.15, s*0.06, s*0.12, -0.6, 0, Math.PI*2);
+      ctx.fillStyle = '#00b894';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(cx + s*0.26, by2 - s*0.15, s*0.06, s*0.12, 0.6, 0, Math.PI*2);
+      ctx.fill();
+      // Body
+      ctx.beginPath();
+      ctx.ellipse(cx, by2, s*0.30, s*0.30, 0, 0, Math.PI*2);
+      ctx.fillStyle = bodyGrad(cx, by2, '#55efc4', '#00b894');
+      ctx.fill();
+      if (s > 20) {
+        eye(cx - s*0.10, by2 - s*0.07, s*0.16);
+        eye(cx + s*0.10, by2 - s*0.07, s*0.16);
+        blush(cx - s*0.18, by2 + s*0.02, s);
+        blush(cx + s*0.18, by2 + s*0.02, s);
+        mouth(cx, by2 + s*0.10, s*0.08);
+      }
+      foot(cx - s*0.12, cy + s*0.28 + bob, s, '#00a87e');
+      foot(cx + s*0.12, cy + s*0.28 + bob, s, '#00a87e');
+    },
+    fire2: function() {
+      // Triple flame crown
+      for (var i = -1; i <= 1; i++) {
+        ctx.beginPath();
+        ctx.moveTo(cx + i*s*0.12 - s*0.08, cy - s*0.32 + bob);
+        ctx.quadraticCurveTo(cx + i*s*0.12 - s*0.10, cy - s*0.48, cx + i*s*0.12, cy - s*0.46);
+        ctx.quadraticCurveTo(cx + i*s*0.12 + s*0.10, cy - s*0.48, cx + i*s*0.12 + s*0.08, cy - s*0.32);
+        ctx.closePath();
+        ctx.fillStyle = i === 0 ? '#ffd93d' : '#ff9500';
+        ctx.fill();
+      }
+      // Bigger body
+      ctx.beginPath();
+      ctx.ellipse(cx, by2, s*0.34, s*0.36, 0, 0, Math.PI*2);
+      ctx.fillStyle = bodyGrad(cx, by2, '#ff6b35', '#c0392b');
+      ctx.fill();
+      // Flame aura
+      ctx.beginPath();
+      ctx.arc(cx, cy + s*0.15 + bob, s*0.38, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,100,0,0.08)';
+      ctx.fill();
+      if (s > 20) {
+        eye(cx - s*0.12, by2 - s*0.09, s*0.18);
+        eye(cx + s*0.12, by2 - s*0.09, s*0.18);
+        blush(cx - s*0.22, by2 + s*0.02, s);
+        blush(cx + s*0.22, by2 + s*0.02, s);
+        mouth(cx, by2 + s*0.12, s*0.10);
+      }
+      foot(cx - s*0.14, cy + s*0.33 + bob, s, '#a93226');
+      foot(cx + s*0.14, cy + s*0.33 + bob, s, '#a93226');
+    },
+    water2: function() {
+      // Big crest
+      ctx.beginPath();
+      ctx.ellipse(cx, cy - s*0.38 + bob, s*0.14, s*0.20, 0, 0, Math.PI*2);
+      ctx.fillStyle = '#0984e3';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(cx - s*0.03, cy - s*0.43 + bob, s*0.06, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,255,255,0.5)';
+      ctx.fill();
+      // Bigger body
+      ctx.beginPath();
+      ctx.ellipse(cx, by2, s*0.34, s*0.34, 0, 0, Math.PI*2);
+      ctx.fillStyle = bodyGrad(cx, by2, '#81ecec', '#0984e3');
+      ctx.fill();
+      // Water aura
+      ctx.beginPath();
+      ctx.arc(cx, cy + s*0.32 + bob, s*0.34, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(0,150,255,0.06)';
+      ctx.fill();
+      if (s > 20) {
+        eye(cx - s*0.12, by2 - s*0.08, s*0.18);
+        eye(cx + s*0.12, by2 - s*0.08, s*0.18);
+        blush(cx - s*0.22, by2 + s*0.02, s);
+        blush(cx + s*0.22, by2 + s*0.02, s);
+        mouth(cx, by2 + s*0.12, s*0.10);
+      }
+      foot(cx - s*0.14, cy + s*0.32 + bob, s, '#0874b8');
+      foot(cx + s*0.14, cy + s*0.32 + bob, s, '#0874b8');
+    },
+    grass2: function() {
+      // Flower on head
+      ctx.beginPath();
+      ctx.arc(cx, cy - s*0.38 + bob, s*0.08, 0, Math.PI*2);
+      ctx.fillStyle = '#ff6b9d';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(cx - s*0.04, cy - s*0.43 + bob, s*0.04, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(255,255,255,0.4)';
+      ctx.fill();
+      // Bigger leaves on sides
+      ctx.beginPath();
+      ctx.ellipse(cx - s*0.28, by2 - s*0.18, s*0.07, s*0.15, -0.6, 0, Math.PI*2);
+      ctx.fillStyle = '#00b894';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(cx + s*0.28, by2 - s*0.18, s*0.07, s*0.15, 0.6, 0, Math.PI*2);
+      ctx.fill();
+      // Bigger body
+      ctx.beginPath();
+      ctx.ellipse(cx, by2, s*0.34, s*0.34, 0, 0, Math.PI*2);
+      ctx.fillStyle = bodyGrad(cx, by2, '#55efc4', '#00b894');
+      ctx.fill();
+      ctx.beginPath();
+      ctx.arc(cx, cy + s*0.32 + bob, s*0.34, 0, Math.PI*2);
+      ctx.fillStyle = 'rgba(0,200,100,0.06)';
+      ctx.fill();
+      if (s > 20) {
+        eye(cx - s*0.12, by2 - s*0.08, s*0.18);
+        eye(cx + s*0.12, by2 - s*0.08, s*0.18);
+        blush(cx - s*0.22, by2 + s*0.02, s);
+        blush(cx + s*0.22, by2 + s*0.02, s);
+        mouth(cx, by2 + s*0.12, s*0.10);
+      }
+      foot(cx - s*0.14, cy + s*0.32 + bob, s, '#008a6e');
+      foot(cx + s*0.14, cy + s*0.32 + bob, s, '#008a6e');
+    },
+    bird: function() {
+      // Fluffy round body
+      var bw = s*0.28, bh = s*0.28;
+      ctx.beginPath();
+      ctx.ellipse(cx, by2 + s*0.02, bw, bh, 0, 0, Math.PI*2);
+      ctx.fillStyle = bodyGrad(cx, by2, '#81ecec', '#00b894');
+      ctx.fill();
+      // Beak
+      ctx.beginPath();
+      ctx.moveTo(cx + s*0.04, by2 - s*0.06);
+      ctx.lineTo(cx + s*0.20, by2 - s*0.01);
+      ctx.lineTo(cx + s*0.04, by2 + s*0.04);
+      ctx.closePath();
+      ctx.fillStyle = '#f39c12';
+      ctx.fill();
+      // Wing
+      ctx.beginPath();
+      ctx.ellipse(cx - s*0.18, by2 - s*0.02, s*0.12, s*0.18, -0.2 + Math.sin((anim||animFrame)*0.08)*0.15, 0, Math.PI*2);
+      ctx.fillStyle = '#00a87e';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(cx + s*0.18, by2 - s*0.02, s*0.12, s*0.18, 0.2 - Math.sin((anim||animFrame)*0.08)*0.15, 0, Math.PI*2);
+      ctx.fill();
+      if (s > 20) {
+        eye(cx - s*0.08, by2 - s*0.06, s*0.14);
+        eye(cx + s*0.08, by2 - s*0.06, s*0.14);
+        blush(cx - s*0.14, by2 + s*0.04, s);
+        blush(cx + s*0.14, by2 + s*0.04, s);
+        mouth(cx + s*0.08, by2 + s*0.04, s*0.04);
+      }
+      // Feet
+      ctx.beginPath();
+      ctx.ellipse(cx - s*0.06, cy + s*0.26 + bob, s*0.04, s*0.06, 0, 0, Math.PI*2);
+      ctx.fillStyle = '#f39c12';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.ellipse(cx + s*0.06, cy + s*0.26 + bob, s*0.04, s*0.06, 0, 0, Math.PI*2);
+      ctx.fill();
+    },
+    bat: function() {
+      var wSwing = Math.sin((anim||animFrame)*0.08) * 0.25;
+      // Round body
+      ctx.beginPath();
+      ctx.ellipse(cx, by2 + s*0.02, s*0.26, s*0.28, 0, 0, Math.PI*2);
+      ctx.fillStyle = bodyGrad(cx, by2, '#9b59b6', '#6c3483');
+      ctx.fill();
+      // Wings
+      ctx.beginPath();
+      ctx.moveTo(cx - s*0.12, by2 - s*0.04);
+      ctx.quadraticCurveTo(cx - s*0.36 - wSwing*s*0.1, by2 - s*0.20 + wSwing*s*0.2, cx - s*0.40 - wSwing*s*0.1, by2 + s*0.12 - wSwing*s*0.1);
+      ctx.quadraticCurveTo(cx - s*0.20, by2 - s*0.02, cx - s*0.12, by2 - s*0.04);
+      ctx.fillStyle = '#8e44ad';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(cx + s*0.12, by2 - s*0.04);
+      ctx.quadraticCurveTo(cx + s*0.36 + wSwing*s*0.1, by2 - s*0.20 + wSwing*s*0.2, cx + s*0.40 + wSwing*s*0.1, by2 + s*0.12 - wSwing*s*0.1);
+      ctx.quadraticCurveTo(cx + s*0.20, by2 - s*0.02, cx + s*0.12, by2 - s*0.04);
+      ctx.fill();
+      // Small fangs
+      ctx.beginPath();
+      ctx.moveTo(cx - s*0.04, by2 + s*0.10);
+      ctx.lineTo(cx - s*0.03, by2 + s*0.14);
+      ctx.lineTo(cx - s*0.01, by2 + s*0.10);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+      ctx.beginPath();
+      ctx.moveTo(cx + s*0.01, by2 + s*0.10);
+      ctx.lineTo(cx + s*0.03, by2 + s*0.14);
+      ctx.lineTo(cx + s*0.04, by2 + s*0.10);
+      ctx.fill();
+      if (s > 20) {
+        eye(cx - s*0.09, by2 - s*0.06, s*0.15);
+        eye(cx + s*0.09, by2 - s*0.06, s*0.15);
+        blush(cx - s*0.16, by2 + s*0.02, s);
+        blush(cx + s*0.16, by2 + s*0.02, s);
+      }
+      // Tiny feet
+      foot(cx - s*0.08, cy + s*0.28 + bob, s, '#6c3483');
+      foot(cx + s*0.08, cy + s*0.28 + bob, s, '#6c3483');
+    },
+    egg: function() {
+      // Egg-shaped body
+      ctx.beginPath();
+      ctx.ellipse(cx, by2 + s*0.02, s*0.25, s*0.34, 0, 0, Math.PI*2);
+      ctx.fillStyle = bodyGrad(cx, by2, '#ffeaa7', '#fdcb6e');
+      ctx.fill();
+      // Crack patterns
+      ctx.beginPath();
+      ctx.moveTo(cx, by2 - s*0.12);
+      ctx.lineTo(cx + s*0.04, by2 - s*0.08);
+      ctx.lineTo(cx + s*0.02, by2 - s*0.04);
+      ctx.lineTo(cx + s*0.06, by2);
+      ctx.strokeStyle = 'rgba(0,0,0,0.12)';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+      ctx.beginPath();
+      ctx.moveTo(cx - s*0.06, by2 - s*0.06);
+      ctx.lineTo(cx - s*0.02, by2 - s*0.02);
+      ctx.lineTo(cx - s*0.04, by2 + s*0.02);
+      ctx.stroke();
+      if (s > 20) {
+        eye(cx - s*0.09, by2 - s*0.10, s*0.15);
+        eye(cx + s*0.09, by2 - s*0.10, s*0.15);
+        blush(cx - s*0.16, by2 + s*0.02, s);
+        blush(cx + s*0.16, by2 + s*0.02, s);
+        mouth(cx, by2 + s*0.06, s*0.06);
+      }
+    }
+  };
+
+  if (types[type]) types[type]();
+  ctx.restore();
+}
+
+// ===== GAME DATA =====
+var STARTERS = [
+  {id:'fire', name:'火火', el:'火', clr:'#e74c3c'},
+  {id:'water', name:'水水', el:'水', clr:'#3498db'},
+  {id:'grass', name:'草草', el:'草', clr:'#2ecc71'}
 ];
 
-const PH = [
-  '<div class="pet pet-0"><div class="fl"></div><div class="eye eye-l"></div><div class="eye eye-r"></div><div class="body"><div class="bl bl-l"></div><div class="bl bl-r"></div><div class="mo"></div></div><div class="lg lg-l"></div><div class="lg lg-r"></div><div class="tl"></div></div>',
-  '<div class="pet pet-1"><div class="dp"></div><div class="bb"></div><div class="b2"></div><div class="eye eye-l"></div><div class="eye eye-r"></div><div class="body"><div class="bl bl-l"></div><div class="bl bl-r"></div><div class="mo"></div></div><div class="lg lg-l"></div><div class="lg lg-r"></div></div>',
-  '<div class="pet pet-2"><div class="lf"></div><div class="ea ea-l"></div><div class="ea ea-r"></div><div class="eye eye-l"></div><div class="eye eye-r"></div><div class="body"><div class="bl bl-l"></div><div class="bl bl-r"></div><div class="mo"></div></div><div class="lg lg-l"></div><div class="lg lg-r"></div></div>',
-  '<div class="pet pet-3"><div class="ea ea-l"></div><div class="ea ea-r"></div><div class="eye eye-l"></div><div class="eye eye-r"></div><div class="body"><div class="bl bl-l"></div><div class="bl bl-r"></div><div class="mo"></div></div><div class="lg lg-l"></div><div class="lg lg-r"></div><div class="tl"></div></div>',
-  '<div class="pet pet-4"><div class="ea ea-l"></div><div class="ea ea-r"></div><div class="eye eye-l"></div><div class="eye eye-r"></div><div class="body"><div class="bl bl-l"></div><div class="bl bl-r"></div><div class="mo"></div></div><div class="lg lg-l"></div><div class="lg lg-r"></div></div>',
-  '<div class="pet pet-5"><div class="ea ea-l"></div><div class="ea ea-r"></div><div class="eye eye-l"></div><div class="eye eye-r"></div><div class="body"><div class="bl bl-l"></div><div class="bl bl-r"></div><div class="mo"></div></div><div class="ck ck-l"></div><div class="ck ck-r"></div><div class="lg lg-l"></div</div></div></div></div>',
-];
-
-const S = {pi:0,lv:1,xp:0,co:50,h:80,p:80,e:80,c:80,t:0,st:false};
-
-function init(){
-  const row=document.getElementById('pickRow');
-  PETS.forEach((p,i)=>{
-    const d=document.createElement('div');d.className='card';
-    d.innerHTML='<div class="pm">'+PH[i]+'</div><div class="pn">'+p.e+' '+p.n+'</div>';
-    d.addEventListener('click',()=>pick(i));
-    row.appendChild(d);
-  });
-  document.getElementById('goBtn').addEventListener('click',start);
-  document.getElementById('btnFeed').addEventListener('click',()=>doA('feed'));
-  document.getElementById('btnPlay').addEventListener('click',()=>doA('play'));
-  document.getElementById('btnSleep').addEventListener('click',()=>doA('sleep'));
-  document.getElementById('btnClean').addEventListener('click',()=>doA('clean'));
-  document.getElementById('petArt').addEventListener('click',petTap);
-  document.getElementById('mdB').addEventListener('click',()=>{document.getElementById('mdM').style.display='none';});
-  document.getElementById('mdM').addEventListener('click',()=>{document.getElementById('mdM').style.display='none';});
-  document.getElementById('btnSave').addEventListener('click',sv);
-  document.getElementById('btnReset').addEventListener('click',rs);
-}
-
-function pick(i){
-  document.querySelectorAll('.card').forEach((c,j)=>c.classList.toggle('sel',j===i));S.pi=i;
-  document.getElementById('goBtn').disabled=false;
-}
-
-function start(){
-  S.st=true;
-  document.getElementById('title').style.display='none';
-  document.getElementById('game').style.display='flex';
-  document.getElementById('petRender').innerHTML=PH[S.pi];
-  up();toast('👋 你好！');
-}
-
-const AC = {
-  feed:{k:'h',v:25,c:5,m:['好味！🍖','食飽飽！😋','Yummy！']},
-  play:{k:'p',v:20,c:0,en:-15,m:['好開心！🎾','跳嚟跳去！🐾','過癮！🤪']},
-  sleep:{k:'e',v:35,c:0,m:['zzz 😴','叉足電！⚡','好精神！']},
-  clean:{k:'c',v:30,c:10,m:['洗白白！🛁','好乾淨！✨','香噴噴！🌸']}
+var PET_DATA = {
+  fire: {name:'火火', el:'火', evolve:'fire2', hp:100, atk:15, def:10},
+  water: {name:'水水', el:'水', evolve:'water2', hp:100, atk:12, def:13},
+  grass: {name:'草草', el:'草', evolve:'grass2', hp:100, atk:13, def:12},
+  fire2: {name:'炎獸', el:'火', evolve:null, hp:150, atk:25, def:18},
+  water2: {name:'海獸', el:'水', evolve:null, hp:150, atk:20, def:22},
+  grass2: {name:'森獸', el:'草', evolve:null, hp:150, atk:22, def:20},
+  bird: {name:'比比', el:'飛', evolve:null, hp:80, atk:18, def:8},
+  bat: {name:'蝙蝠', el:'超', evolve:null, hp:75, atk:16, def:10},
+  egg: {name:'蛋蛋', el:'普', evolve:null, hp:50, atk:5, def:20}
 };
-var tt=null;
 
-function doA(t){
-  const a=AC[t];
-  if(S.co<a.c){toast('🪙 唔夠錢，摸下寵物賺錢啦！');return;}
-  if(S[a.k]>=100){toast('💯 已經滿晒！');return;}
-  S.co-=a.c;S[a.k]=Math.min(100,S[a.k]+a.v);
-  if(a.en)S.e=Math.max(0,S.e+a.en);
-  if(t==='play')S.co+=5+~~(Math.random()*6);
-  S.xp+=3+~~(Math.random()*3);
-  const nd=S.lv*10;
-  if(S.xp>=nd){S.xp-=nd;S.lv++;S.h=Math.min(100,S.h+10);S.p=Math.min(100,S.p+10);S.e=Math.min(100,S.e+10);S.c=Math.min(100,S.c+10);S.co+=30;
-    setTimeout(()=>{document.getElementById('lvT').textContent='🌟 Lv.'+S.lv+'!';document.getElementById('lvS').textContent=PETS[S.pi].n+' 成長咗！';document.getElementById('lvD').style.display='flex';setTimeout(()=>{document.getElementById('lvD').style.display='none';},2000);},300);}
-  toast(a.m[~~(Math.random()*a.m.length)]);up();
+var TYPE_CHART = {
+  fire: {water:0.5, grass:2.0, flying:1.5, normal:1, psychic:1, earth:0.5, fire:0.5},
+  water: {fire:2.0, grass:0.5, normal:1, flying:1, psychic:1, earth:1.5, water:0.5},
+  grass: {fire:0.5, water:2.0, normal:1, flying:0.5, psychic:1, earth:1.5, grass:0.5},
+  flying: {fire:1, water:1, grass:1.5, normal:1, flying:1, psychic:1, earth:0.5},
+  psychic: {fire:1, water:1, grass:1, normal:1.5, flying:1, psychic:0.5, earth:1},
+  earth: {fire:1.5, water:1, grass:0.5, normal:1, flying:0.5, psychic:1, earth:1},
+  normal: {fire:1, water:1, grass:1, normal:1, flying:1, psychic:0.5, earth:1}
+};
+
+function typeEff(atkEl, defEl) {
+  var chart = TYPE_CHART[atkEl];
+  if (!chart) return 1;
+  return chart[defEl] || 1;
 }
 
-function petTap(){
-  const el=document.getElementById('petRender');
-  el.style.transform='scale(.95)';setTimeout(()=>{el.style.transform='';},200);
-  S.p=Math.min(100,S.p+2);S.co+=1;up();toast('🥰 摸摸 +1🪙');
+// ===== GAME STATE =====
+var selectedID = 0;
+var game = {};
+
+function init() {
+  // Stars
+  var sb = document.getElementById('starBG');
+  for (var i = 0; i < 30; i++) {
+    var s = document.createElement('div');
+    s.className = 'title-star';
+    s.style.left = (Math.random()*100)+'%';
+    s.style.top = (Math.random()*100)+'%';
+    s.style.animationDelay = (Math.random()*2)+'s';
+    s.style.width = s.style.height = (1+Math.random()*2)+'px';
+    sb.appendChild(s);
+  }
+  // Starter cards
+  var row = document.getElementById('starterPick');
+  STARTERS.forEach(function(p, i) {
+    var c = document.createElement('div');
+    c.className = 'starter-card';
+    c.innerHTML = '<div class="sprite-box"><canvas id="starterCvs'+i+'" width="80" height="80"></canvas></div><div class="name">'+p.name+'</div><div class="element">'+p.el+'系</div>';
+    (function(idx){c.onclick=function(){selectStarter(idx);};})(i);
+    row.appendChild(c);
+    setTimeout(function() {
+      var cvs = document.getElementById('starterCvs'+idx(i));
+      if (cvs) {
+        var cx = cvs.getContext('2d');
+        drawPet(cx, STARTERS[i].id, 10, 10, 60, false, 0);
+      }
+    }, 50);
+  });
+  function idx(i) {
+    // fix the closure - draw after appended
+  }
+  // delayed draw
+  setTimeout(drawStarters, 100);
 }
 
-function up(){
-  const p=PETS[S.pi];
-  document.getElementById('petName').textContent=p.e+' '+p.n;
-  document.getElementById('petLv').textContent='Lv.'+S.lv;
-  const nd=S.lv*10;document.getElementById('petExp').textContent='EXP '+S.xp+'/'+nd;
-  document.getElementById('petCoin').textContent='🪙 '+S.co;
-  sb('h',S.h);sb('p',S.p);sb('e',S.e);sb('c',S.c);
-  const mk={sick:{e:'🤒',t:'唔舒服...'},sad:{e:'😢',t:'唔開心...'},normal:{e:'🙂',t:'OK'},happy:{e:'😊',t:'好開心！'}};
-  const ag=(S.h+S.p+S.e+S.c)/4;
-  const k=S.h<15?'sick':S.h<30?'sad':ag>70?'happy':'normal';
-  document.getElementById('petMood').textContent=mk[k].e;
+function drawStarters() {
+  for (var i = 0; i < STARTERS.length; i++) {
+    var cvs = document.getElementById('starterCvs'+i);
+    if (cvs) {
+      var cx = cvs.getContext('2d');
+      drawPet(cx, STARTERS[i].id, 10, 10, 60, false, 0);
+    }
+  }
 }
 
-function sb(id,v){document.getElementById(id+'Bar').style.width=v+'%';document.getElementById(id+'Val').textContent=v;}
+function selectStarter(i) {
+  selectedID = i;
+  var cards = document.querySelectorAll('.starter-card');
+  cards.forEach(function(c,j){c.classList.toggle('selected',j===i);});
+  document.getElementById('startBtn').disabled = false;
+  drawStarters();
+}
+function startGame() {
+  var p = STARTERS[selectedID];
+  game = {
+    player: {x:5, y:5, dir:'down'},
+    pets: [
+      {id:p.id, name:p.name, lv:1, hp:100, maxHp:100, atk:15, def:10, xp:0, xpNext:20, dirty:false},
+      {id:'egg', name:'蛋蛋', lv:1, hp:50, maxHp:50, atk:5, def:20, xp:0, xpNext:20},
+    ],
+    active: 0,
+    bagOpen: false,
+    wildEncounters: 0
+  };
+  document.getElementById('title').style.display = 'none';
+  document.getElementById('overworld').style.display = 'flex';
+  document.getElementById('partnerBadge').textContent = '🐾 '+p.name;
+  initOverworld();
+}
+</script>
 
-function dc(){if(!S.st)return;S.t++;
-  if(S.t%60!==0)return;
-  S.h=Math.max(0,S.h-(2+Math.random()*2));S.p=Math.max(0,S.p-(1+Math.random()*2));
-  S.e=Math.max(0,S.e-(1+Math.random()*2));S.c=Math.max(0,S.c-(1+Math.random()*2));
-  up();
-  if(S.h<=0||S.p<=0)md('🤒 寵物病咗','快啲餵佢食嘢或者陪佢玩！');
+<script>
+// ===== OVERWORLD =====
+var mapData, player, ovCtx, ovCvs, encTimer;
+var TILE = 32;
+var MAP_W = 30, MAP_H = 20;
+
+var TILES = {
+  grass: 0, path: 1, water: 2, tree: 3, flower: 4, rock: 5
+};
+
+var MAP = [];
+
+function genMap() {
+  MAP = [];
+  for (var y = 0; y < MAP_H; y++) {
+    MAP[y] = [];
+    for (var x = 0; x < MAP_W; x++) {
+      if (x===0||x===MAP_W-1||y===0||y===MAP_H-1) MAP[y][x] = TILES.tree;
+      else if (Math.random()<0.04) MAP[y][x] = TILES.tree;
+      else if (Math.random()<0.02) MAP[y][x] = TILES.rock;
+      else if (Math.random()<0.03) MAP[y][x] = TILES.flower;
+      else MAP[y][x] = Math.random()<0.85 ? TILES.grass : TILES.path;
+    }
+  }
+  // clear starting area
+  for (var dy = -1; dy <= 1; dy++)
+    for (var dx = -1; dx <= 1; dx++)
+      MAP[5+dy][5+dx] = TILES.grass;
 }
 
-function toast(m){const el=document.getElementById('toast');el.textContent=m;el.classList.add('show');clearTimeout(tt);tt=setTimeout(()=>{el.classList.remove('show');},1800);}
-function md(t,x){document.getElementById('mdT').textContent=t;document.getElementById('mdX').textContent=x;document.getElementById('mdM').style.display='flex';}
-function sv(){localStorage.setItem('pet',JSON.stringify(S));toast('💾 已儲存！');}
-function rs(){localStorage.removeItem('pet');S={pi:0,lv:1,xp:0,co:50,h:80,p:80,e:80,c:80,t:0,st:false};
-  document.getElementById('game').style.display='none';document.getElementById('title').style.display='flex';toast('🔄 已重開！');}
+function initOverworld() {
+  genMap();
+  player = game.player;
+  ovCvs = document.getElementById('gameCanvas');
+  ovCtx = ovCvs.getContext('2d');
+  resizeOverworld();
+  window.addEventListener('resize', resizeOverworld);
+  encTimer = 0;
+  requestAnimationFrame(loopOverworld);
+}
 
-// Load saved
-try{const d=localStorage.getItem('pet');if(d){const o=JSON.parse(d);Object.assign(S,o);S.st=true;document.getElementById('title').style.display='none';document.getElementById('game').style.display='flex';document.getElementById('petRender').innerHTML=PH[S.pi];up();}}catch(e){}
+function resizeOverworld() {
+  var rect = ovCvs.parentElement.getBoundingClientRect();
+  ovCvs.width = ovCvs.clientWidth || 320;
+  ovCvs.height = ovCvs.clientHeight || 300;
+}
 
-function loop(){dc();requestAnimationFrame(loop);}
-window.onload=function(){init();loop();};
+function movePlayer(dx, dy) {
+  if (!game || !game.player) return;
+  var nx = player.x + dx;
+  var ny = player.y + dy;
+  if (nx < 0 || nx >= MAP_W || ny < 0 || ny >= MAP_H) return;
+  if (MAP[ny][nx] === TILES.tree || MAP[ny][nx] === TILES.water || MAP[ny][nx] === TILES.rock) return;
+  player.x = nx;
+  player.y = ny;
+  player.dir = dy < 0 ? 'up' : dy > 0 ? 'down' : dx < 0 ? 'left' : 'right';
+  // Update location
+  var locs = ['🌿 草原','🌿 草地','🌲 樹林','🌊 水邊','🌸 花園'];
+  document.getElementById('locBadge').textContent = locs[Math.floor(Math.random()*locs.length)];
+  // Random encounter
+  encTimer++;
+  if (encTimer > 5 && Math.random() < 0.12) {
+    encTimer = 0;
+    startBattle();
+  }
+}
 
-})();
+function loopOverworld() {
+  drawOverworld();
+  animFrame++;
+  requestAnimationFrame(loopOverworld);
+}
+
+function drawOverworld() {
+  var ctx = ovCtx;
+  var cw = ovCvs.width;
+  var ch = ovCvs.height;
+  var tw = Math.ceil(cw / TILE) + 2;
+  var th = Math.ceil(ch / TILE) + 2;
+  var ox = player.x - Math.floor(tw/2);
+  var oy = player.y - Math.floor(th/2);
+
+  var tileColors = {
+    0: '#5a9e5a', 1: '#b8a87a', 2: '#3a7aba',
+    3: '#2a6a2a', 4: '#9aca5a', 5: '#6a6a5a'
+  };
+
+  // Draw ground
+  for (var ty = 0; ty < th; ty++) {
+    for (var tx = 0; tx < tw; tx++) {
+      var mx = ox + tx;
+      var my = oy + ty;
+      if (mx < 0 || mx >= MAP_W || my < 0 || my >= MAP_H) continue;
+      var t = MAP[my][mx];
+      ctx.fillStyle = tileColors[t] || '#5a9e5a';
+      ctx.fillRect(tx*TILE, ty*TILE, TILE, TILE);
+      // decorative details
+      if (t === TILES.flower) {
+        ctx.beginPath();
+        ctx.arc(tx*TILE+16, ty*TILE+16, 3, 0, Math.PI*2);
+        ctx.fillStyle = '#ff6b9d';
+        ctx.fill();
+      }
+    }
+  }
+
+  // Draw partner pet following
+  var px = (player.x - ox) * TILE;
+  var py = (player.y - oy) * TILE;
+  var pet = game.pets[game.active];
+  if (pet) {
+    ctx.save();
+    ctx.translate(px - 8, py - TILE);
+    drawPet(ctx, pet.id, -2, -2, 24, false, animFrame);
+    ctx.restore();
+  }
+
+  // Draw player
+  ctx.fillStyle = '#6c5ce7';
+  ctx.beginPath();
+  ctx.arc(px+16, py+16, 10, 0, Math.PI*2);
+  ctx.fill();
+  ctx.fillStyle = '#fff';
+  ctx.beginPath();
+  ctx.arc(px+12, py+13, 3, 0, Math.PI*2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(px+20, py+13, 3, 0, Math.PI*2);
+  ctx.fill();
+  // highlight
+  ctx.fillStyle = '#a29bfe';
+  ctx.beginPath();
+  ctx.arc(px+11, py+12, 1.5, 0, Math.PI*2);
+  ctx.fill();
+  ctx.beginPath();
+  ctx.arc(px+19, py+12, 1.5, 0, Math.PI*2);
+  ctx.fill();
+}
+
+// ===== BATTLE =====
+var battle = null;
+
+function startBattle() {
+  document.getElementById('overworld').style.display = 'none';
+  document.getElementById('battle').style.display = 'flex';
+  var wildTypes = ['bird','bat','egg','fire','water','grass'];
+  var myPet = game.pets[game.active];
+  var wildId = wildTypes[Math.floor(Math.random()*wildTypes.length)];
+  var wildData = PET_DATA[wildId];
+  var wildLv = Math.max(1, myPet.lv + Math.floor(Math.random()*3) - 1);
+  var wildHp = Math.floor(wildData.hp * (1 + wildLv * 0.1));
+
+  battle = {
+    my: {id:myPet.id, name:myPet.name, lv:myPet.lv, hp:myPet.hp, maxHp:myPet.maxHp, atk:myPet.atk, def:myPet.def},
+    enemy: {id:wildId, name:wildData.name, lv:wildLv, hp:wildHp, maxHp:wildHp, atk:Math.floor(wildData.atk*(1+wildLv*0.08)), def:Math.floor(wildData.def*(1+wildLv*0.08))},
+    turn: 'player',
+    ended: false
+  };
+
+  updateBattleUI();
+  drawBattle();
+  setupBattleActions();
+}
+
+function updateBattleUI() {
+  var b = battle;
+  document.getElementById('myPN').textContent = b.my.name;
+  document.getElementById('myPL').textContent = 'Lv.'+b.my.lv;
+  document.getElementById('enPN').textContent = b.enemy.name;
+  document.getElementById('enPL').textContent = 'Lv.'+b.enemy.lv;
+  var hpPct = (b.my.hp / b.my.maxHp * 100);
+  document.getElementById('myBar').style.width = hpPct+'%';
+  document.getElementById('myBar').className = 'bar-fill '+(hpPct>50?'green':hpPct>25?'yellow':'red');
+  document.getElementById('myNum').textContent = Math.ceil(b.my.hp)+'/'+b.my.maxHp;
+  var ePct = (b.enemy.hp / b.enemy.maxHp * 100);
+  document.getElementById('enBar').style.width = ePct+'%';
+  document.getElementById('enBar').className = 'bar-fill '+(ePct>50?'green':ePct>25?'yellow':'red');
+  document.getElementById('enNum').textContent = Math.ceil(b.enemy.hp)+'/'+b.enemy.maxHp;
+}
+
+function setupBattleActions() {
+  var acts = document.getElementById('btlActs');
+  acts.innerHTML = '';
+  var btns = [
+    {text:'⚔️ 攻擊', cls:'primary', action:function(){doAttack();}},
+    {text:'💪 重擊', cls:'danger', action:function(){doHeavy();}},
+    {text:'🛡️ 防禦', cls:'success', action:function(){doDefend();}},
+    {text:'🏃 逃走', cls:'', action:function(){doFlee();}}
+  ];
+  btns.forEach(function(b) {
+    var el = document.createElement('div');
+    el.className = 'act-btn ' + b.cls;
+    el.textContent = b.text;
+    el.onclick = b.action;
+    acts.appendChild(el);
+  });
+}
+
+function doAttack() {
+  if (battle.ended) return;
+  var eff = typeEff(PET_DATA[battle.my.id].el, PET_DATA[battle.enemy.id].el);
+  var dmg = Math.max(1, Math.floor(battle.my.atk * 1.2 * eff * (0.85 + Math.random()*0.3) - battle.enemy.def*0.4));
+  battle.enemy.hp = Math.max(0, battle.enemy.hp - dmg);
+  var msg = battle.my.name+' 使用左 普通攻擊！';
+  if (eff > 1) msg += '\n效果超群！';
+  else if (eff < 1) msg += '\n效果不佳...';
+  msg += '\n造成 '+dmg+' 傷害！';
+  document.getElementById('btlMsg').textContent = msg;
+  updateBattleUI();
+  drawBattle();
+  if (battle.enemy.hp <= 0) { battleWon(); return; }
+  setTimeout(enemyTurn, 800);
+}
+
+function doHeavy() {
+  if (battle.ended) return;
+  var eff = typeEff(PET_DATA[battle.my.id].el, PET_DATA[battle.enemy.id].el);
+  var dmg = Math.max(1, Math.floor(battle.my.atk * 2.0 * eff * (0.8 + Math.random()*0.4) - battle.enemy.def*0.3));
+  battle.enemy.hp = Math.max(0, battle.enemy.hp - dmg);
+  var msg = battle.my.name+' 使用左 全力重擊！';
+  if (eff > 1) msg += '\n效果超群！';
+  else if (eff < 1) msg += '\n效果不佳...';
+  msg += '\n造成 '+dmg+' 傷害！';
+  document.getElementById('btlMsg').textContent = msg;
+  updateBattleUI();
+  drawBattle();
+  if (battle.enemy.hp <= 0) { battleWon(); return; }
+  setTimeout(enemyTurn, 800);
+}
+
+function doDefend() {
+  if (battle.ended) return;
+  document.getElementById('btlMsg').textContent = battle.my.name+' 使用左 防禦！\n下次受傷減少！';
+  battle.defending = true;
+  setTimeout(enemyTurn, 600);
+}
+
+function doFlee() {
+  if (battle.ended) return;
+  if (Math.random() < 0.5) {
+    document.getElementById('btlMsg').textContent = '成功逃走！';
+    setTimeout(endBattle, 500);
+  } else {
+    document.getElementById('btlMsg').textContent = '逃走失敗...';
+    setTimeout(enemyTurn, 600);
+  }
+}
+
+function enemyTurn() {
+  if (battle.ended) return;
+  var dmg = Math.max(1, Math.floor(battle.enemy.atk * (0.8 + Math.random()*0.4) - (battle.defending ? battle.my.def*0.8 : battle.my.def*0.3)));
+  battle.my.hp = Math.max(0, battle.my.hp - dmg);
+  var msg = battle.enemy.name+' 攻擊左！\n造成 '+dmg+' 傷害！';
+  if (battle.defending) msg += '\n（防禦減傷）';
+  document.getElementById('btlMsg').textContent = msg;
+  battle.defending = false;
+  updateBattleUI();
+  drawBattle();
+  if (battle.my.hp <= 0) {
+    battleLost();
+    return;
+  }
+}
+
+function battleWon() {
+  battle.ended = true;
+  var gainXp = 10 + battle.enemy.lv * 3;
+  var gainCoins = 5 + battle.enemy.lv * 2;
+  var myPet = game.pets[game.active];
+  myPet.xp += gainXp;
+  document.getElementById('btlMsg').textContent = '🎉 勝利！\n獲得 '+gainXp+' EXP 同 '+gainCoins+' 金幣！';
+  var acts = document.getElementById('btlActs');
+  acts.innerHTML = '';
+  var el = document.createElement('div');
+  el.className = 'act-btn primary';
+  el.textContent = '✅ 繼續冒險';
+  el.onclick = function() {
+    if (myPet.xp >= myPet.xpNext) {
+      levelUp(myPet);
+    }
+    endBattle();
+  };
+  acts.appendChild(el);
+  drawBattle();
+}
+
+function battleLost() {
+  battle.ended = true;
+  document.getElementById('btlMsg').textContent = '💔 '+battle.my.name+' 失去戰鬥能力...\n返回冒險。';
+  var acts = document.getElementById('btlActs');
+  acts.innerHTML = '';
+  var el = document.createElement('div');
+  el.className = 'act-btn success';
+  el.textContent = '🔙 返回';
+  el.onclick = function() {
+    var myPet = game.pets[game.active];
+    myPet.hp = Math.floor(myPet.maxHp * 0.3); // revive with 30%
+    endBattle();
+  };
+  acts.appendChild(el);
+}
+
+function endBattle() {
+  battle = null;
+  document.getElementById('battle').style.display = 'none';
+  document.getElementById('overworld').style.display = 'flex';
+  resizeOverworld();
+}
+
+function levelUp(pet) {
+  pet.xp -= pet.xpNext;
+  pet.lv++;
+  pet.xpNext = Math.floor(pet.xpNext * 1.4 + 5);
+  pet.maxHp = Math.floor(pet.maxHp * 1.12 + 3);
+  pet.hp = pet.maxHp;
+  pet.atk = Math.floor(pet.atk * 1.08 + 1);
+  pet.def = Math.floor(pet.def * 1.08 + 1);
+  document.getElementById('lvupT').textContent = '🌟 Lv.'+pet.lv+'!';
+  document.getElementById('lvupO').style.display = 'flex';
+  setTimeout(function(){document.getElementById('lvupO').style.display='none';}, 1200);
+  // Check evolution
+  var pd = PET_DATA[pet.id];
+  if (pd && pd.evolve && pet.lv >= 10) {
+    var newId = pd.evolve;
+    var newPd = PET_DATA[newId];
+    pet.id = newId;
+    pet.name = newPd.name;
+    pet.maxHp = Math.max(pet.maxHp, newPd.hp + Math.floor(pet.lv * 5));
+    pet.atk = Math.max(pet.atk, newPd.atk + Math.floor(pet.lv * 1.5));
+    pet.def = Math.max(pet.def, newPd.def + Math.floor(pet.lv * 1.5));
+    document.getElementById('partnerBadge').textContent = '🐾 '+pet.name;
+    document.getElementById('evoT').textContent = '✨ 進化！';
+    document.getElementById('evoSub').textContent = pet.name+' 誕生！';
+    document.getElementById('evoO').style.display = 'flex';
+    setTimeout(function(){document.getElementById('evoO').style.display='none';}, 2500);
+  }
+}
+
+function showBag() {
+  // Simple - just show pet names and levels in a modal
+  var msg = '';
+  for (var i = 0; i < game.pets.length; i++) {
+    var p = game.pets[i];
+    msg += (i === game.active ? '▶ ' : '  ') + p.name + ' Lv.' + p.lv + ' HP:' + Math.ceil(p.hp) + '/' + p.maxHp + '\n';
+  }
+  document.getElementById('modalT').textContent = '🎒 寵物隊伍';
+  document.getElementById('modalX').textContent = msg;
+  document.getElementById('modal').style.display = 'flex';
+}
+function closeModal() {
+  document.getElementById('modal').style.display = 'none';
+}
+
+// ===== BATTLE CANVAS DRAWING =====
+function drawBattle() {
+  var cvs = document.getElementById('battleCanvas');
+  var ctx = cvs.getContext('2d');
+  cvs.width = cvs.clientWidth || 320;
+  cvs.height = cvs.clientHeight || 300;
+  var w = cvs.width;
+  var h = cvs.height;
+
+  // Background gradient
+  var bg = ctx.createLinearGradient(0, 0, 0, h);
+  bg.addColorStop(0, '#1a1a3e');
+  bg.addColorStop(0.6, '#2d1b4e');
+  bg.addColorStop(1, '#3a2a3e');
+  ctx.fillStyle = bg;
+  ctx.fillRect(0, 0, w, h);
+
+  // Ground
+  ctx.beginPath();
+  ctx.rect(0, h*0.72, w, h*0.28);
+  ctx.fillStyle = '#3a6b3a';
+  ctx.fill();
+  ctx.strokeStyle = '#2a5a2a';
+  ctx.lineWidth = 2;
+  ctx.beginPath();
+  ctx.moveTo(0, h*0.72);
+  ctx.lineTo(w, h*0.72);
+  ctx.stroke();
+
+  // Grass details
+  for (var i = 0; i < 12; i++) {
+    var gx = Math.random() * w;
+    var gy = h*0.74 + Math.random() * h*0.2;
+    ctx.beginPath();
+    ctx.moveTo(gx, gy);
+    ctx.lineTo(gx-2, gy-8);
+    ctx.moveTo(gx, gy);
+    ctx.lineTo(gx+2, gy-6);
+    ctx.strokeStyle = '#4a8a4a';
+    ctx.lineWidth = 1.5;
+    ctx.stroke();
+  }
+
+  if (!battle) return;
+
+  // Enemy pet (right side, larger)
+  var enSize = Math.min(w*0.3, h*0.35);
+  drawPet(ctx, battle.enemy.id, w*0.58, h*0.12, enSize, false, animFrame);
+
+  // Enemy name/level
+  ctx.fillStyle = 'rgba(255,255,255,0.15)';
+  ctx.beginPath();
+  ctx.roundRect(w*0.55, h*0.02, w*0.38, 28, 6);
+  ctx.fill();
+
+  ctx.fillStyle = '#fff';
+  ctx.font = 'bold 11px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(battle.enemy.name+' Lv.'+battle.enemy.lv, w*0.74, h*0.04+10);
+
+  // Enemy HP bar beside it
+  var eBarW = w*0.35;
+  var eBarH = 6;
+  var eBarX = w*0.56;
+  var eBarY = h*0.05+12;
+  ctx.fillStyle = 'rgba(0,0,0,0.4)';
+  ctx.beginPath();
+  ctx.roundRect(eBarX, eBarY, eBarW, eBarH, 3);
+  ctx.fill();
+  var ePct = battle.enemy.hp / battle.enemy.maxHp;
+  var eClr = ePct > 0.5 ? '#4cd964' : ePct > 0.25 ? '#ff9500' : '#ff3b30';
+  ctx.fillStyle = eClr;
+  ctx.beginPath();
+  ctx.roundRect(eBarX, eBarY, eBarW * ePct, eBarH, 3);
+  ctx.fill();
+
+  // HP text
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '9px sans-serif';
+  ctx.textAlign = 'center';
+  ctx.fillText(Math.ceil(battle.enemy.hp)+' / '+battle.enemy.maxHp, w*0.74, eBarY+12);
+
+  // My pet (left side, slightly larger)
+  var mySize = Math.min(w*0.25, h*0.30);
+  drawPet(ctx, battle.my.id, w*0.08, h*0.40, mySize, true, animFrame);
+
+  // My pet HP bar below
+  var mBarW = w*0.35;
+  var mBarH = 6;
+  var mBarX = w*0.08;
+  var mBarY = h*0.72 - 18;
+  ctx.fillStyle = 'rgba(0,0,0,0.4)';
+  ctx.beginPath();
+  ctx.roundRect(mBarX, mBarY, mBarW, mBarH, 3);
+  ctx.fill();
+  var mPct = battle.my.hp / battle.my.maxHp;
+  var mClr = mPct > 0.5 ? '#4cd964' : mPct > 0.25 ? '#ff9500' : '#ff3b30';
+  ctx.fillStyle = mClr;
+  ctx.beginPath();
+  ctx.roundRect(mBarX, mBarY, mBarW * mPct, mBarH, 3);
+  ctx.fill();
+
+  ctx.fillStyle = 'rgba(255,255,255,0.5)';
+  ctx.font = '9px sans-serif';
+  ctx.fillText(Math.ceil(battle.my.hp)+' / '+battle.my.maxHp, mBarX + mBarW/2, mBarY+12);
+
+  // Attack flash effect
+  if (battle._flashTimer > 0) {
+    ctx.fillStyle = 'rgba(255,255,255,'+(battle._flashTimer*0.2)+')';
+    ctx.fillRect(0, 0, w, h);
+    battle._flashTimer -= 0.05;
+  }
+}
+
+// ===== INIT =====
+window.onload = function() {
+  // roundRect polyfill
+  if (!CanvasRenderingContext2D.prototype.roundRect) {
+    CanvasRenderingContext2D.prototype.roundRect = function(x,y,w,h,r) {
+      this.moveTo(x+r, y);
+      this.quadraticCurveTo(x+w, y, x+w, y+r);
+      this.quadraticCurveTo(x+w, y+h, x+w-r, y+h);
+      this.quadraticCurveTo(x, y+h, x, y+h-r);
+      this.quadraticCurveTo(x, y, x+r, y);
+      return this;
+    };
+  }
+  init();
+};
+
+// Animation loop for battle canvas
+setInterval(function() {
+  if (document.getElementById('battle').style.display === 'flex' && battle) {
+    drawBattle();
+  }
+}, 50);
+
 </script>
 </body>
 </html>

@@ -169,6 +169,8 @@ function init(){
 
 function go(){
   G={n:$('ni').value||'考生',i:0,c:0,r:[],lk:0,sel:[]};
+  // 隨機打亂題目順序
+  for(let i=QS.length-1;i>0;i--){const j=~~(Math.random()*(i+1));[QS[i],QS[j]]=[QS[j],QS[i]];}
   $('title').style.display='none';$('quiz').style.display='flex';
   $('sn').textContent='📝 '+G.n;rq();
 }

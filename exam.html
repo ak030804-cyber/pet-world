@@ -196,7 +196,7 @@ function rq(){
   $('imgBox').style.display='none';$('imgBox').innerHTML='';
   if(q.img){
     $('imgBox').style.display='block';
-    $('imgBox').innerHTML='<div style="font-size:11px;color:rgba(255,255,255,.2);margin-bottom:4px">📊 附圖</div><img src="'+IMG[q.img]+'" style="max-width:100%;border-radius:8px;display:block;margin:0 auto;border:1px solid rgba(255,255,255,.06)">';
+    $('imgBox').innerHTML='<div style="font-size:11px;color:rgba(255,255,255,.2);margin-bottom:4px">📊 附圖</div><img src="'+(IMG[q.img].startsWith('data:')?IMG[q.img]:'data:image/jpeg;base64,'+IMG[q.img])+'" style="max-width:100%;border-radius:8px;display:block;margin:0 auto;border:1px solid rgba(255,255,255,.06)">';
   }
   
   const mul=Array.isArray(q.a);

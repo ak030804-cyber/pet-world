@@ -2,82 +2,63 @@
 <html lang="zh-HK">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no,viewport-fit=cover">
-<title>常識測驗 - 19-21課</title>
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+<title>常識測驗 - 聲光磁</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,'PingFang TC','Segoe UI',sans-serif;background:#0f0f2a;color:#fff}
-#app{width:100%;height:100%;max-width:460px;margin:0 auto;display:flex;flex-direction:column;position:relative}
+#app{width:100%;height:100%;max-width:460px;margin:0 auto;display:flex;flex-direction:column}
 #title{display:flex;flex-direction:column;height:100%;align-items:center;justify-content:center;background:linear-gradient(160deg,#0f0f2a,#1a1050,#162878);padding:20px}
-#title h1{font-size:28px;font-weight:800;background:linear-gradient(135deg,#74b9ff,#a29bfe,#fd79a8);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2px}
+#title h1{font-size:28px;font-weight:800;background:linear-gradient(135deg,#74b9ff,#a29bfe);-webkit-background-clip:text;-webkit-text-fill-color:transparent;margin-bottom:2px}
 #title .sub{color:rgba(255,255,255,.2);font-size:11px;letter-spacing:3px;margin-bottom:16px}
 .si{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:12px;padding:10px 14px;margin-bottom:8px;width:88%;max-width:320px}
-.si label{font-size:10px;color:rgba(255,255,255,.35);display:block;margin-bottom:2px}
-.si input{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:9px 12px;color:#fff;font-size:14px;width:100%;outline:none}
+.si label{font-size:10px;color:rgba(255,255,255,.35)}.si input{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:9px 12px;color:#fff;font-size:14px;width:100%;outline:none}
 .si input:focus{border-color:#74b9ff}
-.gb{background:linear-gradient(135deg,#74b9ff,#a29bfe);border:none;border-radius:14px;color:#0f0f2a;font-size:16px;font-weight:700;padding:14px 44px;margin-top:10px;cursor:pointer;box-shadow:0 4px 0 #5a6ad8;transition:all .08s;letter-spacing:1px}
+.gb{background:linear-gradient(135deg,#74b9ff,#a29bfe);border:none;border-radius:14px;color:#0f0f2a;font-size:16px;font-weight:700;padding:14px 44px;margin-top:10px;cursor:pointer;box-shadow:0 4px 0 #5a6ad8;transition:all .08s}
 .gb:active{transform:translateY(4px);box-shadow:0 0 0 #5a6ad8}
 #quiz{display:none;flex-direction:column;height:100%;background:linear-gradient(180deg,#0f0f2a,#1a1050,#162878)}
-#hdr{display:flex;justify-content:space-between;align-items:center;padding:8px 14px}
-#hdr .nm{font-size:14px;font-weight:600}#hdr .sc{font-size:12px;color:#f5d76e}#hdr .pg{font-size:10px;color:rgba(255,255,255,.3)}
-#prog{height:2px;background:rgba(255,255,255,.04);margin:0 14px;border-radius:2px;overflow:hidden}
-#prog .bf{height:100%;background:linear-gradient(90deg,#74b9ff,#a29bfe);border-radius:2px;transition:width .4s ease}
-#qa{flex:1;display:flex;flex-direction:column;padding:10px 14px;overflow-y:auto;-webkit-overflow-scrolling:touch}
-#qType{font-size:10px;color:rgba(255,255,255,.15)}
-#qNum{font-size:10px;color:rgba(255,255,255,.25);margin-bottom:4px}
-#qTxt{font-size:15px;font-weight:700;line-height:1.5;margin-bottom:10px;padding:0 2px}
-#qTxt .bl{display:inline-block;min-width:50px;border-bottom:2px dashed rgba(116,185,255,.3);margin:0 2px;color:#74b9ff;font-weight:700}
-/* Diagram */
-#diagram{background:rgba(255,255,255,.02);border:1px solid rgba(255,255,255,.04);border-radius:10px;padding:10px;margin-bottom:10px;text-align:center}
-#diagram .d-label{font-size:9px;color:rgba(255,255,255,.2);margin-bottom:6px}
-#diagram .d-grid{display:grid;gap:6px}
-#diagram .d-grid.c2{grid-template-columns:1fr 1fr}
-#diagram .d-grid.c4{grid-template-columns:1fr 1fr 1fr 1fr}
-#diagram .d-item{background:rgba(255,255,255,.03);border-radius:8px;padding:8px 4px;text-align:center}
-#diagram .d-item .d-icon{font-size:28px;display:block;margin-bottom:2px}
-#diagram .d-item .d-label{font-size:9px;color:rgba(255,255,255,.4)}
-/* Word bank */
-#wb{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.04);border-radius:10px;padding:8px 10px;margin-bottom:10px}
-#wb .wl{font-size:9px;color:rgba(255,255,255,.2);margin-bottom:4px}
-#wb .ww{display:flex;flex-wrap:wrap;gap:4px}
-.ww-word{background:rgba(116,185,255,.08);border:1px solid rgba(116,185,255,.12);border-radius:6px;padding:3px 8px;font-size:12px;color:#74b9ff;cursor:pointer;touch-action:none}
-.ww-word:active{background:rgba(116,185,255,.15);transform:scale(.95)}
-.ww-word.us{opacity:.2;pointer-events:none}
+#hdr{display:flex;justify-content:space-between;align-items:center;padding:8px 14px;flex-shrink:0}
+#hdr .nm{font-size:14px;font-weight:600}#hdr .sc{font-size:12px;color:#f5d76e}
+#hdr .pg{font-size:10px;color:rgba(255,255,255,.3)}
+#prog{height:2px;background:rgba(255,255,255,.04);margin:0 14px;border-radius:2px;overflow:hidden;flex-shrink:0}
+#prog .bf{height:100%;background:linear-gradient(90deg,#74b9ff,#a29bfe);border-radius:2px;transition:width .4s}
+#qa{flex:1;display:flex;flex-direction:column;padding:10px 14px 14px;overflow-y:auto;-webkit-overflow-scrolling:touch}
+#qNum{font-size:10px;color:rgba(255,255,255,.25);margin-bottom:3px}
+#qTxt{font-size:15px;font-weight:700;line-height:1.5;margin-bottom:10px}
+#imgBox{text-align:center;margin-bottom:10px;background:rgba(255,255,255,.02);border-radius:10px;padding:8px}
+#imgBox img{max-width:100%;border-radius:6px;display:block;margin:0 auto}
+#imgBox .il{font-size:9px;color:rgba(255,255,255,.2);margin-top:4px}
 #opts{display:flex;flex-direction:column;gap:5px}
-.opt{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:11px;padding:10px 12px;cursor:pointer;transition:all .12s;font-size:14px;touch-action:none}
+.opt{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.06);border-radius:11px;padding:10px 12px;cursor:pointer;transition:all .12s;font-size:14px;line-height:1.3;touch-action:none}
 .opt:active{transform:scale(.98)}
 .opt.sl{border-color:#74b9ff;background:rgba(116,185,255,.06)}
 .opt.cr{border-color:#4cd964!important;background:rgba(76,217,100,.08)!important}
 .opt.wr{border-color:#ff3b30!important;background:rgba(255,59,48,.08)!important}
 .opt.ds{pointer-events:none;opacity:.5}
-.opt .tg{display:inline-block;background:rgba(255,255,255,.04);border-radius:4px;padding:0 6px;font-size:10px;color:rgba(255,255,255,.25);margin-right:6px;font-weight:600}
+.opt .tg{display:inline-block;background:rgba(255,255,255,.04);border-radius:4px;padding:0 7px;font-size:10px;color:rgba(255,255,255,.25);margin-right:7px;font-weight:600}
 .opt.cr .tg{background:rgba(76,217,100,.12);color:#4cd964}
 .opt.wr .tg{background:rgba(255,59,48,.12);color:#ff3b30}
-#fa{display:none;flex-direction:column;margin-top:4px}
-#fi{background:rgba(255,255,255,.04);border:1.5px solid rgba(255,255,255,.08);border-radius:10px;padding:10px 12px;color:#fff;font-size:15px;text-align:center;outline:none;width:100%}
-#fi:focus{border-color:#74b9ff}
-#fs{background:linear-gradient(135deg,#74b9ff,#a29bfe);border:none;border-radius:10px;color:#0f0f2a;font-size:14px;font-weight:700;padding:10px;margin-top:5px;cursor:pointer}
-#fs:active{transform:translateY(2px)}
 #fb{display:none;margin-top:8px;padding:8px 10px;border-radius:10px;font-size:12px;line-height:1.4;gap:6px;flex-direction:column}
-#fb .ic{font-size:15px}
 #fb.cr{background:rgba(76,217,100,.06);border:1px solid rgba(76,217,100,.12);display:flex}
 #fb.wr{background:rgba(255,59,48,.06);border:1px solid rgba(255,59,48,.12);display:flex}
 #fb .an{color:#74b9ff;font-weight:600}
 #nb{background:linear-gradient(135deg,#74b9ff,#a29bfe);border:none;border-radius:10px;color:#0f0f2a;font-size:14px;font-weight:700;padding:10px 0;margin-top:6px;cursor:pointer;display:none;width:100%}
 #nb:active{transform:translateY(2px)}
+#ms{background:linear-gradient(135deg,#f5d76e,#ff9500);border:none;border-radius:10px;color:#0f0f2a;font-size:13px;font-weight:700;padding:9px 0;margin-top:6px;cursor:pointer;display:none;width:100%}
+#ms:active{transform:translateY(2px)}
 #res{display:none;flex-direction:column;height:100%;align-items:center;justify-content:center;background:linear-gradient(160deg,#0f0f2a,#1a1050,#162878);padding:20px}
-#res .re{font-size:52px;margin-bottom:8px}#res h2{font-size:24px;font-weight:800;margin-bottom:4px}
-#res .rs{color:rgba(255,255,255,.3);font-size:12px;margin-bottom:14px}
+#res .re{font-size:52px;margin-bottom:8px}#res h2{font-size:24px;font-weight:800;margin-bottom:4px}#res .rs{color:rgba(255,255,255,.3);font-size:12px;margin-bottom:14px}
 #res .sb{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:14px;padding:14px 26px;margin-bottom:14px;text-align:center}
 #res .sb .bg{font-size:38px;font-weight:800;color:#f5d76e}#res .sb .dt{font-size:12px;color:rgba(255,255,255,.35);margin-top:3px}
 #res .br{display:flex;gap:8px}#res .br button{background:linear-gradient(135deg,#74b9ff,#a29bfe);border:none;border-radius:10px;color:#0f0f2a;font-size:13px;font-weight:700;padding:10px 20px;cursor:pointer}
 #res .br .s2{background:rgba(255,255,255,.04);color:rgba(255,255,255,.4)}
 #rv{display:none;flex-direction:column;height:100%;background:linear-gradient(180deg,#0f0f2a,#1a1050)}
-#rv .list{flex:1;overflow-y:auto;padding:6px 12px;-webkit-overflow-scrolling:touch}
+#rv .rvh{display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04);flex-shrink:0}
+#rv .rvh .nm{font-size:14px;font-weight:600}#rv .rvh .cl{font-size:11px;color:rgba(255,255,255,.3);cursor:pointer}
+#rvl{flex:1;overflow-y:auto;padding:6px 12px;-webkit-overflow-scrolling:touch}
 .rvi{border:1px solid rgba(255,255,255,.03);border-radius:10px;padding:8px 10px;margin-bottom:6px}
 .rvi .q{font-size:12px;font-weight:600;margin-bottom:3px;line-height:1.3}
-.rvi .a{font-size:10px;color:rgba(255,255,255,.35)}
-.rvi .a .y{color:#4cd964;font-weight:600}.rvi .a .n{color:#ff3b30;font-weight:600}
+.rvi .a{font-size:10px;color:rgba(255,255,255,.35)}.rvi .a .y{color:#4cd964;font-weight:600}.rvi .a .n{color:#ff3b30;font-weight:600}
 .rvi .tr{display:inline-block;font-size:9px;padding:1px 6px;border-radius:5px;margin-bottom:3px}
 .rvi .tr.ok{background:rgba(76,217,100,.08);color:#4cd964}.rvi .tr.fail{background:rgba(255,59,48,.08);color:#ff3b30}
 </style>
@@ -87,7 +68,7 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,'Ping
   <h1>📝 常識測驗</h1>
   <div class="sub">一 年 級 · 19 - 21 課</div>
   <div class="si"><label>👤 姓名</label><input id="ni" value="謝蕊安"></div>
-  <div class="si"><label>📚 範圍</label><input id="ti" value="一年級常識 19-21課 聲光磁"></div>
+  <div class="si"><label>📚 範圍</label><input id="ti" value="一年級常識 聲光磁"></div>
   <button class="gb" id="sb">開始測驗！</button>
 </div>
 
@@ -95,253 +76,189 @@ html,body{width:100%;height:100%;overflow:hidden;font-family:-apple-system,'Ping
   <div id="hdr"><span class="nm" id="sn"></span><span class="pg" id="qp"></span><span class="sc" id="ss"></span></div>
   <div id="prog"><div class="bf" id="pb"></div></div>
   <div id="qa">
-    <div id="qType"></div><div id="qNum"></div><div id="qTxt"></div>
-    <div id="diagram"></div><div id="wb"></div><div id="fa"><input id="fi" placeholder="輸入答案..." autocomplete="off"><button id="fs">提交答案</button></div>
+    <div id="qNum"></div>
+    <div id="qTxt"></div>
+    <div id="imgBox"></div>
     <div id="opts"></div>
-    <button id="ms" style="background:linear-gradient(135deg,#f5d76e,#ff9500);border:none;border-radius:10px;color:#0f0f2a;font-size:13px;font-weight:700;padding:9px 0;margin-top:6px;cursor:pointer;display:none">✅ 確認答案</button>
-    <div id="fb"><span class="ic"></span><span class="msg"></span></div>
+    <div id="fb"><span class="an"></span></div>
+    <button id="ms">✅ 確認答案</button>
     <button id="nb">下一題 ▶</button>
   </div>
 </div>
 
 <div id="res">
   <div class="re" id="re">🎉</div><h2 id="rt">測驗完成！</h2><div class="rs" id="rsub"></div>
-  <div class="sb"><div class="bg" id="rsc">0/26</div><div class="dt" id="rdt"></div></div>
+  <div class="sb"><div class="bg" id="rsc">0/25</div><div class="dt" id="rdt"></div></div>
   <div class="br"><button id="rvb">📋 覆卷</button><button class="s2" id="ryb">🔄 再考</button></div>
 </div>
 
-<div id="rv"><div class="list" id="rvl"></div></div>
+<div id="rv"><div class="rvh"><span class="nm">📋 覆卷</span><span class="cl" id="rvc">✕ 關閉</span></div><div id="rvl"></div></div>
 
 <script>
 "use strict";(()=>{
 
-const WB = ['氣體','吸','鐵','振動','直線','南','辨別方向','大','媒介','光線','北','聲音','黑色','半透明體','排斥','吸引'];
+function $(id){return document.getElementById(id);}
 
-// Questions
-// t: wb=wordbank, tf=true/false, mc=choice, exp=experiment
+// Multiple choice questions only
+// a = answer index (or array for multi-select), m = multi-select label
+// img = diagram description
 const QS = [
-  // === 填充題（詞語庫）13題 ===
-  {t:'wb',q:'物體的振動幅度越______，產生的聲音越大。',a:'大'},
-  {t:'wb',q:'指南針能幫助我們______。',a:'辨別方向'},
-  {t:'wb',q:'聲音可以透過______、固體和液體傳播。',a:'氣體'},
-  {t:'wb',q:'當我們說話時，喉嚨內的聲帶______，從而產生聲音。',a:'振動'},
-  {t:'wb',q:'磁鐵能吸攝______製造的東西。',a:'鐵'},
-  {t:'wb',q:'能讓部分光穿透的物體，稱為______。',a:'半透明體'},
-  {t:'wb',q:'光是走______的。',a:'直線'},
-  {t:'wb',q:'磁鐵有同極相______和異極相______的特性。',a:'排斥,吸引'},
-  {t:'wb',q:'物體振動時會產生______。',a:'聲音'},
-  {t:'wb',q:'所有不透明體的影子都是______的。',a:'黑色'},
-  {t:'wb',q:'不同的______傳送聲音的效果都不同。',a:'媒介'},
-  {t:'wb',q:'當沒有______，我們便看不見東西。',a:'光線'},
-  {t:'wb',q:'磁鐵的兩端稱為______極和______極。',a:'北,南'},
+  // === 填充題 → 選擇題 ===
+  {q:'物體的振動幅度越______，產生的聲音越大。',o:['大','小','快','慢'],a:0},
+  {q:'指南針能幫助我們______。',o:['辨別方向','測量溫度','計算時間','量度長度'],a:0},
+  {q:'聲音可以透過______傳播到我們耳中。',o:['媒介（空氣、水、固體）','真空','電線','電磁波'],a:0},
+  {q:'當我們說話時，喉嚨內的什麼結構會產生振動？',o:['聲帶','牙齒','嘴唇','舌頭'],a:0},
+  {q:'磁鐵能吸攝什麼材料製造的東西？',o:['鐵','木','塑膠','紙'],a:0},
+  {q:'能讓部分光穿透的物體稱為______。',o:['半透明體','透明體','不透明體','光源'],a:0},
+  {q:'光是怎樣傳播的？',o:['以直線傳播','以曲線傳播','以圓形傳播','以Z形傳播'],a:0},
+  {q:'磁鐵的特性是：',o:['同極相斥，異極相吸','同極相吸，異極相斥','兩極都相吸','兩極都相斥'],a:0},
+  {q:'物體振動時會產生什麼？',o:['聲音','光','熱','電'],a:0},
+  {q:'不透明體的影子是什麼顏色的？',o:['黑色','白色','灰色','沒有顏色'],a:0},
+  {q:'不同的______傳送聲音的效果都不同。',o:['媒介','溫度','顏色','重量'],a:0},
+  {q:'我們在什麼情況下才能看見物體？',o:['有光的時候','有水的時候','有聲音的時候','有空氣的時候'],a:0},
+  {q:'磁鐵的兩端分別是什麼？',o:['北極和南極','東極和西極','正極和負極','上極和下極'],a:0},
   
-  // === 是非題 10題 ===
-  {t:'tf',q:'當沒有熱，我們便看不見東西。',a:false},
-  {t:'tf',q:'當光照射在不透明的物體上，便會受到阻擋，形成聲音。',a:false},
-  {t:'tf',q:'物體振動幅度越小，發出的聲音便越小。',a:true},
-  {t:'tf',q:'光能穿透鐵造的物體。',a:false},
-  {t:'tf',q:'光以曲線傳播，遇到不透明物體會形成影子。',a:false},
-  {t:'tf',q:'所有不透明體的影子都是黑色的。',a:true},
-  {t:'tf',q:'磁鐵的兩端是南極和北極，有異極相斥的特性。',a:false},
-  {t:'tf',q:'越大力敲打木門，振動幅度越大，產生的聲音越小。',a:false},
-  {t:'tf',q:'木的傳聲效果較空氣的好。',a:true},
-  {t:'tf',q:'能讓部分光穿透的物體，稱為透明體。',a:false},
+  // === 是非題 → 選擇題 ===
+  {q:'「沒有熱，我們便看不見東西」這個說法正確嗎？',o:['不正確，需要有光才能看見','正確','部分正確','不正確，需要有水才能看見'],a:0},
+  {q:'「光照射在不透明物體上便形成聲音」這個說法正確嗎？',o:['不正確，是形成影子','正確','不正確，是形成熱','不正確，是形成光'],a:0},
+  {q:'物體振動幅度越小，發出的聲音便越小。這個說法正確嗎？',o:['正確','不正確','不一定','完全錯誤'],a:0},
+  {q:'光能穿透鐵造的物體。',o:['不正確，鐵是不透明的','正確','不正確，鐵是透明的','部分正確'],a:0},
+  {q:'光以曲線傳播，遇到不透明物體會形成影子。',o:['不正確，光以直線傳播','正確','不正確，光以波浪傳播','不正確，光不會形成影子'],a:0},
+  {q:'所有不透明體的影子都是黑色的。',o:['正確','不正確，影子是白色的','不正確，影子是灰色的','不正確，不一定'],a:0},
+  {q:'磁鐵有異極相斥的特性。',o:['不正確，異極是相吸的','正確','不正確，磁鐵沒有極性','不正確，同極相吸'],a:0},
+  {q:'越大力敲打木門，產生的聲音越小。',o:['不正確，越大力聲音越大','正確','不正確，越大力聲音不變','不正確，越大力聲音消失'],a:0},
+  {q:'木的傳聲效果比空氣好。',o:['正確','不正確，空氣更好','不正確，兩者一樣','不正確，木不能傳聲'],a:0},
+  {q:'「能讓部分光穿透的物體稱為透明體」這個說法正確嗎？',o:['不正確，應是半透明體','正確','不正確，應是不透明體','不正確，應是發光體'],a:0},
   
   // === 圈出適當答案 ===
-  {t:'mc',q:'聲音可經由空氣、水和木等媒介______。',o:['傳播','傳染'],a:0},
+  {q:'聲音可經由空氣、水和木等媒介______。',o:['傳播','傳染','傳送','傳遞'],a:0},
+  {q:'磁鐵能夠指示______方向。',o:['南北','東西','上下','左右'],a:0},
+  {q:'音量的大小是基於物體振動的______。',o:['幅度','速度','次數','力度'],a:0},
   
   // === 看圖選擇題 ===
-  {t:'mc-img',q:'以下哪些情況會產生聲音？',d:['拍打桌面','輕輕放杯','靜止站立','圖書館看書'],o:['男孩拍打桌面','女孩輕輕放杯','男孩靜止站立','圖書館看書'],a:[0],m:'可選多個答案'},
-  {t:'mc-img',q:'第一組：哪個敲打方法音量較大？',d:['用力敲鼓（聲波大）','輕輕敲鼓（聲波細）'],o:['用力敲鼓（聲波大）','輕輕敲鼓（聲波細）'],a:0},
-  {t:'mc-img',q:'第二組：哪個敲打方法音量較大？',d:['輕敲玻璃杯（裂痕細）','大力敲玻璃杯（裂痕大）'],o:['輕敲玻璃杯（裂痕細）','大力敲玻璃杯（裂痕大）'],a:1},
+  {q:'以下哪些情況會產生聲音？（可選多個）',o:['男孩拍打桌面','女孩輕輕放杯子','男孩靜止站立','圖書館中看書'],a:[0],m:'可選多項'},
+  {q:'敲鼓時，哪個方法發出的音量較大？',o:['用力敲鼓（聲波大）','輕輕敲鼓（聲波細）'],a:0},
+  {q:'敲玻璃杯時，哪個方法發出的音量較大？',o:['輕敲玻璃杯（裂痕細）','大力敲玻璃杯（裂痕大）'],a:1},
   
-  // === 看圖分類 ===
-  {t:'mc-img',q:'以下哪個是不透明體？',d:['圓球','玻璃窗','水杯','書本'],o:['圓球','玻璃窗','水杯','書本'],a:[0,3],m:'可選多個答案'},
-  {t:'mc-img',q:'以下哪個是透明體？',d:['圓球','玻璃窗','透明水杯','書本'],o:['圓球','玻璃窗','透明水杯','書本'],a:[1,2],m:'可選多個答案'},
+  // === 磁鐵吸攝題 ===
+  {q:'以下哪些物件可以被磁鐵吸攝？（可選多個）',o:['課本','茶包','鐵閘尺','橡皮擦'],a:[2],m:'可選多項'},
   
-  // === 音量題 ===
-  {t:'mc-img',q:'A) 用力拍桌  B) 用力拍手  C) 輕力拍桌  D) 輕力拍手\n哪些發出較大音量？',d:['A: 用力拍桌','B: 用力拍手','C: 輕力拍桌','D: 輕力拍手'],o:['用力拍桌','用力拍手','輕力拍桌','輕力拍手'],a:[0,1],m:'可選多個答案'},
+  // === 音量大小 ===
+  {q:'以下哪些情況會發出較大的音量？（可選多個）',o:['用力拍桌','用力拍手','輕力拍桌','輕力拍手'],a:[0,1],m:'可選多項'},
+  
+  // === 配對題 → 選擇題 ===
+  {q:'在鼓面撒上小豆，敲打鼓面的力度越大，小豆會怎樣？',o:['跳動幅度越大','跳動幅度越小','貼著鼓面移動','沒有跳動'],a:0},
+  {q:'在鼓面撒上小豆，停止敲打鼓面，小豆會怎樣？',o:['沒有跳動','跳動幅度越大','跳動幅度越小','移動到鼓邊'],a:0},
   
   // === 實驗題 ===
-  {t:'mc',q:'根據實驗，它是測試物料的哪項特性？',o:['硬度','透光率','吸水程度'],a:1},
+  {q:'用光源照射鐵、玻璃和磨砂玻璃，此實驗是為了測試物料的哪項特性？',o:['透光率','硬度','吸水程度','重量'],a:0},
+  {q:'鐵、玻璃和磨砂玻璃中，哪種物料能讓最少的光穿透？',o:['鐵','玻璃','磨砂玻璃','三者一樣'],a:0},
+  {q:'哪種物料最適合用來製造魚缸？',o:['玻璃','鐵','磨砂玻璃','木材'],a:0},
 ];
 
-var G = {n:'',t:'',i:0,c:0,r:[],lk:0,us:[]};
-
-function $(id){return document.getElementById(id);}
+var G = {n:'',i:0,c:0,r:[],lk:0,sel:[]};
 
 function init(){
   $('sb').addEventListener('click',go);
   $('nb').addEventListener('click',next);
-  // MS handler
   $('ms').addEventListener('click',chkMS);
-  $('fs').addEventListener('click',checkFill);
-  $('fi').addEventListener('keydown',e=>{if(e.key==='Enter')checkFill();});
   $('rvb').addEventListener('click',showRV);
   $('ryb').addEventListener('click',()=>{$('res').style.display='none';$('title').style.display='flex';});
+  $('rvc').addEventListener('click',()=>{$('rv').style.display='none';$('res').style.display='flex';});
 }
 
 function go(){
-  G={n:$('ni').value||'考生',t:$('ti').value||'常識測驗',i:0,c:0,r:[],lk:0,us:[]};
+  G={n:$('ni').value||'考生',i:0,c:0,r:[],lk:0,sel:[]};
   $('title').style.display='none';$('quiz').style.display='flex';
   $('sn').textContent='📝 '+G.n;rq();
 }
 
 function rq(){
-  const q=QS[G.i];G.lk=0;
+  const q=QS[G.i];G.lk=0;G.sel=[];
   $('qp').textContent=(G.i+1)+'/'+QS.length;
   $('ss').textContent='✅ '+G.c;
   $('pb').style.width=((G.i+1)/QS.length*100)+'%';
-  $('fb').className='fb';$('fb').style.display='none';
+  $('fb').className='fb';$('fb').style.display='none';$('fb').innerHTML='';
   $('nb').style.display='none';$('ms').style.display='none';
-  $('opts').style.display='none';$('opts').innerHTML='';
-  $('wb').style.display='none';$('wb').innerHTML='';
-  $('fa').style.display='none';$('fi').value='';$('fs').disabled=false;$('fi').disabled=false;
-  $('diagram').style.display='none';$('diagram').innerHTML='';
-  
-  let tn='';
-  if(q.t==='wb')tn='✏️ 填充題（詞語庫）';
-  else if(q.t==='tf')tn='⭕ 是非題';
-  else if(q.t==='mc')tn='🔘 選擇題';
-  else if(q.t==='mc-img')tn='🖼️ 看圖選擇題';
-  $('qType').textContent=tn;
+  $('opts').innerHTML='';
   $('qNum').textContent='第 '+(G.i+1)+' 題（共 '+QS.length+' 題）';
+  $('qTxt').textContent=q.q;
   
-  let txt=q.q;
-  txt=txt.replace(/______/g,'<span class="bl"></span>').replace(/________/g,'<span class="bl" style="min-width:55px"></span>');
-  txt=txt.replace(/\n/g,'<br>');
-  $('qTxt').innerHTML=txt;
-  
-  // Diagram
-  if(q.d){
-    $('diagram').style.display='block';
-    const d=$('diagram');
-    if(q.d.length>4){d.innerHTML='<div class="d-label">📊 圖片情境</div><div class="d-grid c2">'+q.d.map((x,i)=>'<div class="d-item"><span class="d-icon">'+(x.match(/^.{1,2}/)?.[0]||'')+'</span><span class="d-label">'+(q.m?'':'')+String.fromCharCode(65+i)+'. '+x.replace(/^.{1,2}\s?/,'')+'</span></div>').join('')+'</div>';}
-    else{d.innerHTML='<div class="d-label">📊 圖片情境</div><div class="d-grid c4">'+q.d.map((x,i)=>'<div class="d-item"><span class="d-icon">'+(x.match(/^.{1,2}/)?.[0]||'')+'</span><span class="d-label">'+String.fromCharCode(65+i)+'. '+x.replace(/^.{1,2}\s?/,'')+'</span></div>').join('')+'</div>';}
+  // Show image if present
+  $('imgBox').style.display='none';$('imgBox').innerHTML='';
+  if(q.img){
+    $('imgBox').style.display='block';
+    $('imgBox').innerHTML='<div style="font-size:12px;color:rgba(255,255,255,.3);margin-bottom:4px">📊 附圖</div><div style="background:rgba(255,255,255,.02);border-radius:8px;padding:6px;font-size:13px;color:rgba(255,255,255,.5)">'+q.img+'</div>';
   }
   
-  if(q.t==='wb'){
-    const w=$('wb');w.style.display='block';
-    w.innerHTML='<div class="wl">📦 詞語庫（點選詞語作答）</div><div class="ww"></div>';
-    const ww=w.querySelector('.ww');
-    WB.forEach(w=>{
-      const e=document.createElement('span');e.className='ww-word'+(G.us.includes(w)?' us':'');
-      e.textContent=w;
-      e.addEventListener('click',()=>{if(!e.classList.contains('us')){$('fi').value=w;checkFill();}});
-      ww.appendChild(e);
+  const mul=Array.isArray(q.a);
+  const o=$('opts');
+  q.o.forEach((x,i)=>{
+    const d=document.createElement('div');d.className='opt';
+    d.innerHTML='<span class="tg">'+String.fromCharCode(65+i)+'</span>'+x;
+    d.addEventListener('click',()=>{
+      if(G.lk)return;
+      if(mul){
+        const idx=G.sel.indexOf(i);
+        if(idx>=0)G.sel.splice(idx,1);else G.sel.push(i);
+        d.classList.toggle('sl');
+        $('ms').style.display=G.sel.length?'block':'none';
+      } else {
+        G.lk=1;
+        const opts=document.querySelectorAll('.opt');
+        opts.forEach(e=>e.classList.add('ds'));
+        d.classList.add(i===q.a?'cr':'wr','sl');
+        opts[q.a].classList.add('cr');
+        if(i===q.a){G.c++;G.r.push(1);}else G.r.push(0);
+        showFB(i===q.a,q.o[q.a]);
+        $('nb').style.display='block';
+        $('ss').textContent='✅ '+G.c;
+      }
     });
-    $('fa').style.display='flex';
-  } else if(q.t==='tf'){
-    const o=$('opts');o.style.display='flex';
-    [['✅ 正確（√）',true],['❌ 唔正確（×）',false]].forEach(([l,v])=>{
-      const d=document.createElement('div');d.className='opt';
-      d.innerHTML='<span class="tg">?</span>'+l;
-      d.addEventListener('click',()=>chkTF(v));
-      o.appendChild(d);
-    });
-  } else if(q.t==='mc'||q.t==='mc-img'){
-    const o=$('opts');o.style.display='flex';
-    q.o.forEach((x,i)=>{
-      const d=document.createElement('div');d.className='opt';
-      d.innerHTML='<span class="tg">'+String.fromCharCode(65+i)+'</span>'+x;
-      d.addEventListener('click',()=>chkMC(i,Array.isArray(q.a)));
-      o.appendChild(d);
-    });
-  }
-}
-
-function checkFill(){
-  if(G.lk)return;G.lk=1;
-  const v=$('fi').value.trim();if(!v){G.lk=0;return;}
-  const q=QS[G.i];G.us.push(v);
-  const aa=q.a.split(',');const cr=aa.some(a=>v.includes(a)||a.includes(v));
-  fb(cr,q.a);if(cr){G.c++;G.r.push(1);}else G.r.push(0);
-  $('nb').style.display='block';$('fs').disabled=true;$('fi').disabled=true;$('ss').textContent='✅ '+G.c;
-}
-
-function chkTF(v){
-  if(G.lk)return;G.lk=1;
-  const q=QS[G.i],cr=v===q.a;
-  const o=document.querySelectorAll('.opt');o.forEach(e=>e.classList.add('ds'));
-  if(cr){o[0].classList.add(v?'cr':'wr');const ci=v?1:0;o[ci].classList.add('cr');G.c++;G.r.push(1);}
-  else{const ci=v?0:1;o[ci].classList.add('wr');o[1-ci].classList.add('cr');G.r.push(0);}
-  fb(cr,q.a?'✅正確（√）':'❌唔正確（×）');
-  $('nb').style.display='block';$('ss').textContent='✅ '+G.c;
+    o.appendChild(d);
+  });
 }
 
 function chkMS(){
   if(G.lk)return;G.lk=1;
-  const q=QS[G.i];const o=document.querySelectorAll('.opt');
+  const q=QS[G.i],ans=q.a,o=document.querySelectorAll('.opt');
   o.forEach(e=>e.classList.add('ds'));
-  const ans=Array.isArray(q.a)?q.a:[q.a];
-  let cr=true;
   ans.forEach(ai=>o[ai].classList.add('cr'));
-  selMC.forEach(si=>{if(!ans.includes(si)){o[si].classList.add('wr');cr=false;}});
-  if(selMC.length!==ans.length||!ans.every(a=>selMC.includes(a)))cr=false;
-  if(cr){G.c++;G.r.push(1);}else G.r.push(0);
-  fb(cr,ans.map(ai=>q.o[ai]).join('、'));
-  $('nb').style.display='block';$('ss').textContent='✅ '+G.c;
-  $('ms').style.display='none';
+  let ok=true;
+  G.sel.forEach(si=>{if(!ans.includes(si)){o[si].classList.add('wr');ok=false;}});
+  if(G.sel.length!==ans.length)ok=false;
+  if(ok){G.c++;G.r.push(1);}else G.r.push(0);
+  showFB(ok,ans.map(ai=>q.o[ai]).join('、'));
+  $('nb').style.display='block';$('ss').textContent='✅ '+G.c;$('ms').style.display='none';
 }
 
-var selMC=[];
-function chkMC(i,mul){
-  if(G.lk&&!mul)return;
-  const q=QS[G.i];
-  if(mul&&!G.lk){
-    const idx=selMC.indexOf(i);
-    if(idx>=0)selMC.splice(idx,1);else selMC.push(i);
-    const o=document.querySelectorAll('.opt');
-    o[i].classList.toggle('sl');
-    $('ms').style.display=selMC.length?'block':'none';
-    return;
-  }
-  G.lk=1;
-  const cr=i===q.a;
-  const o=document.querySelectorAll('.opt');o.forEach(e=>e.classList.add('ds'));
-  o[i].classList.add(i===q.a?'cr':'wr','sl');
-  o[q.a].classList.add('cr');
-  if(cr){G.c++;G.r.push(1);}else G.r.push(0);
-  fb(cr,q.o[q.a]);$('nb').style.display='block';$('ss').textContent='✅ '+G.c;
-}
-
-function fb(cr,ans){
+function showFB(ok,ans){
   const f=$('fb');
-  f.className='fb '+(cr?'cr':'wr');
-  f.innerHTML=cr?'<span class="ic">✅</span><span class="msg">答啱！好嘢！</span>':'<span class="ic">❌</span><span class="msg">答錯～ 正確答案：<span class="an">'+ans+'</span></span>';
+  if(ok)f.className='fb cr';else f.className='fb wr';
+  f.innerHTML=ok?'✅ 答對了！好棒！':'❌ 答錯了。正確答案：<span class="an">'+ans+'</span>';
   f.style.display='flex';
 }
 
 function next(){
-  G.i++;if(G.i>=QS.length)showRes();else{$('fs').disabled=false;$('fi').disabled=false;selMC=[];rq();}
+  G.i++;if(G.i>=QS.length)showRes();else rq();
 }
 
 function showRes(){
   $('quiz').style.display='none';$('res').style.display='flex';
   const p=Math.round(G.c/QS.length*100);
-  const em=p>=90?'🏆':p>=70?'🎉':p>=50?'👍':'💪';
-  const ti=p>=90?'超叻！':p>=70?'好嘢！':p>=50?'唔錯！':'加油呀！';
-  $('re').textContent=em;$('rt').textContent=ti;
-  $('rsub').textContent=G.n+' - '+G.t;
+  $('re').textContent=p>=90?'🏆':p>=70?'🎉':p>=50?'👍':'💪';
+  $('rt').textContent=p>=90?'超棒！':p>=70?'很好！':p>=50?'不錯！':'加油！';
+  $('rsub').textContent=G.n+' - 一年級常識 聲光磁';
   $('rsc').textContent=G.c+'/'+QS.length;
-  $('rdt').textContent='答啱 '+G.c+' 題，答錯 '+(QS.length-G.c)+' 題（'+p+'%）';
+  $('rdt').textContent='答對 '+G.c+' 題，答錯 '+(QS.length-G.c)+' 題（'+p+'%）';
 }
 
 function showRV(){
-  $('res').style.display='none';
-  const el=$('rv');el.style.display='flex';
-  // Close handler
-  if(!el._close){
-    const h=document.createElement('div');h.style.cssText='display:flex;justify-content:space-between;align-items:center;padding:10px 14px;border-bottom:1px solid rgba(255,255,255,.04)';
-    h.innerHTML='<span style="font-size:14px;font-weight:600">📋 覆卷</span><span id="rvc" style="font-size:11px;color:rgba(255,255,255,.3);cursor:pointer">✕ 關閉</span>';
-    el.insertBefore(h,el.firstChild);
-    h.querySelector('#rvc').addEventListener('click',()=>{el.style.display='none';$('res').style.display='flex';});
-    el._close=true;
-  }
+  $('res').style.display='none';$('rv').style.display='flex';
   const l=$('rvl');l.innerHTML='';
   QS.forEach((q,i)=>{
-    const ok=G.r[i];const d=document.createElement('div');d.className='rvi';
-    d.innerHTML='<div class="tr '+(ok?'ok':'fail')+'">'+(ok?'✅ 答啱':'❌ 答錯')+'</div><div class="q">'+(i+1)+'. '+q.q.replace(/______/g,'____')+'</div><div class="a">答案：<span class="y">'+(q.a||'')+'</span></div>';
+    const ok=G.r[i],d=document.createElement('div');d.className='rvi';
+    d.innerHTML='<div class="tr '+(ok?'ok':'fail')+'">'+(ok?'✅ 答對':'❌ 答錯')+'</div><div class="q">'+(i+1)+'. '+q.q+'</div><div class="a">答案：<span class="y">'+(Array.isArray(q.a)?q.a.map(ai=>q.o[ai]).join('、'):q.o[q.a])+'</span></div>';
     l.appendChild(d);
   });
 }
